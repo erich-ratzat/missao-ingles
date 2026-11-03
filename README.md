@@ -20,6 +20,8 @@ MVP de inglês para crianças: missões curtas com história, personagens e reco
 - 2º erro: a palavra é dita bem devagar, duas vezes, com o jeito de falar escrito ("fala assim: lái-t").
 - 3º erro: o ajudante fala junto e a história continua. A palavra vai para o "treinar amanhã".
 - Silêncio não conta como erro (até duas vezes).
+- Depois da primeira tentativa recusada aparece um botão discreto para o adulto: "Eu ouvi, pode continuar". Serve para quando o celular entendeu mal uma fala certa. Na escolha de cor, o adulto toca na cor que a criança falou.
+- O registro de cada palavra separa: de primeira sozinho, depois de correção, ouviu o 🔊 antes de lembrar, botão "Falei!" (sem microfone), confirmado pelo adulto e ajuda do personagem.
 
 As palavras, as dicas e as palavras parecidas de cada uma ficam em `tools/roteiro.py` (`VOCAB`).
 

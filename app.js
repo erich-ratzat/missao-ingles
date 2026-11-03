@@ -56,10 +56,11 @@ function recordWin(kid, stars){
   if (s.last !== t) { const d = s.last ? Math.round((new Date(t) - new Date(s.last)) / 864e5) : 99; s.streak = d <= 2 ? s.streak + 1 : 1; s.last = t; }
   s.plays++; s.best = Math.max(s.best, stars); persist();
 }
-// por palavra: quantas vezes saiu de primeira, quantas com correção e quantas precisou de ajuda
+// por palavra: first = de primeira sozinho · fixed = depois de correção · peek = ouviu o 🔊 antes de lembrar
+// tap = botão "Falei!" (sem microfone, não deu para conferir) · parent = o adulto confirmou · help = o ajudante falou junto
 function stat(w, how){
   const s = SAVE[G.kid].words[w] = SAVE[G.kid].words[w] || {first:0, fixed:0, help:0};
-  s[how]++; s.last = today(); persist();
+  s[how] = (s[how] || 0) + 1; s.last = today(); persist();
   G.result[w] = how === 'help' ? 'help' : (G.result[w] === 'help' ? 'help' : 'ok');
 }
 
@@ -175,6 +176,8 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 // ---------------- microfone ----------------
 const micMode = () => (SR && !G.noMic) ? 'voice' : 'tap';
 function micButton(){ return micMode() === 'voice' ? '<button class="mic" id="mic" disabled aria-label="Falar">🎤</button>' : '<button class="mic fallback" id="mic" disabled>🗣️ Falei!</button>'; }
+// botão do adulto: aparece depois de uma tentativa que o celular não aceitou
+const adultButton = on => on && micMode() === 'voice' ? '<button class="adult" id="adult" disabled>✓ Eu ouvi, pode continuar</button>' : '';
 function recognize(words, btn, onHeard){
   return new Promise(res => {
     const r = new SR(); r.lang = 'en-US'; r.interimResults = true; r.maxAlternatives = 3; r.continuous = false;
@@ -200,8 +203,12 @@ function recognize(words, btn, onHeard){
 function waitMic(words){
   const id = G.id;
   return new Promise(res => {
-    const b = el('mic'); b.disabled = false; b.classList.add('ready');
-    b.onclick = () => { b.onclick = null; b.disabled = true; b.classList.remove('ready'); voice.pause();
+    const b = el('mic'), a = el('adult');
+    const take = () => { b.onclick = null; b.disabled = true; b.classList.remove('ready'); voice.pause();
+      if (a) { a.onclick = null; a.disabled = true; } };
+    b.disabled = false; b.classList.add('ready');
+    if (a) { a.disabled = false; a.onclick = () => { take(); res({ok:true, key:words[0], heard:'', parent:true}); }; }
+    b.onclick = () => { take();
       if (micMode() === 'tap') return res({ok:true, key:words[0], heard:'', tap:true});
       recognize(words, b, t => { const h = el('heard'); if (h) { h.textContent = t; h.className = 'heard'; } }).then(res); };
   }).then(r => { check(id); return r; });
@@ -220,12 +227,13 @@ const tipKey = (w, near) => `T_${G.H}_${w}_${near && near.w === w ? near.g : 0}`
 // "Não ouvi nada" não conta como erro (até duas vezes).
 async function speak(w, {model = true, hide = !model, intro = [], say = false, expand, onOk} = {}){
   const T = G.T, P = G.P, V = VOCAB[w];
-  let phon = false, heardMsg = null;
+  let phon = false, heardMsg = null, peek = false, adult = false;
   const draw = () => {
     act(`<div class="word"><button class="ear" id="ear" aria-label="Ouvir">🔊</button>
-        <div><div class="w">${hide ? V.icon + ' ?' : w}</div><div class="pt">${phon ? `fala assim: <b class="ph">${V.say}</b>` : hide ? 'lembra o nome em inglês?' : V.pt}</div></div></div>
-      ${micButton()}<div class="heard" id="heard"></div>`);
-    el('ear').onclick = () => { if (hide) { hide = false; draw(); } play(`W_${T}_${w}`).catch(() => {}); };
+        <div><div class="w" id="ww">${hide ? V.icon + ' ?' : w}</div><div class="pt" id="wpt">${phon ? `fala assim: <b class="ph">${V.say}</b>` : hide ? 'lembra o nome em inglês?' : V.pt}</div></div></div>
+      ${micButton()}<div class="heard" id="heard"></div>${adultButton(adult)}`);
+    // mostrar a palavra sem redesenhar: o microfone pode estar esperando o toque
+    el('ear').onclick = () => { if (hide) { hide = false; peek = true; el('ww').textContent = w; el('wpt').textContent = V.pt; } play(`W_${T}_${w}`).catch(() => {}); };
     if (heardMsg) showHeard(heardMsg, w);
   };
   draw();
@@ -238,13 +246,14 @@ async function speak(w, {model = true, hide = !model, intro = [], say = false, e
     if (micMode() === 'tap' && !fallback) { fallback = true; draw(); }
     const r = await waitMic([w]);
     if (r.ok) {
-      SFX.good(); addStar(); stat(w, level ? 'fixed' : 'first');
+      SFX.good(); addStar(); stat(w, r.parent ? 'parent' : r.tap ? 'tap' : level ? 'fixed' : peek && !model ? 'peek' : 'first');
       if (onOk) await onOk();
-      if (level) await line(P + '_fixed');
+      if (level && !r.parent) await line(P + '_fixed');
       if (expand) await line(expand);
       act(''); return true;
     }
     if (!r.heard && micMode() === 'tap') continue;          // microfone bloqueado: vira botão "Falei!", sem contar erro
+    if (!adult) { adult = true; draw(); }
     if (!r.heard && silent < 2) { silent++; await line(P + '_louder'); continue; }
     SFX.bad(); heardMsg = r;
     let step = steps[level++];
@@ -264,10 +273,10 @@ async function speak(w, {model = true, hide = !model, intro = [], say = false, e
 // A criança escolhe falando uma das opções (cores). Tocar numa opção só faz ouvir.
 async function speakChoice(opts, {list, expand, onOk} = {}){
   const T = G.T, P = G.P, keys = Object.keys(opts);
-  let phon = false, heardMsg = null;
+  let phon = false, heardMsg = null, adult = false;
   const draw = () => {
     act(`${keys.map(k => `<button class="choice" data-k="${k}" style="background:${opts[k]}">${phon ? `<span class="ph">${VOCAB[k].say}</span>` : k}</button>`).join('')}
-      ${micButton()}<div class="heard" id="heard"></div>`);
+      ${micButton()}<div class="heard" id="heard"></div>${adultButton(adult)}`);
     document.querySelectorAll('.choice').forEach(b => b.onclick = () => play(`W_${T}_${b.dataset.k}`).catch(() => {}));
     if (heardMsg) showHeard(heardMsg);
   };
@@ -285,11 +294,17 @@ async function speakChoice(opts, {list, expand, onOk} = {}){
     if (micMode() === 'tap') {           // sem microfone: tocar escolhe
       draw(); const id = G.id;
       const k = await new Promise(res => document.querySelectorAll('.choice').forEach(b => b.onclick = () => res(b.dataset.k)));
-      check(id); return done(k, 'first');
+      check(id); return done(k, 'tap');
     }
     const r = await waitMic(keys);
+    if (r.parent) {                      // o adulto ouviu: ele toca na cor que a criança falou
+      const id = G.id; el('heard').className = 'heard'; el('heard').textContent = 'Toque na cor que ele falou';
+      const k = await new Promise(res => document.querySelectorAll('.choice').forEach(b => b.onclick = () => res(b.dataset.k)));
+      check(id); return done(k, 'parent');
+    }
     if (r.ok) return done(r.key, level ? 'fixed' : 'first');
     if (!r.heard && micMode() === 'tap') continue;
+    if (!adult) { adult = true; draw(); if (heardMsg) showHeard(heardMsg); }
     if (!r.heard && silent < 2) { silent++; await line(P + '_louder'); continue; }
     SFX.bad(); heardMsg = r; level++;
     if (level === 1) {
