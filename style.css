@@ -76,19 +76,28 @@ body.henrique .mic{background:#E5484D}
 .mic.listening{background:var(--good);animation:none}
 .mic.listening::after{content:"";position:absolute;inset:-10px;border-radius:50%;border:5px solid var(--good);animation:ring 1s infinite}
 .mic.fallback{width:auto;border-radius:24px;padding:0 22px;font-family:var(--display);font-size:1.4rem}
-.heard{width:100%;text-align:center;color:var(--muted);font-size:.9rem;min-height:1.2em}
+.heard{width:100%;text-align:center;color:var(--muted);font-size:.95rem;min-height:1.2em}
+.heard.bad{color:#FFB3B5}
+.heard b{color:#fff}
+.ph{font-family:var(--display);color:var(--gold);font-size:1.25rem}
+.choice .ph{color:#fff;font-size:1.15rem}
 .choice{width:84px;height:84px;border-radius:24px;border:5px solid rgba(255,255,255,.85);box-shadow:0 5px 0 rgba(0,0,0,.35);font-family:var(--display);font-weight:800;color:#fff;font-size:1.1rem;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px}
 .arrow{width:96px;height:80px;border-radius:24px;background:var(--panel-2);font-size:2.6rem;box-shadow:0 5px 0 rgba(0,0,0,.35)}
 .arrow.no{animation:shake .35s;background:#5A2230}
+.arrow.yes{background:var(--good)}
 .next{background:var(--gold);color:#1E1400;border-radius:22px;padding:14px 30px;font-family:var(--display);font-weight:800;font-size:1.5rem;box-shadow:0 6px 0 #B98900}
 .hint{color:var(--muted);text-align:center;width:100%}
 
 /* prêmio */
-.reward{position:absolute;inset:0;background:rgba(5,8,22,.78);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:16px;animation:fade .4s}
-.reward .badge{width:min(42vw,200px);animation:pop .7s}
+.reward{position:fixed;inset:0;z-index:10;overflow:auto;background:rgba(5,8,22,.9);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:20px 16px;animation:fade .4s}
+.reward .badge{width:min(36vw,180px,24vh);animation:pop .7s;flex:none}
 .reward h2{font-size:clamp(1.8rem,6vw,2.6rem);color:var(--gold)}
 .reward .row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .chip{background:rgba(255,255,255,.14);border-radius:99px;padding:6px 14px;font-weight:800}
+.small-note{color:#FFE7A0;font-weight:800}
+.chip.help{background:rgba(255,210,63,.25)}
+.chip.score{background:rgba(0,0,0,.6);font-size:1.05rem}
+.chip.bump{animation:bump .5s}
 .locked{margin-top:6px;border:2px dashed rgba(255,255,255,.4);border-radius:18px;padding:10px 16px;color:#fff;opacity:.9}
 
 /* ---------- animações das cenas ---------- */
@@ -127,8 +136,27 @@ body.henrique .mic{background:#E5484D}
 .coachbig{opacity:0;transition:opacity .6s}
 .coachbig.show{opacity:1}
 .ball.hidden{opacity:0}
-.confetti{position:absolute;top:-20px;width:10px;height:16px;border-radius:3px;animation:fall 2.2s linear forwards}
+.holov .ghost{display:none}
+.item{opacity:0;transform-box:fill-box;transform-origin:center}
+.item.on{opacity:1;animation:install .8s cubic-bezier(.2,1.6,.4,1)}
+.part.ping{animation:ping .6s 2}
+.part.broken{animation:blink .35s infinite}
+.fship-in,.rock-art,.mother-art{transform-box:fill-box;transform-origin:center}
+.fship.hit .fship-in{animation:spin 1.4s linear infinite}
+.fship.fast{transition:transform .9s cubic-bezier(.6,0,.9,.4)!important}
+.rock-art{animation:spin 6s linear infinite}
+#mother{transition:transform 1.2s cubic-bezier(.3,.8,.3,1)}
+.mother-art{animation:bob 3s ease-in-out infinite}
+#drone2,#drone3{transition:transform .7s cubic-bezier(.3,.8,.3,1)}
+.tbeam{opacity:0;transition:opacity .4s}
+.tbeam.on{opacity:.5;animation:blink .5s infinite}
+.darkness{position:absolute;inset:0;background:#000;opacity:.93;transition:opacity 1.2s;pointer-events:none}
+.darkness.off{opacity:0}
+#player{transition:transform .7s cubic-bezier(.3,.8,.3,1)}
+.confetti{position:fixed;z-index:11;top:-20px;width:10px;height:16px;border-radius:3px;animation:fall 2.2s linear forwards}
 
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ping{50%{filter:brightness(1.8) drop-shadow(0 0 10px #5FD3F3)}}
 @keyframes install{0%{transform:translateY(-60px) scale(.6);opacity:0}100%{transform:none;opacity:1}}
 @keyframes alarm{from{opacity:.15}to{opacity:1}}
 @keyframes flicker{0%,92%,100%{opacity:1}94%{opacity:.5}96%{opacity:.9}}

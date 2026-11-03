@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<base href="../">
+<title>Teste automático</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app"></div>
+<script>
+// Teste automático das lições: um microfone falso "fala" o que o plano manda.
+// Uso: abrir tools/teste.html e chamar runTest('lucas') ou runTest('henrique') no console.
+window.PLAN = {};          // palavra -> lista do que a criança "fala" em cada tentativa ('' = silêncio)
+window.LOG = [];
+class FakeSR {
+  start(){
+    const w = (window.__words || [])[0], key = (window.__words || []).join('|');
+    const q = PLAN[key] || PLAN[w];
+    const said = q && q.length ? q.shift() : w || 'hello';
+    LOG.push(key + ' <- "' + said + '"');
+    setTimeout(() => {
+      if (said) { const alt = [{transcript:said}]; alt.isFinal = true; this.onresult && this.onresult({results:[alt]}); }
+      else this.onend && this.onend();
+    }, 150);
+  }
+  abort(){}
+}
+window.SpeechRecognition = window.webkitSpeechRecognition = FakeSR;
+</script>
+<script src="lines.js"></script>
+<script src="art.js"></script>
+<script src="app.js"></script>
+<script>
+const origRecognize = recognize;
+recognize = (words, btn, onHeard) => { window.__words = words; return origRecognize(words, btn, onHeard); };
+voice.defaultPlaybackRate = 4;
+const realLine = line;
+line = key => { LOG.push('  ' + key); voice.defaultPlaybackRate = 4; return realLine(key); };
+window.until = async k => { for (let i = 0; i < 600 && !LOG.includes('  ' + k); i++) await new Promise(r => setTimeout(r, 100)); return LOG.includes('  ' + k); };
+window.runTest = (kid, plan) => new Promise(done => {
+  window.DONE = null;
+  PLAN = plan || {}; LOG = []; window.__words = [];
+  start(kid);
+  const t = setInterval(() => {
+    const err = document.querySelector('.reward') && document.getElementById('again');
+    if (err) { clearInterval(t); done(window.DONE = {stars:G.stars, max:G.max, result:G.result, log:LOG}); return; }
+    if (window.HOLD) return;
+    const mic = document.getElementById('mic');
+    if (mic && !mic.disabled && mic.classList.contains('ready')) { mic.click(); return; }
+    const arrows = document.querySelectorAll('#act .arrow');
+    if (arrows.length && !document.querySelector('.face.talking')) {
+      const txt = document.getElementById('txt').textContent.toLowerCase();
+      const b = Array.from(arrows).find(a => txt.includes(a.dataset.k));
+      (b || arrows[0]).click();
+    }
+  }, 120);
+});
+</script>
+</body>
+</html>

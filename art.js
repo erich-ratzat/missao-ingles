@@ -72,6 +72,28 @@ ART.narr = `<svg viewBox="0 0 100 100" aria-hidden="true">
   <path d="M74 30 q6 8 0 16 M80 24 q10 14 0 28" stroke="#FFD23F" stroke-width="3" fill="none" stroke-linecap="round"/>
 </svg>`;
 
+ART.vortex = `<svg viewBox="0 0 100 100" aria-hidden="true">
+  <circle cx="50" cy="50" r="50" fill="#2A0E3F"/>
+  <path d="M8 100 C12 70 88 70 92 100 Z" fill="#4B1670"/>
+  <path d="M22 56 C20 20 80 20 78 56 L80 86 L62 77 L50 90 L38 77 L20 86 Z" fill="#141018" stroke="#8E4DFF" stroke-width="3"/>
+  <path d="M50 14 L55 40 L45 40 Z" fill="#8E4DFF"/>
+  <path d="M29 49 L46 54 L44 61 L29 57 Z M71 49 L54 54 L56 61 L71 57 Z" fill="#FF3B3B" class="blink"/>
+  <path d="M41 69 h18 M42 74 h16 M44 79 h12" stroke="#8E4DFF" stroke-width="2.5"/>
+</svg>`;
+
+ART.tony = `<svg viewBox="0 0 100 100" aria-hidden="true">
+  <circle cx="50" cy="50" r="50" fill="#1F2937"/>
+  <path d="M8 100 C10 70 90 70 92 100 Z" fill="#4B5563"/>
+  <path d="M42 96 L54 76 L58 96 Z" fill="#9CA3AF"/>
+  <rect x="41" y="64" width="18" height="14" fill="#B97A4B"/>
+  <ellipse cx="50" cy="50" rx="23" ry="24" fill="#C68B59"/>
+  <rect x="27" y="22" width="46" height="15" rx="5" fill="#1B1B1B"/>
+  <path d="M34 42 L46 47 M66 42 L54 47" stroke="#1B1B1B" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="41" cy="52" r="2.8" fill="#111"/><circle cx="59" cy="52" r="2.8" fill="#111"/>
+  <path d="M40 67 q10 -6 20 0" stroke="#5A2A1A" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <ellipse cx="27" cy="54" rx="4" ry="6" fill="#B97A4B"/><ellipse cx="73" cy="54" rx="4" ry="6" fill="#B97A4B"/>
+</svg>`;
+
 // ---------------- Lucas: nave ----------------
 const SHIP_PARTS = {
   rocket: `<rect x="-204" y="-22" width="64" height="44" rx="9" fill="#5B6478" stroke="#1B2232" stroke-width="3"/>
@@ -140,6 +162,9 @@ ART.hangar = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid sli
   <g id="holo" class="holo"><rect x="24" y="30" width="190" height="150" rx="14" fill="#5FD3F3" opacity=".14" stroke="#5FD3F3" stroke-width="3"/>
     <g transform="translate(64 44) scale(1.1)" opacity=".92">${ART.nova.replace('<svg viewBox="0 0 100 100" aria-hidden="true">', '').replace('</svg>', '')}</g>
     <text x="119" y="170" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="15" fill="#5FD3F3" letter-spacing="1.5">CAPITÃ NOVA</text></g>
+  <g id="holov" class="holo holov"><rect x="24" y="30" width="190" height="150" rx="14" fill="#FF3B3B" opacity=".14" stroke="#FF3B3B" stroke-width="3"/>
+    <g transform="translate(64 44) scale(1.1)" opacity=".92">${ART.vortex.replace(/<svg[^>]*>/, '').replace('</svg>', '')}</g>
+    <text x="119" y="170" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="15" fill="#FF6B6B" letter-spacing="1.5">LORDE VORTEX</text></g>
   <g id="ship" class="ship" transform="translate(450 270) scale(.78)">${shipSVG()}</g>
   <g class="bip-float" transform="translate(70 250)"><g transform="scale(1.2)">${ART.bip.replace(/<svg[^>]*>/, '').replace('</svg>', '')}</g></g>
 </svg>`;
@@ -156,12 +181,27 @@ ART.space = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slic
   <circle cx="640" cy="90" r="60" fill="url(#planet)" opacity=".9"/>
   <g class="stars-near"><g>${stars(40, 11)}</g><g transform="translate(800 0)">${stars(40, 11)}</g></g>
   <g id="laserbeam" class="laserbeam"><line x1="0" y1="0" x2="0" y2="0" stroke="#FF5252" stroke-width="8" stroke-linecap="round"/><line x1="0" y1="0" x2="0" y2="0" stroke="#FFE0E0" stroke-width="3" stroke-linecap="round"/></g>
+  <polygon id="tbeam" class="tbeam" points="0,0 0,0 0,0" fill="#B57BFF"/>
+  <g id="mother" class="mother" transform="translate(1100 80)"><g class="mother-art">
+    <ellipse cx="0" cy="0" rx="150" ry="40" fill="#2A1546" stroke="#8E4DFF" stroke-width="6"/>
+    <ellipse cx="0" cy="-26" rx="62" ry="38" fill="#4B1670" stroke="#8E4DFF" stroke-width="5"/>
+    <circle cx="0" cy="-28" r="15" fill="#FF3B3B" class="blink"/><circle cx="0" cy="-28" r="6" fill="#FFE0E0"/>
+    ${[-110, -66, -22, 22, 66, 110].map(x => `<circle cx="${x}" cy="10" r="7" fill="#FFD23F" class="blink"/>`).join('')}</g></g>
+  <g id="rock" class="rock" transform="translate(1000 225)"><g class="rock-art">
+    <path d="M-40 -10 L-22 -36 L10 -40 L36 -20 L40 12 L20 36 L-14 38 L-38 20 Z" fill="#6B5B4E" stroke="#3A2F28" stroke-width="4"/>
+    <circle cx="-10" cy="-8" r="9" fill="#54473D"/><circle cx="14" cy="14" r="6" fill="#54473D"/><circle cx="-18" cy="18" r="4" fill="#54473D"/></g></g>
   <g id="drone" class="drone" transform="translate(900 140)">${ART.drone}</g>
+  <g id="drone2" class="drone" transform="translate(900 140)">${ART.drone}</g>
+  <g id="drone3" class="drone" transform="translate(900 140)">${ART.drone}</g>
   <g id="boom" class="boom" transform="translate(-200 -200)">${Array.from({length: 10}, (_, i) => `<circle class="spark" r="${8 + (i % 3) * 5}" fill="${['#FFE066', '#FF8A1F', '#FF4D4D'][i % 3]}" style="--a:${i * 36}deg"/>`).join('')}</g>
-  <g id="fship" class="fship" transform="translate(170 225) scale(.45)">${shipSVG(['rocket', 'wing', 'laser', 'light'])}</g>
+  <g id="fship" class="fship" transform="translate(170 225) scale(.45)"><g class="fship-in">${shipSVG(['rocket', 'wing', 'laser', 'light'])}</g></g>
 </svg>`;
 
 // ---------------- Henrique: futebol ----------------
+const BALL = `<circle r="16" fill="#fff" stroke="#11151F" stroke-width="2.5"/>
+  <path d="M0 -6 L6 -2 L4 5 L-4 5 L-6 -2 Z" fill="#11151F"/>
+  <path d="M0 -6 L0 -15 M6 -2 L14 -6 M4 5 L9 13 M-4 5 L-9 13 M-6 -2 L-14 -6" stroke="#11151F" stroke-width="2"/>`;
+
 const SHIRT = `<path d="M-40 -52 L-14 -62 Q0 -50 14 -62 L40 -52 L62 -26 L44 -12 L37 -24 L37 52 L-37 52 L-37 -24 L-44 -12 L-62 -26 Z" fill="var(--shirt)" stroke="#11151F" stroke-width="3"/>
   <path d="M-14 -62 Q0 -50 14 -62" fill="none" stroke="#fff" stroke-width="4"/>
   <path d="M-37 30 h74" stroke="#fff" stroke-width="5" opacity=".6"/>
@@ -179,6 +219,10 @@ ART.locker = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid sli
     <text x="0" y="33" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="30" fill="#17233A">GRANDE FINAL</text></g>
   <g transform="translate(330 170)"><path d="M-20 -78 Q0 -100 20 -78" fill="none" stroke="#C9D1DE" stroke-width="5"/><line x1="0" y1="-98" x2="0" y2="-110" stroke="#C9D1DE" stroke-width="5"/>
     <g id="shirt" class="shirt-pop">${SHIRT}</g></g>
+  <g transform="translate(205 306)"><g id="shoes" class="item">
+    ${[-26, 22].map(x => `<g transform="translate(${x} 0)"><path d="M-24 0 L-24 -18 Q-16 -26 -4 -20 L8 -10 Q22 -8 24 0 L24 4 L-24 4 Z" fill="var(--shirt)" stroke="#11151F" stroke-width="3"/>
+      <path d="M-14 -16 l8 4 M-10 -20 l8 4" stroke="#fff" stroke-width="2.5"/><path d="M-20 4 v5 M-8 4 v5 M6 4 v5 M18 4 v5" stroke="#11151F" stroke-width="4"/></g>`).join('')}</g></g>
+  <g transform="translate(470 296) scale(1.4)"><g id="lball" class="item">${BALL}</g></g>
   <g id="coachbig" class="coachbig" transform="translate(530 120) scale(1.9)">${ART.coach.replace(/<svg[^>]*>/, '').replace('</svg>', '').replace('<circle cx="50" cy="50" r="50" fill="#FFC93C"/>', '')}</g>
 </svg>`;
 
@@ -198,10 +242,6 @@ const KEEPER = `<g class="keeper-body">
   <circle cx="-50" cy="-82" r="9" fill="#FF8A1F"/><circle cx="50" cy="-82" r="9" fill="#FF8A1F"/>
   <circle cx="0" cy="-66" r="14" fill="#C68B59"/><path d="M-14 -70 C-12 -86 12 -86 14 -70 C8 -76 -8 -76 -14 -70 Z" fill="#1B1B1B"/>
   <circle cx="-5" cy="-66" r="1.8" fill="#111"/><circle cx="5" cy="-66" r="1.8" fill="#111"/></g>`;
-
-const BALL = `<circle r="16" fill="#fff" stroke="#11151F" stroke-width="2.5"/>
-  <path d="M0 -6 L6 -2 L4 5 L-4 5 L-6 -2 Z" fill="#11151F"/>
-  <path d="M0 -6 L0 -15 M6 -2 L14 -6 M4 5 L9 13 M-4 5 L-9 13 M-6 -2 L-14 -6" stroke="#11151F" stroke-width="2"/>`;
 
 const PLAYER = `<g class="player-body">
   <rect x="-15" y="40" width="12" height="42" rx="5" fill="#E9B48A"/><rect x="3" y="40" width="12" height="42" rx="5" fill="#E9B48A"/>
@@ -231,7 +271,7 @@ ART.stadium = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid sl
       ${Array.from({length: 6}, (_, i) => `<line x1="258" y1="${158 + i * 20}" x2="542" y2="${158 + i * 20}"/>`).join('')}</g>
     <path d="M254 264 L254 148 L546 148 L546 264" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round"/></g>
   <g id="keeper" class="keeper" transform="translate(400 258)">${KEEPER}</g>
-  <g id="targets" class="targets">${[['left', 305, 185], ['mid', 400, 200], ['right', 495, 185]].map(([k, x, y]) => `<g class="target" data-t="${k}" transform="translate(${x} ${y})"><circle r="30" fill="#FFD23F" opacity=".35"/><circle r="30" fill="none" stroke="#FFD23F" stroke-width="5"/><circle r="8" fill="#FFD23F"/></g>`).join('')}</g>
+  <g id="targets" class="targets">${[['red', 305, 185, '#E5484D'], ['yellow', 400, 200, '#F5C400'], ['blue', 495, 185, '#2F7CF6']].map(([k, x, y, c]) => `<g class="target" data-t="${k}" transform="translate(${x} ${y})"><circle r="30" fill="${c}" opacity=".45"/><circle r="30" fill="none" stroke="${c}" stroke-width="6"/><circle r="9" fill="#fff"/></g>`).join('')}</g>
   <g id="ball" class="ball" transform="translate(400 392)"><g class="ball-spin">${BALL}</g></g>
   <g id="player" class="player" transform="translate(330 330)">${PLAYER}</g>
 </svg>`;
