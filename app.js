@@ -25,6 +25,18 @@ const TR = {
   HC_okay:'Tudo bem, campeão! Você consegue!', HC_ready:'Campeão! Você está pronto?', HC_yes:'Isso!',
   E_yes:'Isso! Vamos jogar!', E_shoes:'Chuteiras legais! Pés rápidos!', E_ball:'Isso! A bola! Vamos lá!', E2_yes:'Isso! Você consegue!',
   E_goal:'Gol! Você é campeão!', E_shirt_red:'Uma camisa vermelha! Legal!', E_shirt_blue:'Uma camisa azul! Legal!', E_shirt_yellow:'Uma camisa amarela! Legal!',
+  // missão 2
+  V04:'Ha ha ha! O Cristal de Luz é meu! Sua base ficou sem energia!', V05:'Você de novo? Vai pra casa, pilotinho!', V06:'Drones! Ataquem!',
+  V07:'Meu cristal! Nããão!', V08:'Isso não acabou! Eu vou voltar!',
+  L2_07:'Lucas, você precisa de uma espada. Pegue!', L2_17:'Você conseguiu, Lucas! Você é um cavaleiro do espaço!',
+  LN2_color:'De que cor é a sua espada? Vermelha, azul ou verde?', LN2_left:'Esquerda!', LN2_right:'Direita!', LN2_sword:'Espada!', LN2_shield:'Escudo!',
+  E_sword:'Uma espada! Zum, zum!', E_shield:'Um escudo! Você está protegido!', E2_shield:'Escudo ligado! Nada te acerta!',
+  E2_sword:'Zum! Belo golpe!', E3_light:'Luz! O cristal voltou!',
+  E_sword_red:'Uma espada vermelha! Demais!', E_sword_blue:'Uma espada azul! Demais!', E_sword_green:'Uma espada verde! Demais!',
+  T05:'Campeão! Sábado não tem gol! Rá rá!', T06:'Hoje não tem gol, campeão!', T07:'O quê? De cabeça?', T08:'Tá bom, tá bom... Você é bom, campeão.',
+  HC2_what:'O que é isso?', HC2_pass:'Passa! Passa a bola!', HC2_head:'Cabeça! Cabeça!', HC2_left:'Esquerda!', HC2_right:'Direita!',
+  HC2_where:'Esquerda ou direita?', HC2_end:'Grande jogo, campeão! Você joga pro time!',
+  E_pass:'Belo passe! Trabalho em equipe!', E_head:'Cabeça! Bela cabeçada!', E2_pass:'Isso! Bom passe!', E2_head:'Cabeçada! Gol!',
 };
 const WHO = {nova:['Capitã Nova', ART.nova], vortex:['Lorde Vortex', ART.vortex], bip:['Bip', ART.bip],
   coach:['Coach Max', ART.coach], tony:['Big Tony', ART.tony], narr:['Narrador', ART.narr]};
@@ -48,7 +60,7 @@ function evaluate(alts, words){
 const KEY = 'missao-ingles-mvp';
 let SAVE = {lucas:{plays:0, best:0, last:null, streak:0}, henrique:{plays:0, best:0, last:null, streak:0}};
 try { const d = JSON.parse(localStorage.getItem(KEY) || 'null'); if (d) Object.assign(SAVE, d); } catch (e) {}
-for (const k in SAVE) SAVE[k].words = SAVE[k].words || {};
+for (const k in SAVE) { SAVE[k].words = SAVE[k].words || {}; if (SAVE[k].plays && !SAVE[k].m) SAVE[k].m = 1; }   // m = última missão vencida
 const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(SAVE)); } catch (e) {} };
 const today = () => new Date().toLocaleDateString('sv');
 function recordWin(kid, stars){
@@ -60,8 +72,13 @@ function recordWin(kid, stars){
 // tap = botão "Falei!" (sem microfone, não deu para conferir) · parent = o adulto confirmou · help = o ajudante falou junto
 function stat(w, how){
   const s = SAVE[G.kid].words[w] = SAVE[G.kid].words[w] || {first:0, fixed:0, help:0};
-  s[how] = (s[how] || 0) + 1; s.last = today(); persist();
+  s[how] = (s[how] || 0) + 1; s.last = today(); s.lastHow = how; persist();
   G.result[w] = how === 'help' ? 'help' : (G.result[w] === 'help' ? 'help' : 'ok');
+}
+// revisão no começo da missão: primeiro as palavras que da última vez precisaram de ajuda
+function pickReview(words, n){
+  const weight = w => { const h = (SAVE[G.kid].words[w] || {}).lastHow; return (h === 'help' ? 4 : h && h !== 'first' ? 2 : 0) + Math.random(); };
+  return words.map(w => [weight(w), w]).sort((a, b) => b[0] - a[0]).slice(0, n).map(x => x[1]);
 }
 
 // ---------------- jogo em andamento / cancelamento ----------------
@@ -271,11 +288,11 @@ async function speak(w, {model = true, hide = !model, intro = [], say = false, e
 }
 
 // A criança escolhe falando uma das opções (cores). Tocar numa opção só faz ouvir.
-async function speakChoice(opts, {list, expand, onOk} = {}){
+async function speakChoice(opts, {list, expand, onOk, labels} = {}){
   const T = G.T, P = G.P, keys = Object.keys(opts);
   let phon = false, heardMsg = null, adult = false;
   const draw = () => {
-    act(`${keys.map(k => `<button class="choice" data-k="${k}" style="background:${opts[k]}">${phon ? `<span class="ph">${VOCAB[k].say}</span>` : k}</button>`).join('')}
+    act(`${keys.map(k => `<button class="choice" data-k="${k}" style="background:${opts[k]}">${phon ? `<span class="ph">${VOCAB[k].say}</span>` : labels ? labels[k] + '<br>' + k : k}</button>`).join('')}
       ${micButton()}<div class="heard" id="heard"></div>${adultButton(adult)}`);
     document.querySelectorAll('.choice').forEach(b => b.onclick = () => play(`W_${T}_${b.dataset.k}`).catch(() => {}));
     if (heardMsg) showHeard(heardMsg);
@@ -337,20 +354,24 @@ async function listenTap(target, sayKey, wrongKey){
 const tapButtons = list => act(list.map(([k, icon, label]) => `<button class="arrow" data-k="${k}" aria-label="${label}">${icon}</button>`).join(''));
 
 // ---------------- prêmio ----------------
-function reward({badge, title, next, kid}){
-  recordWin(kid, G.stars);
+function reward({badge, title, next, kid, homeplay}){
+  recordWin(kid, G.stars); SAVE[kid].m = Math.max(SAVE[kid].m || 0, G.m); persist();
   const words = Object.keys(G.result), review = words.filter(w => G.result[w] === 'help');
   const div = document.createElement('div'); div.className = 'reward';
   div.innerHTML = `<div class="badge">${badge}</div><h2>${title}</h2>
     <div class="row"><span class="chip">⭐ ${G.stars} de ${G.max}</span><span class="chip">🔥 ${SAVE[kid].streak} ${SAVE[kid].streak === 1 ? 'dia' : 'dias'}</span></div>
     <div class="row">${words.map(w => `<span class="chip ${G.result[w]}">${G.result[w] === 'ok' ? '✅' : '🔁'} ${w}</span>`).join('')}</div>
     ${review.length ? `<div class="small-note">🔁 treinar amanhã: ${review.join(', ')}</div>` : ''}
-    <div class="locked">🔒 ${next}</div><div class="row" id="rbtns"></div>`;
+    ${homeplay ? `<div class="homeplay">🏠 ${homeplay}</div>` : ''}
+    <div class="locked">${next}</div><div class="row" id="rbtns"></div>`;
   app.appendChild(div); confetti(80);
 }
 function endButtons(kid){
-  act(''); el('rbtns').innerHTML = `<button class="next" id="again">Jogar de novo</button><button class="next" id="home" style="background:#fff">Início</button>`;
-  el('again').onclick = () => start(kid);
+  const m = G.m, more = LESSONS[kid][m];
+  act(''); el('rbtns').innerHTML = (more ? `<button class="next" id="more">Missão ${m + 1} ▶</button>` : '')
+    + `<button class="next" id="again"${more ? ' style="background:#fff"' : ''}>Jogar de novo</button><button class="next" id="home" style="background:#fff">Início</button>`;
+  if (more) el('more').onclick = () => start(kid, m + 1);
+  el('again').onclick = () => start(kid, m);
   el('home').onclick = () => { G = null; home(); };
 }
 
@@ -397,7 +418,7 @@ async function lessonLucas(){
   const colors = {red:'#E5484D', blue:'#2F7CF6', green:'#2DBE6C'}, dark = {red:'#A82A2F', blue:'#1F4FA8', green:'#1B7E45'};
   const paint = k => { sc.style.setProperty('--ship', colors[k]); sc.style.setProperty('--ship-dark', dark[k]); };
   await line('LN_color');
-  const c = await speakChoice(colors, {list:'LN_color', expand:k => 'E_ship_' + k, onOk:k => { paint(k); SFX.build(); track(4); }});
+  const c = await speakChoice(colors, {list:'LN_color', expand:k => 'E_ship_' + k, onOk:k => { paint(k); SAVE.lucas.ship = k; persist(); SFX.build(); track(4); }});
   await line('L16'); await line('L17');
 
   // 4. decolar
@@ -465,7 +486,7 @@ async function lessonLucas(){
   fship.style.transform = 'translate(300px,225px) scale(.45)';
 
   await line('L25');
-  reward({kid:'lucas', badge:ART.wings, title:'Asas de Piloto!', next:'Missão 2: A espada de luz · amanhã'});
+  reward({kid:'lucas', badge:ART.wings, title:'Asas de Piloto!', next:'🔓 Missão 2 liberada: A Espada de Luz'});
   await line('L26'); await line('L27');
   endButtons('lucas');
 }
@@ -485,7 +506,7 @@ async function lessonHenrique(){
   await line('H06'); await line('H07');
   const colors = {red:'#E5484D', blue:'#2F7CF6', yellow:'#F5C400'};
   await speakChoice(colors, {list:'H06', expand:k => 'E_shirt_' + k, onOk:k => {
-    sc.style.setProperty('--shirt', colors[k]); restart(el('shirt'), 'pop'); SFX.build(); track(1); }});
+    sc.style.setProperty('--shirt', colors[k]); SAVE.henrique.shirt = k; persist(); restart(el('shirt'), 'pop'); SFX.build(); track(1); }});
   const shirt = getComputedStyle(sc).getPropertyValue('--shirt');
   await speak('shoes', {intro:['H08'], expand:'E_shoes', onOk:() => { el('shoes').classList.add('on'); SFX.build(); track(2); }});
   await speak('ball', {intro:['H09', 'H10'], expand:'E_ball', onOk:() => { el('lball').classList.add('on'); SFX.kick(); track(3); }});
@@ -551,31 +572,237 @@ async function lessonHenrique(){
   }
   await line('H22'); SFX.roar(); confetti(90); track(5);
   await line('T04');
-  reward({kid:'henrique', badge:ART.trophy, title:'Craque da Final!', next:'Missão 2: Treino com o Coach Max · amanhã'});
+  reward({kid:'henrique', badge:ART.trophy, title:'Craque da Final!', next:'🔓 Missão 2 liberada: A Revanche'});
   await line('H23');
+  endButtons('henrique');
+}
+
+// ================= LUCAS · Missão 2 · A Espada de Luz =================
+// Revisão das peças (lembrar sozinho), duas palavras novas para falar (sword, shield),
+// duas para entender e tocar (left, right) e uma batalha em que ele lembra tudo sem modelo.
+async function lessonLucas2(){
+  shell('lucas', 'Esquadrão Estelar · Missão 2', ['🔧', '🗡️', '🛡️', '↔️', '💎', '⭐']);
+  Object.assign(G, {T:'nova', H:'bip', P:'LB', max:9});
+  setScene(ART.hangar());
+  const sc = el('scene'), ship = el('ship');
+  const colors = {red:'#E5484D', blue:'#2F7CF6', green:'#2DBE6C'}, dark = {red:'#A82A2F', blue:'#1F4FA8', green:'#1B7E45'};
+  const sh = SAVE.lucas.ship || 'blue';
+  sc.style.setProperty('--ship', colors[sh]); sc.style.setProperty('--ship-dark', dark[sh]);
+  place(ship, 'translate(450px,270px) scale(.78)');
+  ['wing', 'rocket', 'laser', 'light'].forEach(k => el('p-' + k).classList.add('on'));
+
+  sc.classList.add('alarm-on'); SFX.alarm();
+  await line('L2_01');
+  el('holov').classList.add('show'); SFX.villain();
+  await line('V04');
+  el('holov').classList.remove('show'); sc.classList.remove('alarm-on');
+  await line('L2_02');
+
+  // 1. vistoria: lembrar sozinho as peças que deram mais trabalho ontem
+  await line('L2_03');
+  for (const w of pickReview(['wing', 'rocket', 'laser', 'light'], 2)) {
+    restart(el('p-' + w), 'ping');
+    await speak(w, {model:false, expand:'E_' + w, onOk:() => { restart(el('p-' + w), 'ping'); SFX.build(); }});
+  }
+  track(0); await line('L2_04');
+  await speak('go', {model:false, intro:['L2_05', 'LN_count'], expand:'E_go',
+    onOk:async () => { ship.classList.add('flying', 'launch'); SFX.launch(); ship.style.transform = 'translate(1300px,120px) scale(.78)'; await wait(1300); }});
+
+  // 2. planeta roxo: espada e escudo
+  setScene(ART.planet());
+  sc.style.setProperty('--saber', '#5FD3F3');
+  const hero = el('hero'), hb = hero.querySelector('.hero-body'), saber = el('hsaber'), shield = el('hshield');
+  const vx = el('vortexfig'), vsaber = el('vsaber'), crystal = el('crystal'), bolt = el('bolt'), boom = el('boom');
+  const drones = [el('drone'), el('drone2'), el('drone3')];
+  hero.style.transform = 'translate(230px,400px)'; SFX.whoosh(); await wait(700);
+  vx.style.transform = 'translate(620px,400px)'; crystal.style.transform = 'translate(665px,282px)'; SFX.villain();
+  await line('L2_06'); await line('V05');
+  await line('L2_07');
+  await speak('sword', {intro:['L2_08'], say:true, expand:'E_sword', onOk:() => { saber.classList.add('on'); restart(saber, 'swing'); SFX.build(); track(1); }});
+  await line('L2_09'); await line('LN2_color');
+  const blades = {red:'#FF5A5F', blue:'#5FD3F3', green:'#4BE38A'};
+  await speakChoice(colors, {list:'LN2_color', expand:k => 'E_sword_' + k, onOk:k => { sc.style.setProperty('--saber', blades[k]); restart(saber, 'swing'); SFX.build(); }});
+  await speak('shield', {intro:['L2_10'], expand:'E_shield', onOk:() => { shield.classList.add('on'); restart(shield, 'flash'); SFX.build(); track(2); }});
+
+  // 3. desviar das bolas de energia: ouvir left/right e tocar na seta
+  await line('L2_11');
+  drones[0].style.transform = 'translate(700px,140px)'; await wait(700);
+  for (const dir of shuffle(['left', 'right', 'left', 'right'])) {
+    place(bolt, 'translate(680px,150px)');
+    tapButtons([['left', '⬅️', 'Esquerda'], ['right', '➡️', 'Direita']]);
+    await listenTap(dir, 'LN2_' + dir, 'LB_wrong');
+    act('');
+    hero.style.transform = `translate(${dir === 'left' ? 120 : 340}px,400px)`; restart(hb, 'hop');
+    bolt.style.transform = 'translate(-100px,390px)'; SFX.enemy(); await wait(1000);
+    hero.style.transform = 'translate(230px,400px)'; await wait(500);
+  }
+  place(bolt, 'translate(900px,300px)');
+  await line('L2_12'); track(3);
+
+  // 4. treino: ouvir sword/shield e tocar
+  await line('L2_13');
+  tapButtons([['sword', '🗡️', 'Espada'], ['shield', '🛡️', 'Escudo']]);
+  for (const w of shuffle(['sword', 'shield']).concat([Math.random() < .5 ? 'sword' : 'shield'])) {
+    await listenTap(w, 'LN2_' + w, 'LB_wrong');
+    restart(w === 'sword' ? saber : shield, w === 'sword' ? 'swing' : 'flash'); SFX.tap();
+    await line('LN_yes');
+  }
+  act('');
+
+  // 5. batalha: lembrar shield, sword e light sem ouvir antes
+  drones.forEach((d, i) => { d.style.transform = `translate(${[560, 690, 620][i]}px,${[110, 150, 210][i]}px)`; });
+  SFX.villain(); await line('V06'); SFX.enemy();
+  await line('L2_14');
+  await speak('shield', {model:false, expand:'E2_shield', onOk:async () => {
+    shield.classList.add('big'); SFX.build();
+    for (const d of drones) {
+      const [x, y] = d.style.transform.match(/-?[\d.]+/g).map(Number);
+      place(bolt, `translate(${x}px,${y}px)`); bolt.style.transition = 'transform .4s linear';
+      bolt.style.transform = 'translate(250px,300px)'; SFX.enemy(); await wait(450);
+      restart(shield, 'flash'); bolt.style.transform = `translate(${x}px,${y}px)`; await wait(450);
+      boom.setAttribute('transform', `translate(${x} ${y})`); restart(boom, 'go'); SFX.boom();
+      place(d, 'translate(950px,120px)'); place(bolt, 'translate(900px,300px)'); await wait(300);
+    }
+    shield.classList.remove('big');
+  }});
+
+  await line('L2_15');
+  vx.style.transform = 'translate(430px,400px)'; crystal.style.transform = 'translate(475px,282px)'; await wait(700);
+  restart(vsaber, 'swing'); SFX.laser();
+  await speak('sword', {model:false, expand:'E2_sword', onOk:async () => {
+    restart(saber, 'swing'); SFX.laser(); await wait(250);
+    restart(vx.querySelector('.vortex-body'), 'hit'); SFX.boom();
+    crystal.style.transform = 'translate(340px,350px)'; vx.style.transform = 'translate(640px,400px)'; await wait(800);
+  }});
+  await line('V07');
+  await line('L2_16');
+  await speak('light', {model:false, expand:'E3_light', onOk:() => { crystal.classList.replace('dark', 'lit'); SFX.build(); confetti(30); track(4); }});
+  await line('V08');
+  vx.style.transform = 'translate(1050px,300px)'; SFX.whoosh(); await wait(800);
+
+  await line('L2_17'); track(5);
+  reward({kid:'lucas', badge:ART.saberBadge, title:'Cavaleiro Estelar!', next:'🔒 Missão 3 · em breve',
+    homeplay:'Brincadeira com o papai: ele fala <b>left</b> ou <b>right</b> e você pula pro lado certo. Depois troquem!'});
+  await line('L2_18'); await line('L2_19');
+  endButtons('lucas');
+}
+
+// ================= HENRIQUE · Missão 2 · A Revanche =================
+// Revisão da mochila (lembrar sozinho), duas palavras novas para falar (pass, head),
+// duas para entender e tocar (left, right) e um jogo em que ele lembra tudo e escolhe o canto falando.
+async function lessonHenrique2(){
+  shell('henrique', 'A Revanche', ['🎒', '🤝', '🙆', '↔️', '⚽', '🏅']);
+  Object.assign(G, {T:'coach', H:'narr', P:'HN', max:7});
+  setScene(ART.locker());
+  const sc = el('scene'), colors = {red:'#E5484D', blue:'#2F7CF6', yellow:'#F5C400'};
+  sc.style.setProperty('--shirt', colors[SAVE.henrique.shirt || 'blue']);
+  SFX.crowd(.12, 3);
+  await line('H2_01'); await line('H2_02'); await line('T05');
+  await line('H2_03');
+  el('coachbig').classList.add('show');
+
+  // 1. mochila: lembrar sozinho as palavras que deram mais trabalho ontem
+  for (const w of pickReview(['shoes', 'ball', 'yes'], 2)) {
+    if (w === 'yes') { await speak('yes', {model:false, intro:['HC_ready'], expand:'E2_yes'}); continue; }
+    const item = el(w === 'shoes' ? 'shoes' : 'lball'); item.classList.add('on');
+    await speak(w, {model:false, intro:['HC2_what'], expand:'E_' + w, onOk:() => { restart(item, 'on'); SFX.build(); }});
+  }
+  track(0); await line('H2_04');
+
+  // 2. treino com o irmão: pass e head
+  setScene(ART.stadium(true));
+  const ball = el('ball'), keeper = el('keeper'), player = el('player'), mate = el('mate'), def = el('defender'), net = el('goal').querySelector('.net');
+  const atFeet = () => { place(player, 'translate(250px,360px) scale(.9)'); place(ball, 'translate(305px,412px) scale(.9)'); };
+  place(keeper, 'translate(400px,258px)'); atFeet(); SFX.whistle();
+  mate.style.transform = 'translate(560px,350px) scale(.85)'; await wait(700);
+  await line('H2_05');
+  await speak('pass', {intro:['HC2_pass', 'H2_06'], expand:'E_pass', onOk:async () => {
+    SFX.kick(); ball.style.transform = 'translate(605px,398px) scale(.85)'; await wait(700); track(1); }});
+  await speak('head', {intro:['H2_07'], expand:'E_head', onOk:async () => {
+    SFX.kick(); ball.style.transform = 'translate(262px,296px) scale(.8)'; await wait(700);
+    restart(player.querySelector('.player-body'), 'hop'); keeper.style.transform = 'translate(470px,250px) rotate(70deg)';
+    ball.style.transform = 'translate(330px,190px) scale(.55)'; await wait(600);
+    restart(net, 'shake'); SFX.roar(); track(2); }});
+
+  // 3. drible: ouvir left/right e tocar na seta
+  place(keeper, 'translate(400px,258px)'); atFeet();
+  def.style.transform = 'translate(330px,300px) scale(.8)'; await wait(700);
+  await line('H2_08');
+  for (const dir of shuffle(['left', 'right', 'left', 'right'])) {
+    tapButtons([['left', '⬅️', 'Esquerda'], ['right', '➡️', 'Direita']]);
+    await listenTap(dir, 'HC2_' + dir, 'HN_wrong');
+    act('');
+    const x = dir === 'left' ? 170 : 430;
+    player.style.transform = `translate(${x}px,330px) scale(.88)`; ball.style.transform = `translate(${x + 50}px,384px) scale(.88)`; await wait(750);
+    player.style.transform = 'translate(250px,360px) scale(.9)'; ball.style.transform = 'translate(305px,412px) scale(.9)'; await wait(600);
+  }
+  track(3);
+
+  // 4. treino final: ouvir e tocar pass / head / kick
+  await line('H2_09');
+  tapButtons([['pass', '🤝', 'Passar'], ['head', '🙆', 'Cabecear'], ['kick', '🦶', 'Chutar']]);
+  for (const c of shuffle(['pass', 'head', 'kick'])) { await listenTap(c, c === 'kick' ? 'HC_kick' : 'HC2_' + c, 'HN_wrong'); SFX.kick(); await line('HC_yes'); }
+  act('');
+
+  // 5. a revanche: lembrar pass e head sem ouvir antes, e escolher o canto falando left/right
+  SFX.whistle(); SFX.roar();
+  sc.insertAdjacentHTML('beforeend', '<div class="overlay" style="align-items:flex-start;padding-top:10px"><span class="chip score" id="score">Henrique 0 x 0 Tubarões</span></div>');
+  const score = t => { el('score').textContent = t; restart(el('score'), 'bump'); };
+  await line('H2_10'); await line('T06');
+  atFeet(); def.style.transform = 'translate(340px,310px) scale(.85)'; mate.style.transform = 'translate(560px,350px) scale(.85)';
+  await line('H2_11');
+  await speak('pass', {model:false, expand:'E2_pass', onOk:async () => { SFX.kick(); ball.style.transform = 'translate(605px,398px) scale(.85)'; await wait(700); }});
+  player.style.transform = 'translate(300px,320px) scale(.85)'; await wait(600);
+  await line('H2_12');
+  await speak('head', {model:false, expand:'E2_head', onOk:async () => {
+    SFX.kick(); ball.style.transform = 'translate(310px,258px) scale(.75)'; await wait(700);
+    restart(player.querySelector('.player-body'), 'hop'); keeper.style.transform = 'translate(305px,250px) rotate(-70deg)';
+    ball.style.transform = 'translate(480px,190px) scale(.55)'; await wait(700);
+    restart(net, 'shake'); restart(el('crowd'), 'cheer'); SFX.roar(); confetti(40); score('Henrique 1 x 0 Tubarões'); }});
+  await line('H2_13'); await line('T07');
+
+  place(keeper, 'translate(400px,258px)'); place(player, 'translate(330px,330px)'); place(ball, 'translate(400px,392px)');
+  def.style.transform = 'translate(-200px,330px)';
+  await line('H2_14'); await line('HC2_where');
+  const side = await speakChoice({left:'#2F7CF6', right:'#E5484D'}, {list:'HC2_where', labels:{left:'⬅️', right:'➡️'}});
+  player.style.transform = 'translate(370px,345px)'; SFX.kick();
+  keeper.style.transform = side === 'left' ? 'translate(495px,250px) rotate(70deg)' : 'translate(305px,250px) rotate(-70deg)';
+  ball.style.transform = side === 'left' ? 'translate(300px,185px) scale(.55)' : 'translate(500px,185px) scale(.55)';
+  await wait(750);
+  restart(net, 'shake'); restart(el('crowd'), 'cheer'); SFX.roar(); confetti(60); score('Henrique 2 x 0 Tubarões'); track(4);
+  await line('H2_15'); await line('T08'); await line('HC2_end'); track(5);
+  reward({kid:'henrique', badge:ART.medal, title:'Craque do Time!', next:'🔒 Missão 3 · em breve',
+    homeplay:'Treino com o papai: com uma bolinha de meia, ele grita <b>pass</b>, <b>head</b>, <b>left</b> ou <b>right</b> e você faz. Depois troquem!'});
+  await line('H2_16'); await line('H2_17');
   endButtons('henrique');
 }
 
 // ---------------- início ----------------
 let runSeq = 0;
-function start(kid){
+const LESSONS = {lucas:[lessonLucas, lessonLucas2], henrique:[lessonHenrique, lessonHenrique2]};
+const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche']};
+function start(kid, m = 1){
   actx();                                   // libera o som dentro do toque
   voice.src = 'audio/' + (kid === 'lucas' ? 'L01' : 'H01') + '.mp3'; voice.play().catch(() => {}); voice.pause();
-  G = {id:++runSeq, kid, stars:0, max:0, noMic:false, result:{}};
-  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'E_', 'E2_', 'W_coach', 'S_coach', 'T_narr']);
-  (kid === 'lucas' ? lessonLucas() : lessonHenrique()).catch(e => { if (e !== CANCEL) console.error(e); });
+  G = {id:++runSeq, kid, m, stars:0, max:0, noMic:false, result:{}};
+  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'E_', 'E2_', 'W_coach', 'S_coach', 'T_narr']);
+  LESSONS[kid][m - 1]().catch(e => { if (e !== CANCEL) console.error(e); });
 }
 
 function home(){
   document.body.className = 'home';
   const status = k => { const s = SAVE[k]; return s.plays ? `🔥 ${s.streak} ${s.streak === 1 ? 'dia' : 'dias'} · ⭐ recorde ${s.best}` : 'Missão 1 esperando'; };
+  // a missão seguinte abre quando a anterior é vencida; o botão principal é a mais nova aberta
+  const btns = k => { const open = Math.min((SAVE[k].m || 0) + 1, LESSONS[k].length);
+    return MISSIONS[k].map((t, i) => i + 1 > open ? `<button class="go alt" disabled>🔒 ${t}</button>`
+      : `<button class="go${i + 1 === open ? '' : ' alt'}" data-kid="${k}" data-m="${i + 1}">▶ ${t}</button>`).reverse().join(''); };
   app.innerHTML = `<div class="home-wrap">
     <h1>Missão Inglês</h1><p class="sub">Quem vai jogar hoje?</p>
     <div class="cards">
-      <button class="kid l" id="k-lucas"><div class="art">${ART.space()}</div>
-        <div class="info"><b>Lucas</b><span class="meta">Esquadrão Estelar · monte sua nave e enfrente o Lorde Vortex</span><span class="meta">${status('lucas')}</span><span class="go">Jogar ▶</span></div></button>
-      <button class="kid h" id="k-henrique"><div class="art">${ART.stadium()}</div>
-        <div class="info"><b>Henrique</b><span class="meta">A Grande Final · vença o Big Tony nos pênaltis</span><span class="meta">${status('henrique')}</span><span class="go">Jogar ▶</span></div></button>
+      <div class="kid l" id="k-lucas"><div class="art">${ART.space()}</div>
+        <div class="info"><b>Lucas</b><span class="meta">Esquadrão Estelar · enfrente o Lorde Vortex</span><span class="meta">${status('lucas')}</span><div class="btns">${btns('lucas')}</div></div></div>
+      <div class="kid h" id="k-henrique"><div class="art">${ART.stadium()}</div>
+        <div class="info"><b>Henrique</b><span class="meta">Futebol com o Coach Max · vença o Big Tony</span><span class="meta">${status('henrique')}</span><div class="btns">${btns('henrique')}</div></div></div>
     </div>
     <section class="parent"><h3>Para os pais: teste o microfone</h3>
       <p class="small">${SR ? 'Toque no botão e fale uma palavra em inglês (por exemplo: “ball”). O app mostra o que entendeu. No jogo, só vale a palavra certa: se a criança falar outra parecida, ela recebe uma dica de pronúncia e tenta de novo.'
@@ -587,8 +814,7 @@ function home(){
   place(ls.querySelector('#fship'), 'translate(260px,225px) scale(.6)');
   place(ls.querySelector('#drone'), 'translate(640px,150px)');
   app.querySelector('#k-henrique .art').style.setProperty('--shirt', '#F5C400');
-  el('k-lucas').onclick = () => start('lucas');
-  el('k-henrique').onclick = () => start('henrique');
+  app.querySelectorAll('.btns [data-m]').forEach(b => b.onclick = () => start(b.dataset.kid, +b.dataset.m));
   if (SR) el('mtest').onclick = () => {
     const b = el('mtest'); b.disabled = true;
     recognize([], null, t => el('mres').textContent = t).then(r => {

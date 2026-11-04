@@ -243,6 +243,7 @@ const KEEPER = `<g class="keeper-body">
   <circle cx="0" cy="-66" r="14" fill="#C68B59"/><path d="M-14 -70 C-12 -86 12 -86 14 -70 C8 -76 -8 -76 -14 -70 Z" fill="#1B1B1B"/>
   <circle cx="-5" cy="-66" r="1.8" fill="#111"/><circle cx="5" cy="-66" r="1.8" fill="#111"/></g>`;
 
+const playerSVG = (name, shirt) => PLAYER.replace('HENRIQUE', name).replace('var(--shirt)', shirt);
 const PLAYER = `<g class="player-body">
   <rect x="-15" y="40" width="12" height="42" rx="5" fill="#E9B48A"/><rect x="3" y="40" width="12" height="42" rx="5" fill="#E9B48A"/>
   <rect x="-16" y="62" width="14" height="22" rx="4" fill="#fff"/><rect x="2" y="62" width="14" height="22" rx="4" fill="#fff"/>
@@ -253,7 +254,7 @@ const PLAYER = `<g class="player-body">
   <circle cx="0" cy="-46" r="15" fill="#E9B48A"/><path d="M-15 -46 C-16 -66 16 -66 15 -46 C12 -52 -12 -52 -15 -46 Z" fill="#5A3A22"/>
   <path d="M-15 -48 C-15 -40 15 -40 15 -48 C14 -60 -14 -60 -15 -48 Z" fill="#5A3A22"/></g>`;
 
-ART.stadium = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}
+ART.stadium = (mates = false) => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}
   <rect width="800" height="450" fill="url(#sky)"/>
   ${stars(25, 5, 800, 100)}
   <g><circle cx="70" cy="40" r="110" fill="url(#flood)"/><circle cx="730" cy="40" r="110" fill="url(#flood)"/>
@@ -272,8 +273,89 @@ ART.stadium = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid sl
     <path d="M254 264 L254 148 L546 148 L546 264" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round"/></g>
   <g id="keeper" class="keeper" transform="translate(400 258)">${KEEPER}</g>
   <g id="targets" class="targets">${[['red', 305, 185, '#E5484D'], ['yellow', 400, 200, '#F5C400'], ['blue', 495, 185, '#2F7CF6']].map(([k, x, y, c]) => `<g class="target" data-t="${k}" transform="translate(${x} ${y})"><circle r="30" fill="${c}" opacity=".45"/><circle r="30" fill="none" stroke="${c}" stroke-width="6"/><circle r="9" fill="#fff"/></g>`).join('')}</g>
+  ${mates ? `<g id="defender" class="player" transform="translate(-200 330)">${playerSVG('TUBARÕES', '#7C3AED')}</g>
+  <g id="mate" class="player" transform="translate(-200 330)">${playerSVG('LUCAS', 'var(--shirt)')}</g>` : ''}
   <g id="ball" class="ball" transform="translate(400 392)"><g class="ball-spin">${BALL}</g></g>
   <g id="player" class="player" transform="translate(330 330)">${PLAYER}</g>
+</svg>`;
+
+// ---------------- Lucas, Missão 2: planeta roxo ----------------
+// Lucas de corpo inteiro (pés no 0,0, olhando para a direita), com espada e escudo que aparecem depois
+const HERO = `<g class="hero-body">
+  <g id="hshield" class="hshield" transform="translate(-34 -100)"><g class="shield-in">
+    <ellipse rx="30" ry="40" fill="#5FD3F3" opacity=".35" stroke="#9EF0FF" stroke-width="5"/>
+    <ellipse rx="16" ry="24" fill="none" stroke="#E6FDFF" stroke-width="3" opacity=".8"/></g></g>
+  <rect x="-17" y="-62" width="14" height="58" rx="6" fill="#C65A12"/><rect x="3" y="-62" width="14" height="58" rx="6" fill="#C65A12"/>
+  <path d="M-21 -8 h20 v9 h-24 Z M2 -8 h20 l5 9 h-25 Z" fill="#2B2F3A"/>
+  <path d="M-27 -122 L27 -122 L25 -58 L-25 -58 Z" fill="#F07A22" stroke="#11151F" stroke-width="2.5"/>
+  <rect x="-26" y="-70" width="52" height="9" fill="#2B2F3A"/><rect x="-6" y="-71" width="12" height="11" rx="2" fill="#FFD23F"/>
+  <path d="M-10 -112 L0 -100 L10 -112" fill="none" stroke="#FFE3C4" stroke-width="3"/>
+  <path d="M12 -106 l2 4 4.5.5 -3.3 3 1 4.4 -4.2 -2.3 -4.2 2.3 1 -4.4 -3.3 -3 4.5 -.5 Z" fill="#FFD23F"/>
+  <path d="M-26 -116 Q-44 -96 -36 -88" fill="none" stroke="#F07A22" stroke-width="12" stroke-linecap="round"/>
+  <g id="hsaber" class="hsaber" transform="translate(30 -98)"><g class="saber-in">
+    <path d="M-6 -16 Q8 -10 4 6" fill="none" stroke="#F07A22" stroke-width="12" stroke-linecap="round"/>
+    <g class="blade"><rect x="-4" y="-104" width="9" height="96" rx="4.5" fill="var(--saber)" opacity=".55" class="glow"/>
+      <rect x="-2" y="-100" width="5" height="90" rx="2.5" fill="#fff"/></g>
+    <rect x="-5" y="-10" width="11" height="24" rx="3" fill="#9AA3B5" stroke="#2B2F3A" stroke-width="2"/></g></g>
+  <circle cx="0" cy="-146" r="24" fill="#E9B48A"/>
+  <path d="M-25 -148 C-28 -176 26 -178 25 -150 C18 -160 -8 -164 -25 -148 Z" fill="#5A3A22"/>
+  <circle cx="6" cy="-146" r="3" fill="#1A1A1A"/><circle cx="17" cy="-146" r="3" fill="#1A1A1A"/>
+  <path d="M5 -134 q7 5 13 0" stroke="#8A3B2A" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <text x="0" y="-80" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="11" fill="#fff">LUCAS</text></g>`;
+
+// Lorde Vortex de corpo inteiro (pés no 0,0, olhando para a esquerda)
+const VORTEX = `<g class="vortex-body">
+  <path d="M-40 -176 L40 -176 L66 0 L-66 0 Z" fill="#4B1670" stroke="#8E4DFF" stroke-width="3"/>
+  <rect x="-20" y="-64" width="16" height="62" rx="5" fill="#141018"/><rect x="4" y="-64" width="16" height="62" rx="5" fill="#141018"/>
+  <rect x="-30" y="-178" width="60" height="118" rx="12" fill="#141018" stroke="#8E4DFF" stroke-width="3"/>
+  <path d="M-16 -150 h32 M-14 -140 h28 M-12 -130 h24" stroke="#8E4DFF" stroke-width="3"/>
+  <circle cx="0" cy="-108" r="8" fill="#FF3B3B" class="blink"/>
+  <g id="vsaber" class="vsaber" transform="translate(-34 -120)"><g class="saber-in">
+    <path d="M30 4 Q10 6 2 -4" fill="none" stroke="#141018" stroke-width="13" stroke-linecap="round"/>
+    <rect x="-4" y="-100" width="9" height="94" rx="4.5" fill="#FF3B3B" opacity=".6" class="glow"/>
+    <rect x="-2" y="-96" width="5" height="88" rx="2.5" fill="#FFE0E0"/>
+    <rect x="-5" y="-8" width="11" height="22" rx="3" fill="#3A3F4B"/></g></g>
+  <path d="M30 -166 Q52 -130 40 -112" fill="none" stroke="#141018" stroke-width="13" stroke-linecap="round"/>
+  <path d="M-26 -186 C-28 -232 28 -232 26 -186 L28 -168 L-28 -168 Z" fill="#141018" stroke="#8E4DFF" stroke-width="3"/>
+  <path d="M0 -236 L5 -214 L-5 -214 Z" fill="#8E4DFF"/>
+  <path d="M-20 -200 L-4 -196 L-6 -190 L-20 -194 Z M12 -198 L22 -199 L21 -193 L11 -192 Z" fill="#FF3B3B" class="blink"/></g>`;
+
+const CRYSTAL = `<g class="crystal-art"><ellipse cx="0" cy="0" rx="34" ry="34" fill="#7DF9FF" opacity=".0" class="aura"/>
+  <path d="M0 -30 L18 -6 L10 26 L-10 26 L-18 -6 Z" class="gem" stroke="#11151F" stroke-width="2.5"/>
+  <path d="M0 -30 L4 -6 L0 26 M-18 -6 H18" stroke="#fff" stroke-width="2" opacity=".5" fill="none"/></g>`;
+
+ART.planet = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}
+  <defs><linearGradient id="psky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12062B"/><stop offset="1" stop-color="#4A1D6E"/></linearGradient></defs>
+  <rect width="800" height="450" fill="url(#psky)"/>
+  ${stars(70, 21, 800, 260)}
+  <circle cx="660" cy="80" r="42" fill="#C9B6FF" opacity=".85"/><circle cx="140" cy="60" r="18" fill="#FFB86B" opacity=".8"/>
+  <path d="M0 300 Q120 250 260 290 T520 280 T800 290 V450 H0 Z" fill="#3B1D5A"/>
+  <path d="M0 340 Q200 320 400 345 T800 335 V450 H0 Z" fill="#2A1242"/>
+  <g fill="#1B0B2E">${[[90, 352, 22], [520, 362, 16], [740, 350, 26], [300, 372, 12]].map(([x, y, r]) => `<ellipse cx="${x}" cy="${y}" rx="${r * 1.6}" ry="${r * .7}"/>`).join('')}</g>
+  <g transform="translate(110 300) scale(.28)"><g>${shipSVG(['rocket', 'wing', 'laser', 'light'])}</g></g>
+  <g id="bolt" class="bolt" transform="translate(900 300)"><circle r="16" fill="#B57BFF" opacity=".5"/><circle r="9" fill="#F3E8FF"/></g>
+  <g id="vortexfig" class="fig" transform="translate(1000 400)">${VORTEX}</g>
+  <g id="crystal" class="crystal dark" transform="translate(1000 280)">${CRYSTAL}</g>
+  <g id="hero" class="fig" transform="translate(-150 400)">${HERO}</g>
+  <g id="drone" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="drone2" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="drone3" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="boom" class="boom" transform="translate(-200 -200)">${Array.from({length: 10}, (_, i) => `<circle class="spark" r="${8 + (i % 3) * 5}" fill="${['#FFE066', '#FF8A1F', '#FF4D4D'][i % 3]}" style="--a:${i * 36}deg"/>`).join('')}</g>
+</svg>`;
+
+ART.saberBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
+  <circle cx="70" cy="70" r="62" fill="#1D2B53" stroke="#FFD23F" stroke-width="6"/>
+  <g transform="rotate(35 70 70)"><rect x="66" y="14" width="9" height="80" rx="4.5" fill="#5FD3F3"/><rect x="68" y="18" width="5" height="74" rx="2.5" fill="#fff"/><rect x="64" y="92" width="13" height="26" rx="3" fill="#9AA3B5" stroke="#2B2F3A" stroke-width="2"/></g>
+  <g transform="rotate(-35 70 70)"><rect x="66" y="14" width="9" height="80" rx="4.5" fill="#FF5A5F"/><rect x="68" y="18" width="5" height="74" rx="2.5" fill="#fff"/><rect x="64" y="92" width="13" height="26" rx="3" fill="#9AA3B5" stroke="#2B2F3A" stroke-width="2"/></g>
+  <path d="M70 52 l6 12 13 2 -9.5 9 2.3 13 -11.8 -6.3 -11.8 6.3 2.3 -13 -9.5 -9 13 -2 Z" fill="#FFD23F" stroke="#B98900" stroke-width="2"/>
+</svg>`;
+
+ART.medal = `<svg viewBox="0 0 140 150" aria-hidden="true">
+  <path d="M40 0 L62 60 L78 60 L56 0 Z" fill="#2F7CF6"/><path d="M100 0 L78 60 L62 60 L84 0 Z" fill="#E5484D"/>
+  <circle cx="70" cy="98" r="46" fill="url(#gold2)" stroke="#9A6A00" stroke-width="4"/>
+  <circle cx="70" cy="98" r="33" fill="none" stroke="#FFF1A6" stroke-width="3" opacity=".7"/>
+  <g transform="translate(70 98) scale(1.5)">${BALL}</g>
+  <defs><radialGradient id="gold2" cx=".35" cy=".3"><stop offset="0" stop-color="#FFF1A6"/><stop offset=".6" stop-color="#F5B700"/><stop offset="1" stop-color="#B07800"/></radialGradient></defs>
 </svg>`;
 
 ART.trophy = `<svg viewBox="0 0 120 140" aria-hidden="true">

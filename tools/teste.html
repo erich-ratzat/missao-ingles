@@ -39,10 +39,10 @@ voice.defaultPlaybackRate = 4;
 const realLine = line;
 line = key => { LOG.push('  ' + key); voice.defaultPlaybackRate = 4; return realLine(key); };
 window.until = async k => { for (let i = 0; i < 600 && !LOG.includes('  ' + k); i++) await new Promise(r => setTimeout(r, 100)); return LOG.includes('  ' + k); };
-window.runTest = (kid, plan) => new Promise(done => {
+window.runTest = (kid, plan, m = 1) => new Promise(done => {
   window.DONE = null;
   PLAN = plan || {}; LOG = []; window.__words = [];
-  start(kid);
+  start(kid, m);
   const t = setInterval(() => {
     const err = document.querySelector('.reward') && document.getElementById('again');
     if (err) { clearInterval(t); done(window.DONE = {stars:G.stars, max:G.max, result:G.result, log:LOG}); return; }

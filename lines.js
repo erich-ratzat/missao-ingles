@@ -244,6 +244,154 @@ const LINES = {
   "who": "bip",
   "text": "Opa, essa não. Escute de novo!"
  },
+ "L2_01": {
+  "who": "bip",
+  "text": "Lucas! Alerta! O Lorde Vortex voltou, como prometeu!"
+ },
+ "V04": {
+  "who": "vortex",
+  "text": "Ha ha ha! I have the Light Crystal! Your base has no power!"
+ },
+ "L2_02": {
+  "who": "bip",
+  "text": "Ele roubou o Cristal de Luz! É ele que dá energia pra base inteira. Sem ele, tudo vai apagar!"
+ },
+ "L2_03": {
+  "who": "bip",
+  "text": "Antes de sair, vistoria da nave! Eu mostro a peça e você fala o nome em inglês. Desta vez a Capitã não fala antes. Você lembra!"
+ },
+ "L2_04": {
+  "who": "bip",
+  "text": "Nave pronta! O Vortex fugiu para o planeta roxo. Vamos atrás dele!"
+ },
+ "L2_05": {
+  "who": "bip",
+  "text": "Pra decolar, o que a gente grita? Fala quando a Capitã terminar de contar!"
+ },
+ "L2_06": {
+  "who": "bip",
+  "text": "Pousamos no planeta roxo! Olha lá: é o Vortex, com o cristal!"
+ },
+ "V05": {
+  "who": "vortex",
+  "text": "You again? Go home, little pilot!"
+ },
+ "L2_07": {
+  "who": "nova",
+  "text": "Lucas, you need a sword. Take this!"
+ },
+ "L2_08": {
+  "who": "bip",
+  "text": "A Capitã te mandou uma espada de luz! Espada, em inglês, é..."
+ },
+ "L2_09": {
+  "who": "bip",
+  "text": "Escolha a cor da sua espada! Toque nas cores pra ouvir, e fale a cor que você quer."
+ },
+ "L2_10": {
+  "who": "bip",
+  "text": "E eu fiz um presente pra você: um escudo de energia, pra te proteger! Escudo, em inglês, é..."
+ },
+ "L2_11": {
+  "who": "bip",
+  "text": "Cuidado! Os drones do Vortex estão atirando bolas de energia! A Capitã vai gritar pra onde pular: left é esquerda, right é direita. Escute e toque na seta! Se quiser, pula de verdade!"
+ },
+ "L2_12": {
+  "who": "bip",
+  "text": "Ufa! Nenhuma bola acertou você!"
+ },
+ "L2_13": {
+  "who": "bip",
+  "text": "Agora a Capitã vai treinar você. Quando ela falar sword, toque na espada. Quando falar shield, toque no escudo."
+ },
+ "V06": {
+  "who": "vortex",
+  "text": "Drones! Attack!"
+ },
+ "L2_14": {
+  "who": "bip",
+  "text": "Muitos drones atirando ao mesmo tempo! Não dá pra pular de todos! O que te protege?"
+ },
+ "L2_15": {
+  "who": "bip",
+  "text": "Os drones fugiram! Agora é você contra o Vortex. O que você usa pra lutar?"
+ },
+ "V07": {
+  "who": "vortex",
+  "text": "My crystal! Nooo!"
+ },
+ "L2_16": {
+  "who": "bip",
+  "text": "O Vortex derrubou o cristal! Mas ele apagou... Fala a palavra que acende tudo!"
+ },
+ "V08": {
+  "who": "vortex",
+  "text": "This is not over! I will be back!"
+ },
+ "L2_17": {
+  "who": "nova",
+  "text": "You did it, Lucas! You are a space knight!"
+ },
+ "L2_18": {
+  "who": "bip",
+  "text": "O cristal voltou pra base e tudo acendeu de novo! Você virou Cavaleiro Estelar!"
+ },
+ "L2_19": {
+  "who": "bip",
+  "text": "Agora uma missão fora da tela! Chama o papai. Ele fala left ou right, e você pula pro lado certo. Depois troca: você é a Capitã e o papai pula!"
+ },
+ "LN2_color": {
+  "who": "nova",
+  "text": "What color is your sword? Red, blue, or green?"
+ },
+ "LN2_left": {
+  "who": "nova",
+  "text": "Left!"
+ },
+ "LN2_right": {
+  "who": "nova",
+  "text": "Right!"
+ },
+ "LN2_sword": {
+  "who": "nova",
+  "text": "Sword!"
+ },
+ "LN2_shield": {
+  "who": "nova",
+  "text": "Shield!"
+ },
+ "E_sword": {
+  "who": "nova",
+  "text": "A sword! Zoom, zoom!"
+ },
+ "E_shield": {
+  "who": "nova",
+  "text": "A shield! You are safe!"
+ },
+ "E2_shield": {
+  "who": "nova",
+  "text": "Shield up! Nothing can hit you!"
+ },
+ "E2_sword": {
+  "who": "nova",
+  "text": "Zoom! Great move!"
+ },
+ "E3_light": {
+  "who": "nova",
+  "text": "Light! The crystal is back!"
+ },
+ "E_sword_red": {
+  "who": "nova",
+  "text": "A red sword! Awesome!"
+ },
+ "E_sword_blue": {
+  "who": "nova",
+  "text": "A blue sword! Awesome!"
+ },
+ "E_sword_green": {
+  "who": "nova",
+  "text": "A green sword! Awesome!"
+ },
  "H01": {
   "who": "narr",
   "text": "Olá, olá, torcida! Hoje é dia de grande final!"
@@ -444,6 +592,134 @@ const LINES = {
   "who": "narr",
   "text": "Opa, essa não. Escute o Coach de novo!"
  },
+ "H2_01": {
+  "who": "narr",
+  "text": "Bom dia, campeão! Depois da final, o Coach Max preparou um treino especial."
+ },
+ "H2_02": {
+  "who": "narr",
+  "text": "E tem novidade: no sábado tem revanche contra os Tubarões. O Big Tony mandou um recado!"
+ },
+ "T05": {
+  "who": "tony",
+  "text": "Champ! Saturday, no goals! Ha ha!"
+ },
+ "H2_03": {
+  "who": "narr",
+  "text": "Ele disse que no sábado não vai ter gol. Vamos treinar! Primeiro o Coach confere a mochila. Desta vez ele não fala a palavra antes: você lembra!"
+ },
+ "H2_04": {
+  "who": "narr",
+  "text": "Mochila pronta! Vamos pro campo!"
+ },
+ "H2_05": {
+  "who": "narr",
+  "text": "Olha quem veio treinar com você: o seu irmão Lucas! Ele joga no seu time."
+ },
+ "H2_06": {
+  "who": "narr",
+  "text": "Pass é passar a bola pro amigo. Escute o Coach e repita!"
+ },
+ "H2_07": {
+  "who": "narr",
+  "text": "Agora o Lucas vai cruzar a bola pro alto. Pra cabecear, você bate com a cabeça. Cabeça, em inglês, é..."
+ },
+ "H2_08": {
+  "who": "narr",
+  "text": "Agora o drible! Tem um zagueiro na frente. O Coach grita left, esquerda, ou right, direita. Toque na seta pro lado certo. Se quiser, dá um pulinho pro lado de verdade!"
+ },
+ "H2_09": {
+  "who": "narr",
+  "text": "Driblou! Agora o treino final: o Coach grita e você toca no que ele mandou. Passar, cabecear ou chutar!"
+ },
+ "H2_10": {
+  "who": "narr",
+  "text": "Chegou o sábado! Revanche contra os Tubarões! E o Big Tony está no gol."
+ },
+ "T06": {
+  "who": "tony",
+  "text": "No goals today, champ!"
+ },
+ "H2_11": {
+  "who": "narr",
+  "text": "Henrique está com a bola, mas tem um Tubarão na frente! O Lucas está livre. O que você faz?"
+ },
+ "H2_12": {
+  "who": "narr",
+  "text": "O Lucas cruzou! A bola vem alta! Com o que você bate nela?"
+ },
+ "H2_13": {
+  "who": "narr",
+  "text": "Goool de cabeça! Um a zero!"
+ },
+ "T07": {
+  "who": "tony",
+  "text": "What? A header?"
+ },
+ "H2_14": {
+  "who": "narr",
+  "text": "Falta pra nós! Você escolhe o canto. Fala em inglês: left ou right?"
+ },
+ "H2_15": {
+  "who": "narr",
+  "text": "Goool! Dois a zero! É vitória!"
+ },
+ "T08": {
+  "who": "tony",
+  "text": "Okay, okay... You are good, champ."
+ },
+ "H2_16": {
+  "who": "narr",
+  "text": "Você ganhou a medalha de Craque do Time!"
+ },
+ "H2_17": {
+  "who": "narr",
+  "text": "Agora um treino fora da tela! Chama o papai e pega uma bolinha de meia. O papai grita pass, head, left ou right, e você faz. Depois troca: você é o Coach!"
+ },
+ "HC2_what": {
+  "who": "coach",
+  "text": "What is this?"
+ },
+ "HC2_pass": {
+  "who": "coach",
+  "text": "Pass! Pass the ball!"
+ },
+ "HC2_head": {
+  "who": "coach",
+  "text": "Head! Head!"
+ },
+ "HC2_left": {
+  "who": "coach",
+  "text": "Left!"
+ },
+ "HC2_right": {
+  "who": "coach",
+  "text": "Right!"
+ },
+ "HC2_where": {
+  "who": "coach",
+  "text": "Left or right?"
+ },
+ "HC2_end": {
+  "who": "coach",
+  "text": "Great game, champ! You are a team player!"
+ },
+ "E_pass": {
+  "who": "coach",
+  "text": "Nice pass! Teamwork!"
+ },
+ "E_head": {
+  "who": "coach",
+  "text": "Head! Great header!"
+ },
+ "E2_pass": {
+  "who": "coach",
+  "text": "Yes! Good pass!"
+ },
+ "E2_head": {
+  "who": "coach",
+  "text": "Header! Goal!"
+ },
  "W_nova_wing": {
   "who": "nova",
   "text": "Wing."
@@ -568,6 +844,70 @@ const LINES = {
   "who": "nova",
   "text": "Down."
  },
+ "W_nova_sword": {
+  "who": "nova",
+  "text": "Sword."
+ },
+ "S_nova_sword": {
+  "who": "nova",
+  "text": "Sword... Sword."
+ },
+ "T_bip_sword_0": {
+  "who": "bip",
+  "text": "Sword não fala o W! É só sórd, com o R enroladinho. Escute:"
+ },
+ "T_bip_sword_1": {
+  "who": "bip",
+  "text": "Quase! No final tem um d curtinho: sórd. Escute:"
+ },
+ "W_nova_shield": {
+  "who": "nova",
+  "text": "Shield."
+ },
+ "S_nova_shield": {
+  "who": "nova",
+  "text": "Shield... Shield."
+ },
+ "T_bip_shield_0": {
+  "who": "bip",
+  "text": "Shield começa com xis, como em xícara, e tem um i bem comprido. Escute:"
+ },
+ "T_bip_shield_1": {
+  "who": "bip",
+  "text": "Quase! No final a língua encosta atrás dos dentes, e vem um d curtinho: xíild. Escute:"
+ },
+ "W_nova_left": {
+  "who": "nova",
+  "text": "Left."
+ },
+ "S_nova_left": {
+  "who": "nova",
+  "text": "Left... Left."
+ },
+ "T_bip_left_0": {
+  "who": "bip",
+  "text": "Left tem o é bem aberto, e termina com f e t curtinhos. Escute:"
+ },
+ "T_bip_left_1": {
+  "who": "bip",
+  "text": "Left começa com o som do L, igual em lua: a pontinha da língua encosta atrás dos dentes. Escute:"
+ },
+ "W_nova_right": {
+  "who": "nova",
+  "text": "Right."
+ },
+ "S_nova_right": {
+  "who": "nova",
+  "text": "Right... Right."
+ },
+ "T_bip_right_0": {
+  "who": "bip",
+  "text": "Right começa com o R do inglês: a língua fica enroladinha lá atrás, sem encostar em nada. Escute:"
+ },
+ "T_bip_right_1": {
+  "who": "bip",
+  "text": "Quase! No final tem um t curtinho, quase mudo: ráit. Escute:"
+ },
  "W_coach_yes": {
   "who": "coach",
   "text": "Yes."
@@ -659,6 +999,70 @@ const LINES = {
  "W_coach_kick": {
   "who": "coach",
   "text": "Kick."
+ },
+ "W_coach_pass": {
+  "who": "coach",
+  "text": "Pass."
+ },
+ "S_coach_pass": {
+  "who": "coach",
+  "text": "Pass... Pass."
+ },
+ "T_narr_pass_0": {
+  "who": "narr",
+  "text": "Pass começa com P, soprando, sem voz. E termina com sss de cobra. Escute:"
+ },
+ "T_narr_pass_1": {
+  "who": "narr",
+  "text": "Quase! A boca abre bem no meio, péss, e termina com sss de cobra. Escute:"
+ },
+ "W_coach_head": {
+  "who": "coach",
+  "text": "Head."
+ },
+ "S_coach_head": {
+  "who": "coach",
+  "text": "Head... Head."
+ },
+ "T_narr_head_0": {
+  "who": "narr",
+  "text": "Head começa com um sopro, como uma risadinha: rrr. E não é o R enrolado, é só o ar. Escute:"
+ },
+ "T_narr_head_1": {
+  "who": "narr",
+  "text": "Quase! No final tem um d curtinho: rréd. Escute:"
+ },
+ "W_coach_left": {
+  "who": "coach",
+  "text": "Left."
+ },
+ "S_coach_left": {
+  "who": "coach",
+  "text": "Left... Left."
+ },
+ "T_narr_left_0": {
+  "who": "narr",
+  "text": "Left tem o é bem aberto, e termina com f e t curtinhos. Escute:"
+ },
+ "T_narr_left_1": {
+  "who": "narr",
+  "text": "Left começa com o som do L, igual em lua: a pontinha da língua encosta atrás dos dentes. Escute:"
+ },
+ "W_coach_right": {
+  "who": "coach",
+  "text": "Right."
+ },
+ "S_coach_right": {
+  "who": "coach",
+  "text": "Right... Right."
+ },
+ "T_narr_right_0": {
+  "who": "narr",
+  "text": "Right começa com o R do inglês: a língua fica enroladinha lá atrás, sem encostar em nada. Escute:"
+ },
+ "T_narr_right_1": {
+  "who": "narr",
+  "text": "Quase! No final tem um t curtinho, quase mudo: ráit. Escute:"
  }
 };
 const VOCAB = {
@@ -1128,6 +1532,274 @@ const VOCAB = {
   ],
   "tips": [
    "Goal começa com gôu e termina com a língua encostando atrás dos dentes, como um L. Escute:"
+  ]
+ },
+ "sword": {
+  "pt": "espada",
+  "say": "sórd",
+  "icon": "🗡️",
+  "ok": [
+   "sword",
+   "swords",
+   "soared",
+   "sord"
+  ],
+  "near": [
+   [
+    "word",
+    "words",
+    "swore",
+    "swear",
+    "sward",
+    "swat",
+    "sweet",
+    "sweat",
+    "squad",
+    "swirl",
+    "world"
+   ],
+   [
+    "sore",
+    "saw",
+    "soar",
+    "sorry",
+    "sort",
+    "short",
+    "store",
+    "sauce",
+    "sort of",
+    "source",
+    "so"
+   ]
+  ],
+  "tips": [
+   "Sword não fala o W! É só sórd, com o R enroladinho. Escute:",
+   "Quase! No final tem um d curtinho: sórd. Escute:"
+  ]
+ },
+ "shield": {
+  "pt": "escudo",
+  "say": "xíild",
+  "icon": "🛡️",
+  "ok": [
+   "shield",
+   "shields",
+   "sheild"
+  ],
+  "near": [
+   [
+    "field",
+    "sealed",
+    "yield",
+    "steel",
+    "feel",
+    "seal",
+    "filled",
+    "fields",
+    "build"
+   ],
+   [
+    "she",
+    "sheet",
+    "sheep",
+    "cheese",
+    "chill",
+    "shell",
+    "shill",
+    "she will",
+    "shelled",
+    "child",
+    "chilled",
+    "cheap"
+   ]
+  ],
+  "tips": [
+   "Shield começa com xis, como em xícara, e tem um i bem comprido. Escute:",
+   "Quase! No final a língua encosta atrás dos dentes, e vem um d curtinho: xíild. Escute:"
+  ]
+ },
+ "pass": {
+  "pt": "passar",
+  "say": "péss",
+  "icon": "🤝",
+  "ok": [
+   "pass",
+   "passed",
+   "past",
+   "passes",
+   "pas"
+  ],
+  "near": [
+   [
+    "bus",
+    "bass",
+    "bath",
+    "bats",
+    "buzz",
+    "boss",
+    "bess"
+   ],
+   [
+    "pus",
+    "push",
+    "posh",
+    "puss",
+    "pause",
+    "paws",
+    "pose",
+    "pace",
+    "piece",
+    "peace",
+    "path",
+    "pat",
+    "pack",
+    "pa",
+    "pop",
+    "perhaps"
+   ]
+  ],
+  "tips": [
+   "Pass começa com P, soprando, sem voz. E termina com sss de cobra. Escute:",
+   "Quase! A boca abre bem no meio, péss, e termina com sss de cobra. Escute:"
+  ]
+ },
+ "head": {
+  "pt": "cabeça",
+  "say": "rréd",
+  "icon": "🙆",
+  "ok": [
+   "head",
+   "heads",
+   "headed"
+  ],
+  "near": [
+   [
+    "red",
+    "bed",
+    "dead",
+    "said",
+    "fed",
+    "led",
+    "wed",
+    "ed",
+    "ted",
+    "and",
+    "add",
+    "edge",
+    "bread"
+   ],
+   [
+    "hey",
+    "hay",
+    "hair",
+    "heat",
+    "hit",
+    "hid",
+    "hide",
+    "hood",
+    "hat",
+    "hen",
+    "her",
+    "help",
+    "hell",
+    "had"
+   ]
+  ],
+  "tips": [
+   "Head começa com um sopro, como uma risadinha: rrr. E não é o R enrolado, é só o ar. Escute:",
+   "Quase! No final tem um d curtinho: rréd. Escute:"
+  ]
+ },
+ "left": {
+  "pt": "esquerda",
+  "say": "léft",
+  "icon": "⬅️",
+  "ok": [
+   "left",
+   "lefts"
+  ],
+  "near": [
+   [
+    "lift",
+    "laughed",
+    "let",
+    "less",
+    "lest",
+    "leaf",
+    "loft",
+    "list",
+    "lap",
+    "lev",
+    "lef",
+    "lifts"
+   ],
+   [
+    "rift",
+    "raft",
+    "west",
+    "wept",
+    "theft",
+    "deft",
+    "after",
+    "death",
+    "net",
+    "next"
+   ]
+  ],
+  "tips": [
+   "Left tem o é bem aberto, e termina com f e t curtinhos. Escute:",
+   "Left começa com o som do L, igual em lua: a pontinha da língua encosta atrás dos dentes. Escute:"
+  ]
+ },
+ "right": {
+  "pt": "direita",
+  "say": "ráit",
+  "icon": "➡️",
+  "ok": [
+   "right",
+   "rights",
+   "write",
+   "rite",
+   "wright",
+   "alright",
+   "all right"
+  ],
+  "near": [
+   [
+    "light",
+    "white",
+    "bright",
+    "night",
+    "like",
+    "lite",
+    "height",
+    "why",
+    "wait",
+    "fight",
+    "quite",
+    "kite",
+    "hi",
+    "high",
+    "hide",
+    "wide"
+   ],
+   [
+    "rye",
+    "rider",
+    "ride",
+    "rise",
+    "ripe",
+    "rice",
+    "ryan",
+    "rain",
+    "rhyme",
+    "riot",
+    "rival"
+   ]
+  ],
+  "tips": [
+   "Right começa com o R do inglês: a língua fica enroladinha lá atrás, sem encostar em nada. Escute:",
+   "Quase! No final tem um t curtinho, quase mudo: ráit. Escute:"
   ]
  },
  "up": {

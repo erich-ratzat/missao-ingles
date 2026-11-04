@@ -155,9 +155,34 @@ body.henrique .mic{background:#E5484D}
 .darkness{position:absolute;inset:0;background:#000;opacity:.93;transition:opacity 1.2s;pointer-events:none}
 .darkness.off{opacity:0}
 #player{transition:transform .7s cubic-bezier(.3,.8,.3,1)}
+/* missão 2 */
+.fig,#crystal,#bolt,#mate,#defender{transition:transform .7s cubic-bezier(.3,.8,.3,1)}
+#bolt{transition:transform .9s linear}
+.hsaber,.hshield{opacity:0;transition:opacity .4s}
+.hsaber.on,.hshield.on{opacity:1}
+.saber-in,.hero-body,.vortex-body,.crystal-art{transform-box:fill-box;transform-origin:center bottom}
+.shield-in{transform-box:fill-box;transform-origin:center;transition:transform .3s}
+.hsaber.swing .saber-in{animation:swing .5s}
+.vsaber.swing .saber-in{animation:vswing .5s}
+.hshield.flash ellipse:first-child{animation:ping .4s 3}
+.hshield.big .shield-in{transform:scale(1.7)}
+.hop{animation:hop .5s}
+.vortex-body.hit{animation:shake .4s 2}
+.crystal.dark .gem{fill:#5B5F6E}
+.crystal.lit .gem{fill:#7DF9FF}
+.crystal.lit .aura{opacity:.45;animation:blink 1.6s infinite}
+.crystal-art{animation:bob 2.4s ease-in-out infinite}
+.homeplay{background:rgba(255,210,63,.16);border:2px solid var(--gold);border-radius:18px;padding:10px 16px;color:#fff;max-width:520px}
+.kid .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.kid .btns .go{margin-top:0}
+.kid .go.alt{background:rgba(255,255,255,.18);color:#fff}
+.kid .go:disabled{opacity:.5}
 .confetti{position:fixed;z-index:11;top:-20px;width:10px;height:16px;border-radius:3px;animation:fall 2.2s linear forwards}
 
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes swing{40%{transform:rotate(80deg)}}
+@keyframes vswing{40%{transform:rotate(-70deg)}}
+@keyframes hop{50%{transform:translateY(-30px)}}
 @keyframes ping{50%{filter:brightness(1.8) drop-shadow(0 0 10px #5FD3F3)}}
 @keyframes install{0%{transform:translateY(-60px) scale(.6);opacity:0}100%{transform:none;opacity:1}}
 @keyframes alarm{from{opacity:.15}to{opacity:1}}
