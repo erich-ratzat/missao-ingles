@@ -31,7 +31,7 @@ ART.bip = `<svg viewBox="0 0 100 110" aria-hidden="true" class="bip">
   <circle cx="50" cy="6" r="5" fill="#FF4D4D" class="blink"/>
   <rect x="7" y="38" width="9" height="20" rx="3" fill="#F5A524" stroke="#16485A" stroke-width="2"/>
   <rect x="84" y="38" width="9" height="20" rx="3" fill="#F5A524" stroke="#16485A" stroke-width="2"/>
-  <rect x="15" y="18" width="70" height="60" rx="20" fill="#3EC6E0" stroke="#16485A" stroke-width="3"/>
+  <rect x="15" y="18" width="70" height="60" rx="20" style="fill:var(--bip,#3EC6E0)" stroke="#16485A" stroke-width="3"/>
   <path d="M22 30 Q30 22 44 22" stroke="#fff" stroke-width="4" fill="none" opacity=".5" stroke-linecap="round"/>
   <rect x="24" y="30" width="52" height="34" rx="11" fill="#0B1B2B"/>
   <circle cx="50" cy="47" r="12" fill="#7DF9FF"/>
@@ -166,7 +166,7 @@ ART.hangar = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid sli
     <g transform="translate(64 44) scale(1.1)" opacity=".92">${ART.vortex.replace(/<svg[^>]*>/, '').replace('</svg>', '')}</g>
     <text x="119" y="170" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="15" fill="#FF6B6B" letter-spacing="1.5">LORDE VORTEX</text></g>
   <g id="ship" class="ship" transform="translate(450 270) scale(.78)">${shipSVG()}</g>
-  <g class="bip-float" transform="translate(70 250)"><g transform="scale(1.2)">${ART.bip.replace(/<svg[^>]*>/, '').replace('</svg>', '')}</g></g>
+  <g id="bipf" class="bip-float" transform="translate(70 250)"><g transform="scale(1.2)">${ART.bip.replace(/<svg[^>]*>/, '').replace('</svg>', '')}</g></g>
 </svg>`;
 
 ART.drone = `<g class="drone-art">
@@ -294,8 +294,9 @@ const HERO = `<g class="hero-body">
   <path d="M-26 -116 Q-44 -96 -36 -88" fill="none" stroke="#F07A22" stroke-width="12" stroke-linecap="round"/>
   <g id="hsaber" class="hsaber" transform="translate(30 -98)"><g class="saber-in">
     <path d="M-6 -16 Q8 -10 4 6" fill="none" stroke="#F07A22" stroke-width="12" stroke-linecap="round"/>
-    <g class="blade"><rect x="-4" y="-104" width="9" height="96" rx="4.5" fill="var(--saber)" opacity=".55" class="glow"/>
-      <rect x="-2" y="-100" width="5" height="90" rx="2.5" fill="#fff"/></g>
+    <g class="blade"><rect x="-8" y="-108" width="17" height="104" rx="8.5" style="fill:var(--saber)" opacity=".45" class="glow"/>
+      <rect x="-4" y="-102" width="9" height="94" rx="4.5" style="fill:var(--saber)"/>
+      <rect x="-1" y="-98" width="3" height="84" rx="1.5" fill="#fff" opacity=".75"/></g>
     <rect x="-5" y="-10" width="11" height="24" rx="3" fill="#9AA3B5" stroke="#2B2F3A" stroke-width="2"/></g></g>
   <circle cx="0" cy="-146" r="24" fill="#E9B48A"/>
   <path d="M-25 -148 C-28 -176 26 -178 25 -150 C18 -160 -8 -164 -25 -148 Z" fill="#5A3A22"/>
@@ -373,4 +374,95 @@ ART.wings = `<svg viewBox="0 0 160 100" aria-hidden="true">
   <path d="M80 30 C100 10 140 8 156 18 C142 22 134 30 130 36 C142 36 150 42 154 50 C136 46 120 50 110 56 C118 60 122 66 124 74 C106 66 90 64 80 66 Z" fill="#FFD23F" stroke="#B98900" stroke-width="3"/>
   <circle cx="80" cy="48" r="20" fill="#5B45E0" stroke="#FFD23F" stroke-width="5"/>
   <path d="M80 36 l4 8 9 1.3 -6.5 6.3 1.5 9 -8 -4.3 -8 4.3 1.5 -9 -6.5 -6.3 9 -1.3 Z" fill="#FFF1A6"/>
+</svg>`;
+
+// ---------------- Lucas, Missão 3: o castelo do Vortex ----------------
+const BIP_INNER = () => ART.bip.replace(/<svg[^>]*>/, '').replace('</svg>', '');
+const torch = (x, y, on = '') => `<g transform="translate(${x} ${y})"><rect x="-5" y="0" width="10" height="34" fill="#5A3A22"/><path d="M-12 0 h24 l-4 8 h-16 Z" fill="#7A7F8C"/>
+  <g class="tflame ${on}"><circle cy="-14" r="30" fill="url(#flood)" opacity=".6"/><path d="M0 -32 Q13 -12 6 0 H-6 Q-13 -12 0 -32 Z" fill="#FF8A1F" class="flame"/><path d="M0 -20 Q6 -8 3 0 H-3 Q-6 -8 0 -20 Z" fill="#FFE066" class="flame"/></g></g>`;
+
+ART.castle = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}
+  <defs><linearGradient id="nsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#060A1F"/><stop offset="1" stop-color="#2A1A55"/></linearGradient></defs>
+  <rect width="800" height="450" fill="url(#nsky)"/>
+  ${stars(80, 31, 800, 300)}
+  <circle cx="680" cy="80" r="50" fill="#F4F1FF"/><circle cx="664" cy="68" r="9" fill="#D9D3F0"/><circle cx="696" cy="96" r="6" fill="#D9D3F0"/>
+  <path d="M0 330 Q200 312 400 330 T800 324 V450 H0 Z" fill="#3A3550"/>
+  <path d="M0 380 Q220 366 420 384 T800 376 V450 H0 Z" fill="#2A2640"/>
+  <g transform="translate(80 336) scale(.24)"><g>${shipSVG(['rocket', 'wing', 'laser', 'light'])}</g></g>
+  <g fill="#3B2F5C" stroke="#1A1230" stroke-width="4">
+    <rect x="280" y="150" width="240" height="190"/>
+    ${[0, 1, 2, 3, 4, 5].map(i => `<rect x="${284 + i * 40}" y="128" width="22" height="24"/>`).join('')}
+    <rect x="228" y="92" width="70" height="248"/><rect x="502" y="92" width="70" height="248"/></g>
+  <path d="M220 94 L263 18 L306 94 Z M494 94 L537 18 L580 94 Z" fill="#6B2FB5" stroke="#1A1230" stroke-width="4"/>
+  <line x1="537" y1="18" x2="537" y2="-10" stroke="#9AA3B5" stroke-width="3"/><path d="M537 -10 L572 0 L537 10 Z" fill="#8E4DFF"/>
+  <g fill="#B57BFF" class="glow">${[[252, 130], [526, 130], [252, 210], [526, 210]].map(([x, y]) => `<path d="M${x} ${y + 26} V${y + 8} Q${x} ${y} ${x + 11} ${y} Q${x + 22} ${y} ${x + 22} ${y + 8} V${y + 26} Z"/>`).join('')}</g>
+  <path d="M335 340 V250 Q335 192 400 192 Q465 192 465 250 V340 Z" fill="#1A1230"/>
+  <g id="door" class="door">
+    <path class="inlight" d="M340 340 V252 Q340 198 400 198 Q460 198 460 252 V340 Z" fill="#FFD27A"/>
+    <g class="leaf leaf-l"><path d="M340 340 V252 Q340 198 400 198 V340 Z" fill="#7A4A26" stroke="#3A220F" stroke-width="4"/><path d="M360 206 V340 M380 199 V340" stroke="#4A2D14" stroke-width="3"/></g>
+    <g class="leaf leaf-r"><path d="M460 340 V252 Q460 198 400 198 V340 Z" fill="#7A4A26" stroke="#3A220F" stroke-width="4"/><path d="M440 206 V340 M420 199 V340" stroke="#4A2D14" stroke-width="3"/></g>
+    <g class="rune"><circle cx="400" cy="275" r="22" fill="#8E4DFF" opacity=".55" class="glow"/><circle cx="400" cy="275" r="12" fill="none" stroke="#E2CCFF" stroke-width="3"/><path d="M400 266 V284 M391 275 H409" stroke="#E2CCFF" stroke-width="3"/></g></g>
+  <g id="hero" class="fig" transform="translate(-150 420)">${HERO}</g>
+</svg>`;
+
+ART.hall = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}
+  <rect width="800" height="450" fill="#2A2045"/>
+  <g fill="none" stroke="#1C1533" stroke-width="3">${Array.from({length: 8}, (_, r) => Array.from({length: 11}, (_, c) => `<rect x="${c * 80 - (r % 2) * 40}" y="${r * 42}" width="80" height="42"/>`).join('')).join('')}</g>
+  <rect y="330" width="800" height="120" fill="#17112A"/>
+  <g stroke="#241B3D" stroke-width="3">${[360, 395, 430].map(y => `<line x1="0" y1="${y}" x2="800" y2="${y}"/>`).join('')}</g>
+  ${[90, 325, 475, 710].map(x => torch(x, 140)).join('')}
+  ${[['one', '1', 250], ['two', '2', 400], ['three', '3', 550]].map(([k, n, x]) => `<g id="d-${k}" class="hdoor" transform="translate(${x} 330)">
+    <path d="M-50 0 V-120 Q-50 -162 0 -162 Q50 -162 50 -120 V0 Z" fill="#0A0614" stroke="#120C22" stroke-width="5"/>
+    <text id="in-${k}" y="-50" text-anchor="middle" font-size="60"></text>
+    <g class="hleaf"><path d="M-45 0 V-118 Q-45 -156 0 -156 Q45 -156 45 -118 V0 Z" fill="#6B4423" stroke="#2E1A0B" stroke-width="4"/>
+      <path d="M-22 -152 V0 M0 -156 V0 M22 -152 V0" stroke="#4A2D14" stroke-width="3"/><circle cx="32" cy="-60" r="5" fill="#FFD23F"/>
+      <circle cy="-118" r="21" fill="#FFD23F" stroke="#9A6A00" stroke-width="3"/>
+      <text y="-108" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="28" fill="#1E1400">${n}</text></g></g>`).join('')}
+  <g id="hero" class="fig" transform="translate(-150 430)">${HERO}</g>
+</svg>`;
+
+// labirinto visto de cima: 3x3 casas; a ficha do Lucas anda conforme as setas
+ART.maze = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}
+  <rect width="800" height="450" fill="#120C22"/>
+  <rect x="219" y="44" width="374" height="374" rx="22" fill="#1C1533" stroke="#3D3160" stroke-width="6"/>
+  ${[0, 1, 2].map(r => [0, 1, 2].map(c => `<rect id="t${c}${r}" class="tile" x="${235 + c * 116}" y="${60 + r * 116}" width="110" height="110" rx="14"/>`).join('')).join('')}
+  <text x="522" y="250" text-anchor="middle" font-size="58">🚪</text>
+  ${torch(140, 200, 'on')}${torch(670, 200, 'on')}
+  <g id="mtok" class="mtok" transform="translate(290 347)"><circle r="38" fill="#F07A22" stroke="#FFE3C4" stroke-width="5"/>
+    <text y="14" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="40" fill="#fff">L</text></g>
+</svg>`;
+
+ART.throne = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}
+  <defs><linearGradient id="tsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1A0B2E"/><stop offset="1" stop-color="#3A1460"/></linearGradient></defs>
+  <rect width="800" height="450" fill="url(#tsky)"/>
+  <g fill="#2A1846" stroke="#170B29" stroke-width="4">${[40, 330, 760].map(x => `<rect x="${x - 22}" y="0" width="44" height="345"/>`).join('')}</g>
+  <path d="M410 30 H490 V190 L450 168 L410 190 Z" fill="#6B2FB5" stroke="#170B29" stroke-width="4"/>
+  <text x="450" y="128" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="62" fill="#E2CCFF">V</text>
+  <path d="M690 345 V200 Q690 170 720 170 H770 V345 Z" fill="#4B1670" stroke="#8E4DFF" stroke-width="4"/>
+  ${torch(190, 130, 'on')}${torch(560, 130, 'on')}
+  <rect y="345" width="800" height="105" fill="#1B0F2E"/>
+  <g stroke="#2A1846" stroke-width="3">${[375, 410].map(y => `<line x1="0" y1="${y}" x2="800" y2="${y}"/>`).join('')}</g>
+  <ellipse cx="225" cy="405" rx="88" ry="26" fill="#8E4DFF" opacity=".3" class="glow"/><ellipse cx="225" cy="405" rx="76" ry="20" fill="#05020A"/>
+  <line x1="640" y1="0" x2="640" y2="110" stroke="#6B6F80" stroke-width="5" stroke-dasharray="10 4"/>
+  <g transform="translate(640 110)"><rect x="-58" y="0" width="116" height="124" rx="10" fill="#000" opacity=".3"/>
+    <path d="M-58 0 H58 M-58 124 H58 M-58 0 V124 M58 0 V124" stroke="#9AA3B5" stroke-width="7"/></g>
+  <g id="bipfree" class="bipfree" transform="translate(640 170)"><g class="bob"><g transform="scale(.8) translate(-50 -55)">${BIP_INNER()}</g></g></g>
+  <g id="cagedoor" class="cagedoor" transform="translate(640 110)"><g class="cd-in">
+    <path d="M-34 0 V124 M-11 0 V124 M11 0 V124 M34 0 V124" stroke="#9AA3B5" stroke-width="6"/>
+    <rect x="-14" y="54" width="28" height="22" rx="4" fill="#8E4DFF" stroke="#E2CCFF" stroke-width="2"/></g></g>
+  <g id="bolt" class="bolt" transform="translate(900 300)"><circle r="16" fill="#B57BFF" opacity=".5"/><circle r="9" fill="#F3E8FF"/></g>
+  <g id="vortexfig" class="fig" transform="translate(1000 400)">${VORTEX}</g>
+  <g id="hero" class="fig" transform="translate(-150 400)">${HERO}</g>
+  <g id="drone" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="drone2" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="drone3" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="boom" class="boom" transform="translate(-200 -200)">${Array.from({length: 10}, (_, i) => `<circle class="spark" r="${8 + (i % 3) * 5}" fill="${['#FFE066', '#FF8A1F', '#FF4D4D'][i % 3]}" style="--a:${i * 36}deg"/>`).join('')}</g>
+</svg>`;
+
+ART.keyBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
+  <circle cx="70" cy="70" r="62" fill="#2A1546" stroke="#FFD23F" stroke-width="6"/>
+  <g transform="rotate(-40 70 70)" fill="#F5B700" stroke="#9A6A00" stroke-width="2">
+    <path d="M70 18 a22 22 0 1 1 -0.1 0 Z M70 30 a10 10 0 1 0 0.1 0 Z" fill-rule="evenodd"/>
+    <rect x="65" y="61" width="10" height="58"/><rect x="75" y="98" width="16" height="8"/><rect x="75" y="110" width="12" height="8"/></g>
+  <path d="M104 30 l3 6 6.5 1 -4.7 4.5 1.1 6.5 -5.9 -3.1 -5.9 3.1 1.1 -6.5 -4.7 -4.5 6.5 -1 Z" fill="#FFF1A6"/>
 </svg>`;

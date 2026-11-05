@@ -37,6 +37,16 @@ const TR = {
   HC2_what:'O que é isso?', HC2_pass:'Passa! Passa a bola!', HC2_head:'Cabeça! Cabeça!', HC2_left:'Esquerda!', HC2_right:'Direita!',
   HC2_where:'Esquerda ou direita?', HC2_end:'Grande jogo, campeão! Você joga pro time!',
   E_pass:'Belo passe! Trabalho em equipe!', E_head:'Cabeça! Bela cabeçada!', E2_pass:'Isso! Bom passe!', E2_head:'Cabeçada! Gol!',
+  LN_yes__2:'Ótimo!', LN_yes__3:'Demais!', LN_yes__4:'Bom trabalho!', HC_yes__2:'Ótimo!', HC_yes__3:'Boa!',
+  E_sword_yellow:'Uma espada amarela! Demais!', E_sword_purple:'Uma espada roxa! Demais!',
+  // missão 3
+  L3_01:'Lucas! O Bip sumiu!', V09:'Ha ha ha! Seu robozinho está no meu castelo!', L3_07:'Esta é uma porta mágica. Fale: open!',
+  V10:'Você de novo? Drones, peguem ele!', L3_18:'Você conseguiu, Lucas! Você salvou o Bip! Você é um herói!',
+  LN3_door_one:'Porta número um!', LN3_door_two:'Porta número dois!', LN3_door_three:'Porta número três!',
+  LN3_color:'De que cor é o Bip? Vermelho, azul, verde, amarelo ou roxo?',
+  E_open:'Open! A porta abriu!', E2_open:'Open! O Bip está livre!', E_jump:'Pula! Belo pulo!', E4_light:'Luz! Olha o castelo!',
+  E_bip_red:'Um robô vermelho! Amei!', E_bip_blue:'Um robô azul! Amei!', E_bip_green:'Um robô verde! Amei!',
+  E_bip_yellow:'Um robô amarelo! Amei!', E_bip_purple:'Um robô roxo! Amei!',
 };
 const WHO = {nova:['Capitã Nova', ART.nova], vortex:['Lorde Vortex', ART.vortex], bip:['Bip', ART.bip],
   coach:['Coach Max', ART.coach], tony:['Big Tony', ART.tony], narr:['Narrador', ART.narr]};
@@ -45,14 +55,22 @@ const SPEAKS_EN = new Set(['nova', 'vortex', 'coach', 'tony']);
 // ---------------- reconhecimento: só a palavra certa vale ----------------
 const norm = s => s.toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
 const has = (t, list) => { const ws = t.split(' '); return (list || []).some(v => v.includes(' ') ? t.includes(v) : ws.includes(v)); };
-// alts = o que o reconhecedor ouviu, da hipótese mais provável para a menos provável.
-// Vale a 1ª hipótese. Se ela for uma palavra parecida conhecida (white no lugar de light), é erro, com dica.
-// Só quando a 1ª hipótese é ruído sem sentido é que olhamos a 2ª e a 3ª.
+// alts = tudo o que o reconhecedor ouviu (hipóteses finais e parciais), da mais provável para a menos provável.
+// Criança fala diferente de adulto e o celular erra muito com ela, então vale se QUALQUER hipótese tiver:
+// a palavra (ou um jeito aceito de escrever), uma letra de diferença, ou um "quase" (comeu um pedacinho).
+// Só quando nada disso aparece é que a 1ª hipótese decide a dica (white no lugar de light).
+const lev = (a, b) => { let p = Array.from({length:b.length + 1}, (_, j) => j);
+  for (let i = 1; i <= a.length; i++) { const q = [i]; for (let j = 1; j <= b.length; j++) q[j] = Math.min(p[j] + 1, q[j - 1] + 1, p[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)); p = q; }
+  return p[b.length]; };
+const OK_OF = new Map(); for (const w in VOCAB) for (const o of VOCAB[w].ok || []) if (!OK_OF.has(o)) OK_OF.set(o, w);
+const oneOff = (t, w) => t.split(' ').some(tok => !(OK_OF.has(tok) && OK_OF.get(tok) !== w) &&
+  VOCAB[w].ok.some(o => o.length >= 4 && !o.includes(' ') && lev(tok, o) <= 1));
 function evaluate(alts, words){
   const a0 = alts[0] || '';
-  for (const w of words) if (has(a0, VOCAB[w].ok)) return {key:w};
+  for (const t of alts) for (const w of words) if (has(t, VOCAB[w].ok)) return {key:w};
+  for (const t of alts) for (const w of words) if (oneOff(t, w)) return {key:w};
+  for (const t of alts) for (const w of words) if ((VOCAB[w].almost || []).some(g => has(t, VOCAB[w].near[g]))) return {key:w};
   for (const w of words) { const g = (VOCAB[w].near || []).findIndex(l => has(a0, l)); if (g >= 0) return {key:null, near:{w, g}}; }
-  for (const t of alts.slice(1, 3)) for (const w of words) if (has(t, VOCAB[w].ok)) return {key:w};
   return {key:null};
 }
 
@@ -148,6 +166,7 @@ const SFX = {
 // ---------------- tela de jogo ----------------
 function shell(kid, title, icons){
   document.body.className = kid;
+  document.body.style.setProperty('--bip', PAINT[kid === 'lucas' && SAVE.lucas.bip] || '#3EC6E0');
   app.innerHTML = `
     <div class="hud"><button class="x" id="quit" aria-label="Sair">✕</button>
       <div class="title">${title}</div>
@@ -173,7 +192,15 @@ function trOf(key){
   if (TR[key]) return TR[key];
   const m = key.match(/^[WS]_[a-z]+_([a-z]+)$/); return m && VOCAB[m[1]] ? VOCAB[m[1]].pt : '';
 }
+// falas que se repetem muito (Yes!, Escute de novo...) têm versões key__2, key__3: sorteia uma diferente da última
+const lastVar = {};
+function variant(key){
+  const vs = [key]; for (let i = 2; LINES[key + '__' + i]; i++) vs.push(key + '__' + i);
+  if (vs.length === 1) return key;
+  const opts = vs.filter(k => k !== lastVar[key]); return lastVar[key] = opts[Math.floor(Math.random() * opts.length)];
+}
 async function line(key){
+  key = variant(key);
   const L = LINES[key], [name, face] = WHO[L.who], en = SPEAKS_EN.has(L.who);
   el('face').innerHTML = face; el('face').classList.add('talking');
   el('who').textContent = name;
@@ -198,21 +225,26 @@ const adultButton = on => on && micMode() === 'voice' ? '<button class="adult" i
 function recognize(words, btn, onHeard){
   return new Promise(res => {
     const r = new SR(); r.lang = 'en-US'; r.interimResults = true; r.maxAlternatives = 3; r.continuous = false;
-    let done = false, interim = '';
-    btn && btn.classList.add('listening'); onHeard && onHeard('Ouvindo...');
+    // o microfone fica amarelo até o celular começar a gravar; só então fica verde ("Fale agora!").
+    // Quem fala antes disso perde o começo da palavra, e o celular entende outra coisa.
+    let done = false, live = false, seen = [];
+    btn && btn.classList.add('waiting'); onHeard && onHeard('Espere...');
+    const go = () => { if (done || live) return; live = true;
+      btn && btn.classList.replace('waiting', 'listening'); onHeard && onHeard('Fale agora!'); };
     const fin = alts => { if (done) return; done = true; clearTimeout(t); try { r.abort(); } catch (e) {}
-      btn && btn.classList.remove('listening'); onHeard && onHeard('');
-      alts = (alts || []).filter(Boolean);
+      btn && btn.classList.remove('waiting', 'listening'); onHeard && onHeard('');
+      alts = [...new Set((alts || []).concat(seen.slice().reverse()).filter(Boolean))];
       const v = evaluate(alts, words);
       res({ok:!!v.key, key:v.key, near:v.near, heard:alts[0] || ''}); };
+    r.onaudiostart = go; setTimeout(go, 1000);
     r.onresult = e => {
       const last = e.results[e.results.length - 1], alts = Array.from(last, a => norm(a.transcript));
-      if (last.isFinal) return fin(alts);                 // decide só com o resultado final
-      interim = alts[0] || interim; onHeard && interim && onHeard('…' + interim);
+      if (last.isFinal) return fin(alts);                 // decide com o resultado final e o que apareceu no caminho
+      if (alts[0]) { seen.push(alts[0]); onHeard && onHeard('…' + alts[0]); }
     };
-    r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { if (G) G.noMic = true; interim = ''; } fin(interim ? [interim] : []); };
-    r.onend = () => fin(interim ? [interim] : []);
-    const t = setTimeout(() => fin(interim ? [interim] : []), 7000);
+    r.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { if (G) G.noMic = true; seen = []; } fin([]); };
+    r.onend = () => fin([]);
+    const t = setTimeout(() => fin([]), 7000);
     try { r.start(); } catch (e) { fin([]); }
   });
 }
@@ -238,9 +270,9 @@ function showHeard(r, w){
 }
 const tipKey = (w, near) => `T_${G.H}_${w}_${near && near.w === w ? near.g : 0}`;
 
-// A criança fala uma palavra. Caminho de correção (nunca aceita palavra errada):
-//   lembrar (só quando ela tinha que lembrar sozinha) → dica de pronúncia para o erro que ela cometeu
-//   → bem devagar, com o jeito de falar escrito → o ajudante fala junto e a palavra vai para o treino de amanhã.
+// A criança fala uma palavra. Caminho de correção, no máximo três tentativas:
+//   1ª: dica de pronúncia para o erro que ela cometeu (ou "lembra?", quando ela tinha que lembrar sozinha)
+//   2ª: bem devagar, com o jeito de falar escrito → 3ª: o ajudante fala junto e a palavra vai para o treino de amanhã.
 // "Não ouvi nada" não conta como erro (até duas vezes).
 async function speak(w, {model = true, hide = !model, intro = [], say = false, expand, onOk} = {}){
   const T = G.T, P = G.P, V = VOCAB[w];
@@ -257,7 +289,7 @@ async function speak(w, {model = true, hide = !model, intro = [], say = false, e
   for (const k of intro) await line(k);
   if (model) await line(`W_${T}_${w}`);
   if (say) await line(P + '_say');
-  const steps = (model ? [] : ['remember']).concat(['tip', 'slow', 'help']);
+  const steps = [model ? 'tip' : 'remember', 'slow', 'help'];
   let level = 0, silent = 0, fallback = micMode() === 'tap';
   for (;;) {
     if (micMode() === 'tap' && !fallback) { fallback = true; draw(); }
@@ -275,7 +307,7 @@ async function speak(w, {model = true, hide = !model, intro = [], say = false, e
     SFX.bad(); heardMsg = r;
     let step = steps[level++];
     // lembrou a palavra, só pronunciou errado: vai direto para a dica de pronúncia
-    if (step === 'remember' && r.near && r.near.w === w) { step = 'tip'; steps.splice(level, 1); }
+    if (step === 'remember' && r.near && r.near.w === w) step = 'tip';
     if (step === 'remember') { hide = false; draw(); await line(P + '_remember'); await line(`W_${T}_${w}`); }
     else if (step === 'tip') { hide = false; draw(); await line(tipKey(w, r.near)); await line(`W_${T}_${w}`); }
     else if (step === 'slow') { hide = false; phon = true; draw(); await line(P + '_slow'); await line(`S_${T}_${w}`); }
@@ -287,18 +319,26 @@ async function speak(w, {model = true, hide = !model, intro = [], say = false, e
   }
 }
 
-// A criança escolhe falando uma das opções (cores). Tocar numa opção só faz ouvir.
-async function speakChoice(opts, {list, expand, onOk, labels} = {}){
+// A criança escolhe falando uma das opções (cores). Tocar numa opção faz ouvir o nome e já mostra a cor
+// na cena (preview); falar confirma. Se o celular não entender duas vezes, ela escolhe tocando: nunca
+// sai uma cor que ela não pediu.
+async function speakChoice(opts, {list, expand, onOk, labels, preview} = {}){
   const T = G.T, P = G.P, keys = Object.keys(opts);
-  let phon = false, heardMsg = null, adult = false;
+  let heardMsg = null, adult = false, picked = null, pickMsg = '';
   const draw = () => {
-    act(`${keys.map(k => `<button class="choice" data-k="${k}" style="background:${opts[k]}">${phon ? `<span class="ph">${VOCAB[k].say}</span>` : labels ? labels[k] + '<br>' + k : k}</button>`).join('')}
-      ${micButton()}<div class="heard" id="heard"></div>${adultButton(adult)}`);
-    document.querySelectorAll('.choice').forEach(b => b.onclick = () => play(`W_${T}_${b.dataset.k}`).catch(() => {}));
-    if (heardMsg) showHeard(heardMsg);
+    act(`${keys.map(k => `<button class="choice${keys.length > 3 ? ' many' : ''}" data-k="${k}" style="background:${opts[k]}">${labels ? labels[k] + '<br>' + k : k}</button>`).join('')}
+      ${picked ? `<div class="heard">${pickMsg}</div>` : micButton() + '<div class="heard" id="heard"></div>' + adultButton(adult)}`);
+    document.querySelectorAll('.choice').forEach(b => b.onclick = () => {
+      if (picked) return picked(b.dataset.k);
+      document.querySelectorAll('.choice').forEach(x => x.classList.toggle('sel', x === b));
+      if (preview) preview(b.dataset.k);
+      play(`W_${T}_${b.dataset.k}`).catch(() => {});
+    });
+    if (heardMsg && !picked) showHeard(heardMsg);
   };
   draw();
   const done = async (k, how) => {
+    if (preview) preview(k);
     SFX.good(); if (how !== 'help') addStar(); stat(k, how);
     if (onOk) await onOk(k);
     if (how === 'fixed') await line(P + '_fixed');
@@ -306,34 +346,27 @@ async function speakChoice(opts, {list, expand, onOk, labels} = {}){
     if (expand) await line(expand(k));
     act(''); return k;
   };
+  // escolher tocando (sem microfone, o adulto confirmou ou o celular não entendeu)
+  const pick = async (how, msg = '') => {
+    const id = G.id, p = new Promise(res => picked = res); pickMsg = msg; draw();
+    const k = await p; check(id); return done(k, how);
+  };
   let level = 0, silent = 0;
   for (;;) {
-    if (micMode() === 'tap') {           // sem microfone: tocar escolhe
-      draw(); const id = G.id;
-      const k = await new Promise(res => document.querySelectorAll('.choice').forEach(b => b.onclick = () => res(b.dataset.k)));
-      check(id); return done(k, 'tap');
-    }
+    if (micMode() === 'tap') return pick('tap');
     const r = await waitMic(keys);
-    if (r.parent) {                      // o adulto ouviu: ele toca na cor que a criança falou
-      const id = G.id; el('heard').className = 'heard'; el('heard').textContent = 'Toque na cor que ele falou';
-      const k = await new Promise(res => document.querySelectorAll('.choice').forEach(b => b.onclick = () => res(b.dataset.k)));
-      check(id); return done(k, 'parent');
-    }
+    if (r.parent) return pick('parent', 'Toque no que ele falou');
     if (r.ok) return done(r.key, level ? 'fixed' : 'first');
     if (!r.heard && micMode() === 'tap') continue;
-    if (!adult) { adult = true; draw(); if (heardMsg) showHeard(heardMsg); }
+    if (!adult) { adult = true; draw(); }
     if (!r.heard && silent < 2) { silent++; await line(P + '_louder'); continue; }
     SFX.bad(); heardMsg = r; level++;
     if (level === 1) {
       showHeard(r, r.near ? r.near.w : null);
       if (r.near) { await line(tipKey(r.near.w, r.near)); await line(`W_${T}_${r.near.w}`); }
       else { await line(P + '_close'); await line(list); }
-    } else if (level === 2) {
-      phon = true; draw(); await line(P + '_slow');
-      for (const k of keys) await line(`W_${T}_${k}`);
     } else {
-      const k = r.near ? r.near.w : keys[Math.floor(Math.random() * keys.length)];
-      await line(P + '_help'); return done(k, 'help');
+      await line(P + '_pick'); return pick('help', 'Toque no que você quer');
     }
   }
 }
@@ -373,6 +406,26 @@ function endButtons(kid){
   if (more) el('more').onclick = () => start(kid, m + 1);
   el('again').onclick = () => start(kid, m);
   el('home').onclick = () => { G = null; home(); };
+}
+
+// cores que o Lucas escolhe (nave, espada, Bip)
+const PAINT = {red:'#E5484D', blue:'#2F7CF6', green:'#2DBE6C', yellow:'#F5C400', purple:'#8E4DFF'};
+const PAINT_DARK = {red:'#A82A2F', blue:'#1F4FA8', green:'#1B7E45'};
+const BLADE = {red:'#FF5A5F', blue:'#5FD3F3', green:'#4BE38A', yellow:'#FFE14D', purple:'#B57BFF'};
+const paintShip = sc => { const k = SAVE.lucas.ship || 'blue'; sc.style.setProperty('--ship', PAINT[k]); sc.style.setProperty('--ship-dark', PAINT_DARK[k]); };
+// os drones atiram, o escudo cresce e devolve cada tiro
+async function reflectDrones(drones, heroX){
+  const bolt = el('bolt'), boom = el('boom'), shield = el('hshield');
+  shield.classList.add('big'); SFX.build();
+  for (const d of drones) {
+    const [x, y] = d.style.transform.match(/-?[\d.]+/g).map(Number);
+    place(bolt, `translate(${x}px,${y}px)`); bolt.style.transition = 'transform .4s linear';
+    bolt.style.transform = `translate(${heroX + 20}px,300px)`; SFX.enemy(); await wait(450);
+    restart(shield, 'flash'); bolt.style.transform = `translate(${x}px,${y}px)`; await wait(450);
+    boom.setAttribute('transform', `translate(${x} ${y})`); restart(boom, 'go'); SFX.boom();
+    place(d, 'translate(950px,120px)'); place(bolt, 'translate(900px,300px)'); await wait(300);
+  }
+  shield.classList.remove('big');
 }
 
 // ================= LUCAS · Esquadrão Estelar =================
@@ -418,7 +471,7 @@ async function lessonLucas(){
   const colors = {red:'#E5484D', blue:'#2F7CF6', green:'#2DBE6C'}, dark = {red:'#A82A2F', blue:'#1F4FA8', green:'#1B7E45'};
   const paint = k => { sc.style.setProperty('--ship', colors[k]); sc.style.setProperty('--ship-dark', dark[k]); };
   await line('LN_color');
-  const c = await speakChoice(colors, {list:'LN_color', expand:k => 'E_ship_' + k, onOk:k => { paint(k); SAVE.lucas.ship = k; persist(); SFX.build(); track(4); }});
+  const c = await speakChoice(colors, {list:'LN_color', preview:paint, expand:k => 'E_ship_' + k, onOk:k => { paint(k); SAVE.lucas.ship = k; persist(); SFX.build(); track(4); }});
   await line('L16'); await line('L17');
 
   // 4. decolar
@@ -505,7 +558,7 @@ async function lessonHenrique(){
   await speak('yes', {intro:['H04', 'H05'], say:true, expand:'E_yes', onOk:() => track(0)});
   await line('H06'); await line('H07');
   const colors = {red:'#E5484D', blue:'#2F7CF6', yellow:'#F5C400'};
-  await speakChoice(colors, {list:'H06', expand:k => 'E_shirt_' + k, onOk:k => {
+  await speakChoice(colors, {list:'H06', preview:k => sc.style.setProperty('--shirt', colors[k]), expand:k => 'E_shirt_' + k, onOk:k => {
     sc.style.setProperty('--shirt', colors[k]); SAVE.henrique.shirt = k; persist(); restart(el('shirt'), 'pop'); SFX.build(); track(1); }});
   const shirt = getComputedStyle(sc).getPropertyValue('--shirt');
   await speak('shoes', {intro:['H08'], expand:'E_shoes', onOk:() => { el('shoes').classList.add('on'); SFX.build(); track(2); }});
@@ -585,9 +638,7 @@ async function lessonLucas2(){
   Object.assign(G, {T:'nova', H:'bip', P:'LB', max:9});
   setScene(ART.hangar());
   const sc = el('scene'), ship = el('ship');
-  const colors = {red:'#E5484D', blue:'#2F7CF6', green:'#2DBE6C'}, dark = {red:'#A82A2F', blue:'#1F4FA8', green:'#1B7E45'};
-  const sh = SAVE.lucas.ship || 'blue';
-  sc.style.setProperty('--ship', colors[sh]); sc.style.setProperty('--ship-dark', dark[sh]);
+  paintShip(sc);
   place(ship, 'translate(450px,270px) scale(.78)');
   ['wing', 'rocket', 'laser', 'light'].forEach(k => el('p-' + k).classList.add('on'));
 
@@ -612,7 +663,7 @@ async function lessonLucas2(){
   setScene(ART.planet());
   sc.style.setProperty('--saber', '#5FD3F3');
   const hero = el('hero'), hb = hero.querySelector('.hero-body'), saber = el('hsaber'), shield = el('hshield');
-  const vx = el('vortexfig'), vsaber = el('vsaber'), crystal = el('crystal'), bolt = el('bolt'), boom = el('boom');
+  const vx = el('vortexfig'), vsaber = el('vsaber'), crystal = el('crystal'), bolt = el('bolt');
   const drones = [el('drone'), el('drone2'), el('drone3')];
   hero.style.transform = 'translate(230px,400px)'; SFX.whoosh(); await wait(700);
   vx.style.transform = 'translate(620px,400px)'; crystal.style.transform = 'translate(665px,282px)'; SFX.villain();
@@ -620,14 +671,14 @@ async function lessonLucas2(){
   await line('L2_07');
   await speak('sword', {intro:['L2_08'], say:true, expand:'E_sword', onOk:() => { saber.classList.add('on'); restart(saber, 'swing'); SFX.build(); track(1); }});
   await line('L2_09'); await line('LN2_color');
-  const blades = {red:'#FF5A5F', blue:'#5FD3F3', green:'#4BE38A'};
-  await speakChoice(colors, {list:'LN2_color', expand:k => 'E_sword_' + k, onOk:k => { sc.style.setProperty('--saber', blades[k]); restart(saber, 'swing'); SFX.build(); }});
+  const blade = k => { sc.style.setProperty('--saber', BLADE[k]); restart(saber, 'swing'); };
+  await speakChoice(PAINT, {list:'LN2_color', preview:blade, expand:k => 'E_sword_' + k, onOk:k => { SAVE.lucas.saber = k; persist(); SFX.build(); }});
   await speak('shield', {intro:['L2_10'], expand:'E_shield', onOk:() => { shield.classList.add('on'); restart(shield, 'flash'); SFX.build(); track(2); }});
 
   // 3. desviar das bolas de energia: ouvir left/right e tocar na seta
   await line('L2_11');
   drones[0].style.transform = 'translate(700px,140px)'; await wait(700);
-  for (const dir of shuffle(['left', 'right', 'left', 'right'])) {
+  for (const dir of shuffle(['left', 'right']).concat([Math.random() < .5 ? 'left' : 'right'])) {
     place(bolt, 'translate(680px,150px)');
     tapButtons([['left', '⬅️', 'Esquerda'], ['right', '➡️', 'Direita']]);
     await listenTap(dir, 'LN2_' + dir, 'LB_wrong');
@@ -642,7 +693,7 @@ async function lessonLucas2(){
   // 4. treino: ouvir sword/shield e tocar
   await line('L2_13');
   tapButtons([['sword', '🗡️', 'Espada'], ['shield', '🛡️', 'Escudo']]);
-  for (const w of shuffle(['sword', 'shield']).concat([Math.random() < .5 ? 'sword' : 'shield'])) {
+  for (const w of shuffle(['sword', 'shield'])) {
     await listenTap(w, 'LN2_' + w, 'LB_wrong');
     restart(w === 'sword' ? saber : shield, w === 'sword' ? 'swing' : 'flash'); SFX.tap();
     await line('LN_yes');
@@ -653,18 +704,7 @@ async function lessonLucas2(){
   drones.forEach((d, i) => { d.style.transform = `translate(${[560, 690, 620][i]}px,${[110, 150, 210][i]}px)`; });
   SFX.villain(); await line('V06'); SFX.enemy();
   await line('L2_14');
-  await speak('shield', {model:false, expand:'E2_shield', onOk:async () => {
-    shield.classList.add('big'); SFX.build();
-    for (const d of drones) {
-      const [x, y] = d.style.transform.match(/-?[\d.]+/g).map(Number);
-      place(bolt, `translate(${x}px,${y}px)`); bolt.style.transition = 'transform .4s linear';
-      bolt.style.transform = 'translate(250px,300px)'; SFX.enemy(); await wait(450);
-      restart(shield, 'flash'); bolt.style.transform = `translate(${x}px,${y}px)`; await wait(450);
-      boom.setAttribute('transform', `translate(${x} ${y})`); restart(boom, 'go'); SFX.boom();
-      place(d, 'translate(950px,120px)'); place(bolt, 'translate(900px,300px)'); await wait(300);
-    }
-    shield.classList.remove('big');
-  }});
+  await speak('shield', {model:false, expand:'E2_shield', onOk:() => reflectDrones(drones, 230)});
 
   await line('L2_15');
   vx.style.transform = 'translate(430px,400px)'; crystal.style.transform = 'translate(475px,282px)'; await wait(700);
@@ -681,9 +721,121 @@ async function lessonLucas2(){
   vx.style.transform = 'translate(1050px,300px)'; SFX.whoosh(); await wait(800);
 
   await line('L2_17'); track(5);
-  reward({kid:'lucas', badge:ART.saberBadge, title:'Cavaleiro Estelar!', next:'🔒 Missão 3 · em breve',
+  reward({kid:'lucas', badge:ART.saberBadge, title:'Cavaleiro Estelar!', next:'🔓 Missão 3 liberada: O Castelo do Vortex',
     homeplay:'Brincadeira com o papai: ele fala <b>left</b> ou <b>right</b> e você pula pro lado certo. Depois troquem!'});
   await line('L2_18'); await line('L2_19');
+  endButtons('lucas');
+}
+
+// ================= LUCAS · Missão 3 · O Castelo do Vortex =================
+// Revisão curta (a peça que deu mais trabalho e o go), duas palavras novas para falar (open, jump),
+// números e setas para entender e tocar, e o resgate do Bip, em que ele lembra shield, sword e open sozinho.
+async function lessonLucas3(){
+  shell('lucas', 'Esquadrão Estelar · Missão 3', ['🚪', '🔥', '🔢', '🧭', '🦘', '🤖']);
+  Object.assign(G, {T:'nova', H:'bip', P:'LB', max:9});
+  setScene(ART.hangar());
+  const sc = el('scene'), ship = el('ship');
+  paintShip(sc); sc.style.setProperty('--saber', BLADE[SAVE.lucas.saber || 'blue']);
+  place(ship, 'translate(450px,270px) scale(.78)');
+  ['wing', 'rocket', 'laser', 'light'].forEach(k => el('p-' + k).classList.add('on'));
+  el('bipf').style.display = 'none';                       // o Bip foi levado: só fala pelo rádio
+  // Lucas entra na cena com a espada e o escudo da missão 2
+  const heroIn = (x, y) => { const h = el('hero'); el('hsaber').classList.add('on'); el('hshield').classList.add('on'); h.style.transform = `translate(${x}px,${y}px)`; return h; };
+
+  sc.classList.add('alarm-on'); SFX.alarm();
+  el('holo').classList.add('show'); await line('L3_01'); el('holo').classList.remove('show');
+  await line('L3_02');
+  el('holov').classList.add('show'); SFX.villain(); await line('V09');
+  el('holov').classList.remove('show'); sc.classList.remove('alarm-on');
+  await line('L3_03');
+
+  // 1. revisão: a peça que deu mais trabalho pisca; ele lembra o nome e decola
+  const [part] = pickReview(['wing', 'rocket', 'laser', 'light'], 1), pe = el('p-' + part);
+  pe.classList.add('broken');
+  await speak(part, {model:false, intro:['L3_04'], expand:'E_' + part, onOk:() => { pe.classList.remove('broken'); restart(pe, 'ping'); SFX.build(); }});
+  await speak('go', {model:false, intro:['L3_05', 'LN_count'], expand:'E_go',
+    onOk:async () => { ship.classList.add('flying', 'launch'); SFX.launch(); ship.style.transform = 'translate(1300px,120px) scale(.78)'; await wait(1300); }});
+
+  // 2. a porta mágica: open
+  setScene(ART.castle());
+  let hero = heroIn(170, 420); SFX.whoosh(); await wait(800);
+  await line('L3_06'); await line('L3_07');
+  await speak('open', {intro:['L3_08'], say:true, expand:'E_open', onOk:async () => { el('door').classList.add('open'); SFX.build(); track(0); await wait(900); }});
+  hero.style.transform = 'translate(400px,350px) scale(.5)'; await wait(800);
+
+  // 3. o salão escuro: lembrar light, depois ouvir o número e tocar na porta
+  setScene(ART.hall());
+  hero = heroIn(110, 430);
+  sc.insertAdjacentHTML('beforeend', '<div class="darkness" id="dark"></div>'); SFX.dark();
+  await line('L3_09');
+  await speak('light', {model:false, expand:'E4_light', onOk:() => { el('dark').classList.add('off'); sc.classList.add('lit'); SFX.build(); track(1); }});
+  await line('L3_10');
+  tapButtons([['one', '<b class="num">1</b>', 'Um'], ['two', '<b class="num">2</b>', 'Dois'], ['three', '<b class="num">3</b>', 'Três']]);
+  const surprise = [['🦇', 'L3_bat'], ['👻', 'L3_ghost'], ['✨', 'L3_found']];
+  for (const [i, k] of shuffle(['one', 'two', 'three']).entries()) {
+    await listenTap(k, 'LN3_door_' + k, 'LB_wrong');
+    el('in-' + k).textContent = surprise[i][0]; el('d-' + k).classList.add('open');
+    el('act').querySelector(`[data-k="${k}"]`).disabled = true;
+    i < 2 ? SFX.whoosh() : SFX.good();
+    await line(surprise[i][1]);
+  }
+  act(''); track(2);
+
+  // 4. o labirinto: ouvir up/down/left/right e tocar na seta
+  setScene(ART.maze()); sc.classList.remove('lit');
+  const tok = el('mtok'), at = (c, r) => { tok.style.transform = `translate(${290 + c * 116}px,${115 + r * 116}px)`; el(`t${c}${r}`).classList.add('lit'); };
+  let c = 0, r = 2; at(c, r);
+  await line('L3_11');
+  tapButtons([['up', '⬆️', 'Para cima'], ['down', '⬇️', 'Para baixo'], ['left', '⬅️', 'Esquerda'], ['right', '➡️', 'Direita']]);
+  const D = {up:[0, -1], down:[0, 1], left:[-1, 0], right:[1, 0]}, call = {up:'W_nova_up', down:'W_nova_down', left:'LN2_left', right:'LN2_right'};
+  for (const d of ['up', 'right', 'down', 'right', 'up']) {
+    await listenTap(d, call[d], 'LB_wrong');
+    c += D[d][0]; r += D[d][1]; at(c, r); SFX.tap(); await wait(500);
+  }
+  act(''); SFX.good(); track(3);
+  await line('L3_12');
+
+  // 5. a sala do trono: jump (palavra nova), depois lembrar shield, sword e open sozinho
+  setScene(ART.throne());
+  hero = heroIn(110, 400);
+  const hb = hero.querySelector('.hero-body'), vx = el('vortexfig'), vsaber = el('vsaber'), saber = el('hsaber');
+  const drones = [el('drone'), el('drone2'), el('drone3')];
+  vx.style.transform = 'translate(560px,400px)'; SFX.villain(); await wait(700);
+  await speak('jump', {intro:['L3_13'], expand:'E_jump', onOk:async () => {
+    hero.style.transform = 'translate(350px,400px)'; restart(hb, 'bighop'); SFX.whoosh(); await wait(900); track(4); }});
+
+  await line('V10');
+  drones.forEach((d, i) => { d.style.transform = `translate(${[460, 560, 500][i]}px,${[90, 150, 230][i]}px)`; }); SFX.enemy();
+  await line('L3_14');
+  await speak('shield', {model:false, expand:'E2_shield', onOk:() => reflectDrones(drones, 350)});
+
+  await line('L3_15');
+  vx.style.transform = 'translate(480px,400px)'; await wait(700);
+  restart(vsaber, 'swing'); SFX.laser();
+  await speak('sword', {model:false, expand:'E2_sword', onOk:async () => {
+    restart(saber, 'swing'); SFX.laser(); await wait(250);
+    restart(vx.querySelector('.vortex-body'), 'hit'); SFX.boom();
+    vx.style.transform = 'translate(620px,400px)'; await wait(700);
+  }});
+  await line('V08');
+  vx.style.transform = 'translate(1050px,300px)'; SFX.whoosh(); await wait(800);
+
+  await line('L3_16');
+  await speak('open', {model:false, expand:'E2_open', onOk:async () => {
+    el('cagedoor').classList.add('open'); SFX.build(); await wait(700);
+    el('bipfree').style.transform = 'translate(470px,200px)'; await wait(1000); confetti(30); track(5);
+  }});
+
+  // 6. Bip escolhe a cor nova: tocar já pinta, falar confirma
+  await line('L3_17'); await line('LN3_color');
+  const paintBip = k => document.body.style.setProperty('--bip', PAINT[k]);
+  await speakChoice(PAINT, {list:'LN3_color', preview:paintBip, expand:k => 'E_bip_' + k,
+    onOk:k => { SAVE.lucas.bip = k; persist(); restart(el('bipfree'), 'hop'); SFX.build(); }});
+
+  await line('L3_18');
+  reward({kid:'lucas', badge:ART.keyBadge, title:'Herói do Castelo!', next:'🔒 Missão 4 · em breve',
+    homeplay:'Brincadeira com o papai: ele fala <b>open</b> (você abre as mãos), <b>jump</b> (você pula) ou <b>one</b>, <b>two</b>, <b>three</b> (você mostra os dedos). Depois troquem!'});
+  await line('L3_19'); await line('L3_20');
   endButtons('lucas');
 }
 
@@ -779,13 +931,13 @@ async function lessonHenrique2(){
 
 // ---------------- início ----------------
 let runSeq = 0;
-const LESSONS = {lucas:[lessonLucas, lessonLucas2], henrique:[lessonHenrique, lessonHenrique2]};
-const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche']};
+const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3], henrique:[lessonHenrique, lessonHenrique2]};
+const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche']};
 function start(kid, m = 1){
   actx();                                   // libera o som dentro do toque
   voice.src = 'audio/' + (kid === 'lucas' ? 'L01' : 'H01') + '.mp3'; voice.play().catch(() => {}); voice.pause();
   G = {id:++runSeq, kid, m, stars:0, max:0, noMic:false, result:{}};
-  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'E_', 'E2_', 'W_coach', 'S_coach', 'T_narr']);
+  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'E4_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'E_', 'E2_', 'W_coach', 'S_coach', 'T_narr']);
   LESSONS[kid][m - 1]().catch(e => { if (e !== CANCEL) console.error(e); });
 }
 

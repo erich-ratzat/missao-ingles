@@ -140,6 +140,18 @@ const LINES = {
   "who": "nova",
   "text": "Yes!"
  },
+ "LN_yes__2": {
+  "who": "nova",
+  "text": "Great!"
+ },
+ "LN_yes__3": {
+  "who": "nova",
+  "text": "Awesome!"
+ },
+ "LN_yes__4": {
+  "who": "nova",
+  "text": "Good job!"
+ },
  "LN_check": {
   "who": "nova",
   "text": "All systems go!"
@@ -220,6 +232,14 @@ const LINES = {
   "who": "bip",
   "text": "Agora sim! Você corrigiu!"
  },
+ "LB_fixed__2": {
+  "who": "bip",
+  "text": "Isso! Agora ficou certinho!"
+ },
+ "LB_fixed__3": {
+  "who": "bip",
+  "text": "Mandou bem! Corrigiu rapidinho!"
+ },
  "LB_close": {
   "who": "bip",
   "text": "Quase!"
@@ -238,11 +258,27 @@ const LINES = {
  },
  "LB_louder": {
   "who": "bip",
-  "text": "Não escutei. Aperte o microfone e fale bem alto, pertinho."
+  "text": "Ops, não peguei. Aperte o microfone, espere ele ficar verde e fale."
+ },
+ "LB_louder__2": {
+  "who": "bip",
+  "text": "Hmm, não deu pra entender. Vamos de novo? Quando o microfone ficar verde, fala."
  },
  "LB_wrong": {
   "who": "bip",
   "text": "Opa, essa não. Escute de novo!"
+ },
+ "LB_wrong__2": {
+  "who": "bip",
+  "text": "Hmm, não é essa. Presta atenção!"
+ },
+ "LB_wrong__3": {
+  "who": "bip",
+  "text": "Quase! Escute mais uma vez."
+ },
+ "LB_pick": {
+  "who": "bip",
+  "text": "Tudo bem! Agora é só tocar no que você quer."
  },
  "L2_01": {
   "who": "bip",
@@ -342,7 +378,7 @@ const LINES = {
  },
  "LN2_color": {
   "who": "nova",
-  "text": "What color is your sword? Red, blue, or green?"
+  "text": "What color is your sword? Red, blue, green, yellow, or purple?"
  },
  "LN2_left": {
   "who": "nova",
@@ -391,6 +427,166 @@ const LINES = {
  "E_sword_green": {
   "who": "nova",
   "text": "A green sword! Awesome!"
+ },
+ "E_sword_yellow": {
+  "who": "nova",
+  "text": "A yellow sword! Awesome!"
+ },
+ "E_sword_purple": {
+  "who": "nova",
+  "text": "A purple sword! Awesome!"
+ },
+ "L3_01": {
+  "who": "nova",
+  "text": "Lucas! Bip is gone!"
+ },
+ "L3_02": {
+  "who": "bip",
+  "text": "Lucas! Lucas! Aqui é o Bip, falando pelo rádio! O Lorde Vortex me pegou!"
+ },
+ "V09": {
+  "who": "vortex",
+  "text": "Ha ha ha! Your little robot is in my castle!"
+ },
+ "L3_03": {
+  "who": "bip",
+  "text": "Ele me prendeu numa gaiola, no castelo dele, na lua escura! Vem me salvar, Lucas!"
+ },
+ "L3_04": {
+  "who": "bip",
+  "text": "Antes de sair, olha: uma peça da nave está piscando! Fala o nome dela em inglês pra consertar."
+ },
+ "L3_05": {
+  "who": "bip",
+  "text": "Nave consertada! Fala a palavra de decolar quando a Capitã terminar de contar!"
+ },
+ "L3_06": {
+  "who": "bip",
+  "text": "Chegamos na lua escura! Olha o castelo do Vortex! A porta é gigante, e está trancada."
+ },
+ "L3_07": {
+  "who": "nova",
+  "text": "This is a magic door. Say: open!"
+ },
+ "L3_08": {
+  "who": "bip",
+  "text": "A porta é mágica! Ela só abre quando alguém fala abrir em inglês. Abrir, em inglês, é..."
+ },
+ "L3_09": {
+  "who": "bip",
+  "text": "Entramos! Mas aqui dentro está tudo escuro. Fala a palavra que acende as tochas!"
+ },
+ "L3_10": {
+  "who": "bip",
+  "text": "Três portas! Uma delas leva até mim. A Capitã vai falar um número em inglês: one é um, two é dois, three é três. Escute e toque na porta certa!"
+ },
+ "L3_bat": {
+  "who": "bip",
+  "text": "Um morcego! Ai, que susto! Não é essa porta."
+ },
+ "L3_ghost": {
+  "who": "bip",
+  "text": "Um fantasma! Buuu! Também não é essa."
+ },
+ "L3_found": {
+  "who": "bip",
+  "text": "Achou! Essa porta leva pro labirinto!"
+ },
+ "L3_11": {
+  "who": "bip",
+  "text": "Um labirinto escuro! A Capitã vai guiar você: up é pra cima, down é pra baixo, left é esquerda, right é direita. Escute e toque na seta!"
+ },
+ "L3_12": {
+  "who": "bip",
+  "text": "Você saiu do labirinto! Estou te vendo, Lucas! Estou aqui em cima, na gaiola!"
+ },
+ "L3_13": {
+  "who": "bip",
+  "text": "Cuidado, tem um buraco no chão! Pra passar, você precisa pular. Se quiser, pula de verdade junto! Pular, em inglês, é..."
+ },
+ "V10": {
+  "who": "vortex",
+  "text": "You again? Drones, get him!"
+ },
+ "L3_14": {
+  "who": "bip",
+  "text": "Os drones vão atirar! O que te protege?"
+ },
+ "L3_15": {
+  "who": "bip",
+  "text": "Agora o Vortex vem com a espada vermelha dele! O que você usa pra lutar?"
+ },
+ "L3_16": {
+  "who": "bip",
+  "text": "O Vortex fugiu! Agora a gaiola. Ela também é mágica. Qual é a palavra que abre?"
+ },
+ "L3_17": {
+  "who": "bip",
+  "text": "Eba! Estou livre! Obrigado, Lucas! Mas o Vortex estragou a minha pintura. Escolhe uma cor nova pra mim! Toque nas cores pra ver, e fale a cor que você quer."
+ },
+ "L3_18": {
+  "who": "nova",
+  "text": "You did it, Lucas! You saved Bip! You are a hero!"
+ },
+ "L3_19": {
+  "who": "bip",
+  "text": "Você ganhou a chave do castelo! Agora você é o Herói do Castelo!"
+ },
+ "L3_20": {
+  "who": "bip",
+  "text": "Missão fora da tela! Chama o papai. Ele fala open, jump ou um número em inglês. Open: você abre as mãos. Jump: você pula. One, two, three: você mostra os dedos. Depois troca!"
+ },
+ "LN3_door_one": {
+  "who": "nova",
+  "text": "Door number one!"
+ },
+ "LN3_door_two": {
+  "who": "nova",
+  "text": "Door number two!"
+ },
+ "LN3_door_three": {
+  "who": "nova",
+  "text": "Door number three!"
+ },
+ "LN3_color": {
+  "who": "nova",
+  "text": "What color is Bip? Red, blue, green, yellow, or purple?"
+ },
+ "E_open": {
+  "who": "nova",
+  "text": "Open! The door is open!"
+ },
+ "E2_open": {
+  "who": "nova",
+  "text": "Open! Bip is free!"
+ },
+ "E_jump": {
+  "who": "nova",
+  "text": "Jump! Great jump!"
+ },
+ "E4_light": {
+  "who": "nova",
+  "text": "Light! Look at the castle!"
+ },
+ "E_bip_red": {
+  "who": "nova",
+  "text": "A red robot! I love it!"
+ },
+ "E_bip_blue": {
+  "who": "nova",
+  "text": "A blue robot! I love it!"
+ },
+ "E_bip_green": {
+  "who": "nova",
+  "text": "A green robot! I love it!"
+ },
+ "E_bip_yellow": {
+  "who": "nova",
+  "text": "A yellow robot! I love it!"
+ },
+ "E_bip_purple": {
+  "who": "nova",
+  "text": "A purple robot! I love it!"
  },
  "H01": {
   "who": "narr",
@@ -528,6 +724,14 @@ const LINES = {
   "who": "coach",
   "text": "Yes!"
  },
+ "HC_yes__2": {
+  "who": "coach",
+  "text": "Great!"
+ },
+ "HC_yes__3": {
+  "who": "coach",
+  "text": "Nice!"
+ },
  "E_yes": {
   "who": "coach",
   "text": "Yes! Let us play!"
@@ -568,6 +772,10 @@ const LINES = {
   "who": "narr",
   "text": "Agora sim! Você corrigiu!"
  },
+ "HN_fixed__2": {
+  "who": "narr",
+  "text": "Isso! Agora ficou certinho!"
+ },
  "HN_close": {
   "who": "narr",
   "text": "Quase!"
@@ -586,11 +794,23 @@ const LINES = {
  },
  "HN_louder": {
   "who": "narr",
-  "text": "Não escutei! Aperte o microfone e fala bem alto, pertinho."
+  "text": "Ops, não peguei! Aperte o microfone, espere ele ficar verde e fale."
+ },
+ "HN_louder__2": {
+  "who": "narr",
+  "text": "Não deu pra entender. Vamos de novo? Quando o microfone ficar verde, fala."
  },
  "HN_wrong": {
   "who": "narr",
   "text": "Opa, essa não. Escute o Coach de novo!"
+ },
+ "HN_wrong__2": {
+  "who": "narr",
+  "text": "Hmm, não é essa. Presta atenção no Coach!"
+ },
+ "HN_pick": {
+  "who": "narr",
+  "text": "Tudo bem! Agora é só tocar no que você quer."
  },
  "H2_01": {
   "who": "narr",
@@ -908,6 +1128,62 @@ const LINES = {
   "who": "bip",
   "text": "Quase! No final tem um t curtinho, quase mudo: ráit. Escute:"
  },
+ "W_nova_yellow": {
+  "who": "nova",
+  "text": "Yellow."
+ },
+ "S_nova_yellow": {
+  "who": "nova",
+  "text": "Yellow... Yellow."
+ },
+ "T_bip_yellow_0": {
+  "who": "bip",
+  "text": "Yellow começa com iê, como em ioiô. Não é rélou, é iélou. Escute:"
+ },
+ "W_nova_purple": {
+  "who": "nova",
+  "text": "Purple."
+ },
+ "S_nova_purple": {
+  "who": "nova",
+  "text": "Purple... Purple."
+ },
+ "T_bip_purple_0": {
+  "who": "bip",
+  "text": "Purple tem um R enroladinho no meio: pâr-pou. Escute:"
+ },
+ "W_nova_open": {
+  "who": "nova",
+  "text": "Open."
+ },
+ "S_nova_open": {
+  "who": "nova",
+  "text": "Open... Open."
+ },
+ "T_bip_open_0": {
+  "who": "bip",
+  "text": "Open começa com ôu, fazendo biquinho no final do ô. Escute:"
+ },
+ "T_bip_open_1": {
+  "who": "bip",
+  "text": "Quase! São dois pedacinhos: ôu e pen. Escute:"
+ },
+ "W_nova_jump": {
+  "who": "nova",
+  "text": "Jump."
+ },
+ "S_nova_jump": {
+  "who": "nova",
+  "text": "Jump... Jump."
+ },
+ "T_bip_jump_0": {
+  "who": "bip",
+  "text": "Jump começa com dj, juntinho, como em djembê. Escute:"
+ },
+ "T_bip_jump_1": {
+  "who": "bip",
+  "text": "Quase! No final a boca fecha: mp. Escute:"
+ },
  "W_coach_yes": {
   "who": "coach",
   "text": "Yes."
@@ -1072,7 +1348,14 @@ const VOCAB = {
   "icon": "✈️",
   "ok": [
    "wing",
-   "wings"
+   "wings",
+   "wink",
+   "wig",
+   "ween",
+   "weeing"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1110,7 +1393,15 @@ const VOCAB = {
   "icon": "🚀",
   "ok": [
    "rocket",
-   "rockets"
+   "rockets",
+   "rock it",
+   "rocked it",
+   "rockit",
+   "racket",
+   "rocking"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1145,7 +1436,14 @@ const VOCAB = {
   "ok": [
    "laser",
    "lasers",
-   "lazer"
+   "lazer",
+   "lazers",
+   "lacer",
+   "laze her",
+   "lays her"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1189,7 +1487,15 @@ const VOCAB = {
   "ok": [
    "light",
    "lights",
-   "lite"
+   "lite",
+   "lighty",
+   "lighter",
+   "lighting",
+   "light it",
+   "lie it"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1242,7 +1548,12 @@ const VOCAB = {
   "icon": "🔴",
   "ok": [
    "red",
-   "reds"
+   "reds",
+   "rad",
+   "read",
+   "redd",
+   "rid",
+   "reddit"
   ],
   "near": [
    [
@@ -1276,7 +1587,11 @@ const VOCAB = {
   "ok": [
    "blue",
    "blew",
-   "blues"
+   "blues",
+   "bleu",
+   "blu",
+   "bluey",
+   "balloo"
   ],
   "near": [
    [
@@ -1306,7 +1621,11 @@ const VOCAB = {
   "icon": "🟢",
   "ok": [
    "green",
-   "greens"
+   "greens",
+   "grin",
+   "gree",
+   "greeny",
+   "greene"
   ],
   "near": [
    [
@@ -1337,7 +1656,12 @@ const VOCAB = {
   "icon": "🟡",
   "ok": [
    "yellow",
-   "yellows"
+   "yellows",
+   "yelo",
+   "yello",
+   "hello",
+   "jello",
+   "ello"
   ],
   "near": [
    [
@@ -1367,7 +1691,11 @@ const VOCAB = {
   "icon": "🏁",
   "ok": [
    "go",
-   "goes"
+   "goes",
+   "gogo",
+   "go go",
+   "gone",
+   "gol"
   ],
   "near": [
    [
@@ -1542,7 +1870,16 @@ const VOCAB = {
    "sword",
    "swords",
    "soared",
-   "sord"
+   "sord",
+   "sward",
+   "swore",
+   "sored",
+   "swored",
+   "sorde",
+   "sort"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1584,7 +1921,16 @@ const VOCAB = {
   "ok": [
    "shield",
    "shields",
-   "sheild"
+   "sheild",
+   "shielded",
+   "she ll",
+   "sheeld",
+   "shealed",
+   "shilled",
+   "shild"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1627,7 +1973,12 @@ const VOCAB = {
    "passed",
    "past",
    "passes",
-   "pas"
+   "pas",
+   "pasta",
+   "passy"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1670,7 +2021,11 @@ const VOCAB = {
   "ok": [
    "head",
    "heads",
-   "headed"
+   "headed",
+   "hed"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1716,7 +2071,13 @@ const VOCAB = {
   "icon": "⬅️",
   "ok": [
    "left",
-   "lefts"
+   "lefts",
+   "lefty",
+   "lift",
+   "laughed"
+  ],
+  "almost": [
+   0
   ],
   "near": [
    [
@@ -1762,7 +2123,12 @@ const VOCAB = {
    "rite",
    "wright",
    "alright",
-   "all right"
+   "all right",
+   "righty",
+   "writ"
+  ],
+  "almost": [
+   1
   ],
   "near": [
    [
@@ -1800,6 +2166,131 @@ const VOCAB = {
   "tips": [
    "Right começa com o R do inglês: a língua fica enroladinha lá atrás, sem encostar em nada. Escute:",
    "Quase! No final tem um t curtinho, quase mudo: ráit. Escute:"
+  ]
+ },
+ "purple": {
+  "pt": "roxo",
+  "say": "pârpou",
+  "icon": "🟣",
+  "ok": [
+   "purple",
+   "purples",
+   "purpo",
+   "purpel",
+   "perple"
+  ],
+  "near": [
+   [
+    "people",
+    "paper",
+    "maple",
+    "pupil",
+    "apple",
+    "popple",
+    "bubble",
+    "pebble",
+    "purse",
+    "purr",
+    "pepper",
+    "puppy"
+   ]
+  ],
+  "tips": [
+   "Purple tem um R enroladinho no meio: pâr-pou. Escute:"
+  ]
+ },
+ "open": {
+  "pt": "abrir",
+  "say": "ôu-pen",
+  "icon": "🚪",
+  "ok": [
+   "open",
+   "opened",
+   "opens",
+   "opening",
+   "oppen",
+   "opan",
+   "o pen",
+   "oh pen",
+   "hopen"
+  ],
+  "almost": [
+   1
+  ],
+  "near": [
+   [
+    "hoping",
+    "hope",
+    "oak",
+    "oven",
+    "often",
+    "apple",
+    "happen",
+    "up and",
+    "opal",
+    "upon",
+    "pen"
+   ],
+   [
+    "ope",
+    "oh",
+    "oppa",
+    "opa",
+    "hope in",
+    "ocean",
+    "olive"
+   ]
+  ],
+  "tips": [
+   "Open começa com ôu, fazendo biquinho no final do ô. Escute:",
+   "Quase! São dois pedacinhos: ôu e pen. Escute:"
+  ]
+ },
+ "jump": {
+  "pt": "pular",
+  "say": "djâmp",
+  "icon": "🦘",
+  "ok": [
+   "jump",
+   "jumps",
+   "jumped",
+   "jumping",
+   "jumpy",
+   "jumper",
+   "champ",
+   "chump"
+  ],
+  "almost": [
+   1
+  ],
+  "near": [
+   [
+    "dump",
+    "jam",
+    "john",
+    "junk",
+    "gum",
+    "jungle",
+    "jim",
+    "joe",
+    "pump",
+    "bump",
+    "lump",
+    "yum"
+   ],
+   [
+    "jum",
+    "jun",
+    "june",
+    "jumble",
+    "jumbo",
+    "just",
+    "jug"
+   ]
+  ],
+  "tips": [
+   "Jump começa com dj, juntinho, como em djembê. Escute:",
+   "Quase! No final a boca fecha: mp. Escute:"
   ]
  },
  "up": {
