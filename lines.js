@@ -10,7 +10,7 @@ const LINES = {
  },
  "V01": {
   "who": "vortex",
-  "text": "Ha ha ha! I am Lord Vortex! Your base is mine!"
+  "text": "Ha ha ha! I'm Lord Vortex! Your base is mine!"
  },
  "L03": {
   "who": "bip",
@@ -86,7 +86,7 @@ const LINES = {
  },
  "V02": {
   "who": "vortex",
-  "text": "You cannot escape me! Ha ha ha!"
+  "text": "You can't escape me! Ha ha ha!"
  },
  "L24": {
   "who": "bip",
@@ -94,11 +94,11 @@ const LINES = {
  },
  "V03": {
   "who": "vortex",
-  "text": "Nooo! I will be back!"
+  "text": "Nooo! I'll be back!"
  },
  "L25": {
   "who": "nova",
-  "text": "You did it, Lucas! The base is safe. You are a real pilot!"
+  "text": "You did it, Lucas! The base is safe. You're a real pilot!"
  },
  "L26": {
   "who": "bip",
@@ -158,7 +158,7 @@ const LINES = {
  },
  "LN_q_light": {
   "who": "nova",
-  "text": "It is dark! What do we need?"
+  "text": "It's dark! What do we need?"
  },
  "LN_q_laser": {
   "who": "nova",
@@ -286,7 +286,7 @@ const LINES = {
  },
  "V04": {
   "who": "vortex",
-  "text": "Ha ha ha! I have the Light Crystal! Your base has no power!"
+  "text": "Ha ha ha! I've got the Light Crystal! Your base has no power!"
  },
  "L2_02": {
   "who": "bip",
@@ -362,11 +362,11 @@ const LINES = {
  },
  "V08": {
   "who": "vortex",
-  "text": "This is not over! I will be back!"
+  "text": "This isn't over! I'll be back!"
  },
  "L2_17": {
   "who": "nova",
-  "text": "You did it, Lucas! You are a space knight!"
+  "text": "You did it, Lucas! You're a space knight!"
  },
  "L2_18": {
   "who": "bip",
@@ -402,7 +402,7 @@ const LINES = {
  },
  "E_shield": {
   "who": "nova",
-  "text": "A shield! You are safe!"
+  "text": "A shield! You're safe!"
  },
  "E2_shield": {
   "who": "nova",
@@ -526,7 +526,7 @@ const LINES = {
  },
  "L3_18": {
   "who": "nova",
-  "text": "You did it, Lucas! You saved Bip! You are a hero!"
+  "text": "You did it, Lucas! You saved Bip! You're a hero!"
  },
  "L3_19": {
   "who": "bip",
@@ -602,7 +602,7 @@ const LINES = {
  },
  "H04": {
   "who": "coach",
-  "text": "Hey, champ! Are you ready?"
+  "text": "Hey champ! Are you ready?"
  },
  "H05": {
   "who": "narr",
@@ -654,7 +654,7 @@ const LINES = {
  },
  "T01": {
   "who": "tony",
-  "text": "I am Big Tony! No goals today!"
+  "text": "I'm Big Tony! No goals today!"
  },
  "H17": {
   "who": "narr",
@@ -690,7 +690,7 @@ const LINES = {
  },
  "T04": {
   "who": "tony",
-  "text": "Okay... good kick, champ."
+  "text": "Okay... good kick champ."
  },
  "H23": {
   "who": "narr",
@@ -714,7 +714,7 @@ const LINES = {
  },
  "HC_okay": {
   "who": "coach",
-  "text": "It is okay, champ! You can do it!"
+  "text": "It's okay champ! You can do it!"
  },
  "HC_ready": {
   "who": "coach",
@@ -734,7 +734,7 @@ const LINES = {
  },
  "E_yes": {
   "who": "coach",
-  "text": "Yes! Let us play!"
+  "text": "Yes! Let's play!"
  },
  "E_shoes": {
   "who": "coach",
@@ -742,7 +742,7 @@ const LINES = {
  },
  "E_ball": {
   "who": "coach",
-  "text": "Yes! The ball! Let us go!"
+  "text": "Yes! The ball! Let's go!"
  },
  "E2_yes": {
   "who": "coach",
@@ -750,7 +750,7 @@ const LINES = {
  },
  "E_goal": {
   "who": "coach",
-  "text": "Goal! You are a champion!"
+  "text": "Goal! You're a champion!"
  },
  "E_shirt_red": {
   "who": "coach",
@@ -858,7 +858,7 @@ const LINES = {
  },
  "T06": {
   "who": "tony",
-  "text": "No goals today, champ!"
+  "text": "No goals today champ!"
  },
  "H2_11": {
   "who": "narr",
@@ -886,7 +886,7 @@ const LINES = {
  },
  "T08": {
   "who": "tony",
-  "text": "Okay, okay... You are good, champ."
+  "text": "Okay, okay... You're good champ."
  },
  "H2_16": {
   "who": "narr",
@@ -898,7 +898,7 @@ const LINES = {
  },
  "HC2_what": {
   "who": "coach",
-  "text": "What is this?"
+  "text": "What's this?"
  },
  "HC2_pass": {
   "who": "coach",
@@ -922,7 +922,7 @@ const LINES = {
  },
  "HC2_end": {
   "who": "coach",
-  "text": "Great game, champ! You are a team player!"
+  "text": "Great game champ! You're a team player!"
  },
  "E_pass": {
   "who": "coach",

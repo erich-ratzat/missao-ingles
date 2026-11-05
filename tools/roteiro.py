@@ -2,8 +2,9 @@
 
 Uso:  python tools/roteiro.py          (grava só o que falta)
       python tools/roteiro.py --all    (regrava tudo)
+      python tools/roteiro.py --mark   (só anota no manifest os áudios que já existem, sem gravar)
 """
-import asyncio, json, pathlib, sys
+import asyncio, json, pathlib, re, subprocess, sys, tempfile
 import edge_tts
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -13,7 +14,7 @@ CAST = {
     'nova':   ('en-US-AvaNeural',         '-8%',  '+0Hz'),   # Capitã Nova (só fala inglês)
     'vortex': ('en-GB-RyanNeural',        '-12%', '-22Hz'),  # Lorde Vortex, o vilão (inglês)
     'bip':    ('pt-BR-FranciscaNeural',   '+6%',  '+30Hz'),  # Bip, robô ajudante (português)
-    'coach':  ('en-US-GuyNeural',         '-5%',  '+0Hz'),   # Coach Max (só fala inglês)
+    'coach':  ('en-US-AndrewNeural',      '-4%',  '+0Hz'),   # Coach Max (só fala inglês)
     'tony':   ('en-US-ChristopherNeural', '-6%',  '-14Hz'),  # Big Tony, goleiro rival (inglês)
     'narr':   ('pt-BR-AntonioNeural',     '+10%', '+0Hz'),   # narrador do jogo (português)
 }
@@ -24,7 +25,7 @@ LINES = {
     # ---------------- LUCAS · Esquadrão Estelar · Missão 1 ----------------
     'L01': ('bip',  'Lucas! Lucas! Alerta vermelho! Eu sou o Bip, seu robô ajudante.'),
     'L02': ('bip',  'Uma nave gigante apareceu no radar. É o Lorde Vortex!'),
-    'V01': ('vortex', 'Ha ha ha! I am Lord Vortex! Your base is mine!'),
+    'V01': ('vortex', "Ha ha ha! I'm Lord Vortex! Your base is mine!"),
     'L03': ('bip',  'Ele disse que a nossa base agora é dele. Nem pensar! Vou chamar a Capitã Nova.'),
     'L04': ('nova', 'Pilot Lucas! We need you! Build a ship!'),
     'L05': ('bip',  'A Capitã disse: piloto Lucas, precisamos de você! Construa uma nave!'),
@@ -36,17 +37,17 @@ LINES = {
     'L14': ('bip',  'A nave está quase pronta! Agora a Capitã vai testar as peças. Ela fala o nome em inglês e você toca na peça certa.'),
     'L15': ('bip',  'Agora a parte mais legal: a cor da sua nave! Toque nas cores pra ouvir. Depois aperte o microfone e fale a cor que você quer.'),
     'L16': ('nova', 'Wow! Your ship is ready, pilot!'),
-    'L17': ('bip',  'Pra decolar, a Capitã conta até três. No final, você grita: Go! Quer dizer: vai!'),
-    'L18': ('bip',  'Decolamos! Cuidado, asteroides! A Capitã vai dizer pra onde ir: up é pra cima, down é pra baixo. Escute e toque na seta!'),
+    'L17': ('bip',  'Pra decolar, a Capitã conta até três. No final, você grita: {Go}! Quer dizer: vai!'),
+    'L18': ('bip',  'Decolamos! Cuidado, asteroides! A Capitã vai dizer pra onde ir: {up} é pra cima, {down} é pra baixo. Escute e toque na seta!'),
     'L19': ('bip',  'Ufa! Passamos pelos asteroides!'),
     'L20': ('bip',  'Ih! Um drone do Vortex atirou e apagou as nossas luzes! Não dá pra ver nada!'),
     'L21': ('bip',  'Fala o nome da peça que acende a nave!'),
     'L22': ('bip',  'São os drones do Vortex! Qual peça a gente usa pra acertar os drones?'),
     'L23': ('bip',  'Opa! Um drone acertou a nossa asa! A nave está rodando! Qual peça a gente precisa consertar?'),
-    'V02': ('vortex', 'You cannot escape me! Ha ha ha!'),
+    'V02': ('vortex', "You can't escape me! Ha ha ha!"),
     'L24': ('bip',  'O Vortex está puxando a gente com um raio! Precisamos de força total! Qual peça faz a nave correr?'),
-    'V03': ('vortex', 'Nooo! I will be back!'),
-    'L25': ('nova', 'You did it, Lucas! The base is safe. You are a real pilot!'),
+    'V03': ('vortex', "Nooo! I'll be back!"),
+    'L25': ('nova', "You did it, Lucas! The base is safe. You're a real pilot!"),
     'L26': ('bip',  'Você salvou a base estelar e ganhou suas asas de piloto!'),
     'L27': ('bip',  'Mas o Vortex disse que vai voltar... Amanhã você vai precisar de uma espada de luz. Até amanhã, piloto!'),
     # Capitã Nova
@@ -62,7 +63,7 @@ LINES = {
     'LN_yes__3':   ('nova', 'Awesome!'),
     'LN_yes__4':   ('nova', 'Good job!'),
     'LN_check':    ('nova', 'All systems go!'),
-    'LN_q_light':  ('nova', 'It is dark! What do we need?'),
+    'LN_q_light':  ('nova', "It's dark! What do we need?"),
     'LN_q_laser':  ('nova', 'Drones! What do we use?'),
     'LN_q_wing':   ('nova', 'Our wing is broken! Fix it!'),
     'LN_q_rocket': ('nova', 'Pilot! Full power! Now!'),
@@ -97,7 +98,7 @@ LINES = {
 
     # ---------------- LUCAS · Missão 2 · A Espada de Luz ----------------
     'L2_01': ('bip',  'Lucas! Alerta! O Lorde Vortex voltou, como prometeu!'),
-    'V04':   ('vortex', 'Ha ha ha! I have the Light Crystal! Your base has no power!'),
+    'V04':   ('vortex', "Ha ha ha! I've got the Light Crystal! Your base has no power!"),
     'L2_02': ('bip',  'Ele roubou o Cristal de Luz! É ele que dá energia pra base inteira. Sem ele, tudo vai apagar!'),
     'L2_03': ('bip',  'Antes de sair, vistoria da nave! Eu mostro a peça e você fala o nome em inglês. Desta vez a Capitã não fala antes. Você lembra!'),
     'L2_04': ('bip',  'Nave pronta! O Vortex fugiu para o planeta roxo. Vamos atrás dele!'),
@@ -108,25 +109,25 @@ LINES = {
     'L2_08': ('bip',  'A Capitã te mandou uma espada de luz! Espada, em inglês, é...'),
     'L2_09': ('bip',  'Escolha a cor da sua espada! Toque nas cores pra ouvir, e fale a cor que você quer.'),
     'L2_10': ('bip',  'E eu fiz um presente pra você: um escudo de energia, pra te proteger! Escudo, em inglês, é...'),
-    'L2_11': ('bip',  'Cuidado! Os drones do Vortex estão atirando bolas de energia! A Capitã vai gritar pra onde pular: left é esquerda, right é direita. Escute e toque na seta! Se quiser, pula de verdade!'),
+    'L2_11': ('bip',  'Cuidado! Os drones do Vortex estão atirando bolas de energia! A Capitã vai gritar pra onde pular: {left} é esquerda, {right} é direita. Escute e toque na seta! Se quiser, pula de verdade!'),
     'L2_12': ('bip',  'Ufa! Nenhuma bola acertou você!'),
-    'L2_13': ('bip',  'Agora a Capitã vai treinar você. Quando ela falar sword, toque na espada. Quando falar shield, toque no escudo.'),
+    'L2_13': ('bip',  'Agora a Capitã vai treinar você. Quando ela falar {sword}, toque na espada. Quando falar {shield}, toque no escudo.'),
     'V06':   ('vortex', 'Drones! Attack!'),
     'L2_14': ('bip',  'Muitos drones atirando ao mesmo tempo! Não dá pra pular de todos! O que te protege?'),
     'L2_15': ('bip',  'Os drones fugiram! Agora é você contra o Vortex. O que você usa pra lutar?'),
     'V07':   ('vortex', 'My crystal! Nooo!'),
     'L2_16': ('bip',  'O Vortex derrubou o cristal! Mas ele apagou... Fala a palavra que acende tudo!'),
-    'V08':   ('vortex', 'This is not over! I will be back!'),
-    'L2_17': ('nova', 'You did it, Lucas! You are a space knight!'),
+    'V08':   ('vortex', "This isn't over! I'll be back!"),
+    'L2_17': ('nova', "You did it, Lucas! You're a space knight!"),
     'L2_18': ('bip',  'O cristal voltou pra base e tudo acendeu de novo! Você virou Cavaleiro Estelar!'),
-    'L2_19': ('bip',  'Agora uma missão fora da tela! Chama o papai. Ele fala left ou right, e você pula pro lado certo. Depois troca: você é a Capitã e o papai pula!'),
+    'L2_19': ('bip',  'Agora uma missão fora da tela! Chama o papai. Ele fala {left} ou {right}, e você pula pro lado certo. Depois troca: você é a Capitã e o papai pula!'),
     'LN2_color':  ('nova', 'What color is your sword? Red, blue, green, yellow, or purple?'),
     'LN2_left':   ('nova', 'Left!'),
     'LN2_right':  ('nova', 'Right!'),
     'LN2_sword':  ('nova', 'Sword!'),
     'LN2_shield': ('nova', 'Shield!'),
     'E_sword':    ('nova', 'A sword! Zoom, zoom!'),
-    'E_shield':   ('nova', 'A shield! You are safe!'),
+    'E_shield':   ('nova', "A shield! You're safe!"),
     'E2_shield':  ('nova', 'Shield up! Nothing can hit you!'),
     'E2_sword':   ('nova', 'Zoom! Great move!'),
     'E3_light':   ('nova', 'Light! The crystal is back!'),
@@ -147,11 +148,11 @@ LINES = {
     'L3_07': ('nova', 'This is a magic door. Say: open!'),
     'L3_08': ('bip',  'A porta é mágica! Ela só abre quando alguém fala abrir em inglês. Abrir, em inglês, é...'),
     'L3_09': ('bip',  'Entramos! Mas aqui dentro está tudo escuro. Fala a palavra que acende as tochas!'),
-    'L3_10': ('bip',  'Três portas! Uma delas leva até mim. A Capitã vai falar um número em inglês: one é um, two é dois, three é três. Escute e toque na porta certa!'),
+    'L3_10': ('bip',  'Três portas! Uma delas leva até mim. A Capitã vai falar um número em inglês: {one} é um, {two} é dois, {three} é três. Escute e toque na porta certa!'),
     'L3_bat':   ('bip', 'Um morcego! Ai, que susto! Não é essa porta.'),
     'L3_ghost': ('bip', 'Um fantasma! Buuu! Também não é essa.'),
     'L3_found': ('bip', 'Achou! Essa porta leva pro labirinto!'),
-    'L3_11': ('bip',  'Um labirinto escuro! A Capitã vai guiar você: up é pra cima, down é pra baixo, left é esquerda, right é direita. Escute e toque na seta!'),
+    'L3_11': ('bip',  'Um labirinto escuro! A Capitã vai guiar você: {up} é pra cima, {down} é pra baixo, {left} é esquerda, {right} é direita. Escute e toque na seta!'),
     'L3_12': ('bip',  'Você saiu do labirinto! Estou te vendo, Lucas! Estou aqui em cima, na gaiola!'),
     'L3_13': ('bip',  'Cuidado, tem um buraco no chão! Pra passar, você precisa pular. Se quiser, pula de verdade junto! Pular, em inglês, é...'),
     'V10':   ('vortex', 'You again? Drones, get him!'),
@@ -159,9 +160,9 @@ LINES = {
     'L3_15': ('bip',  'Agora o Vortex vem com a espada vermelha dele! O que você usa pra lutar?'),
     'L3_16': ('bip',  'O Vortex fugiu! Agora a gaiola. Ela também é mágica. Qual é a palavra que abre?'),
     'L3_17': ('bip',  'Eba! Estou livre! Obrigado, Lucas! Mas o Vortex estragou a minha pintura. Escolhe uma cor nova pra mim! Toque nas cores pra ver, e fale a cor que você quer.'),
-    'L3_18': ('nova', 'You did it, Lucas! You saved Bip! You are a hero!'),
+    'L3_18': ('nova', "You did it, Lucas! You saved Bip! You're a hero!"),
     'L3_19': ('bip',  'Você ganhou a chave do castelo! Agora você é o Herói do Castelo!'),
-    'L3_20': ('bip',  'Missão fora da tela! Chama o papai. Ele fala open, jump ou um número em inglês. Open: você abre as mãos. Jump: você pula. One, two, three: você mostra os dedos. Depois troca!'),
+    'L3_20': ('bip',  'Missão fora da tela! Chama o papai. Ele fala {open}, {jump} ou um número em inglês. {Open}: você abre as mãos. {Jump}: você pula. {One}, {two}, {three}: você mostra os dedos. Depois troca!'),
     'LN3_door_one':   ('nova', 'Door number one!'),
     'LN3_door_two':   ('nova', 'Door number two!'),
     'LN3_door_three': ('nova', 'Door number three!'),
@@ -180,20 +181,20 @@ LINES = {
     'H01': ('narr', 'Olá, olá, torcida! Hoje é dia de grande final!'),
     'H02': ('narr', 'De um lado, os Tubarões. Do outro, o time do craque Henrique!'),
     'H03': ('narr', 'O técnico do time é o Coach Max. Ele veio dos Estados Unidos e só fala inglês. Escute bem!'),
-    'H04': ('coach', 'Hey, champ! Are you ready?'),
+    'H04': ('coach', 'Hey champ! Are you ready?'),
     'H05': ('narr', 'Ele perguntou se você está pronto! Pra dizer sim, em inglês, a gente fala...'),
     'H06': ('coach', 'Now choose your shirt! Red, blue, or yellow?'),
-    'H07': ('narr', 'Shirt é camisa! Toque nas cores pra ouvir. Depois aperte o microfone e fale a cor que você quer.'),
-    'H08': ('narr', 'Agora a chuteira! Em inglês, a gente fala shoes. Escute o Coach.'),
+    'H07': ('narr', '{Shirt} é camisa! Toque nas cores pra ouvir. Depois aperte o microfone e fale a cor que você quer.'),
+    'H08': ('narr', 'Agora a chuteira! Em inglês, a gente fala {shoes}. Escute o Coach.'),
     'H09': ('coach', 'Take the ball!'),
     'H10': ('narr', 'O Coach quer a bola! Bola, em inglês, é...'),
     'H11': ('narr', 'Entrando em campo! Começa a grande final!'),
     'H12': ('narr', 'Ih, os Tubarões fizeram um gol! Um a zero pra eles.'),
-    'H13': ('narr', 'Agora o Coach vai gritar o que fazer. Run é correr. Kick é chutar. Escute e toque no botão certo! Se quiser, corre no lugar de verdade!'),
+    'H13': ('narr', 'Agora o Coach vai gritar o que fazer. {Run} é correr. {Kick} é chutar. Escute e toque no botão certo! Se quiser, corre no lugar de verdade!'),
     'H14': ('narr', 'Goool! Empatou! Um a um!'),
     'H15': ('narr', 'Fim de jogo! Empate! A final vai ser decidida nos pênaltis!'),
     'H16': ('narr', 'E no gol dos Tubarões está o goleiro mais bravo do campeonato: Big Tony!'),
-    'T01': ('tony', 'I am Big Tony! No goals today!'),
+    'T01': ('tony', "I'm Big Tony! No goals today!"),
     'H17': ('narr', 'Ele disse que hoje não vai ter gol. Vamos ver! Pra escolher onde chutar, fale a cor do alvo em inglês.'),
     'H18': ('narr', 'Gooool! Que golaço!'),
     'T02': ('tony', 'What? No!'),
@@ -202,23 +203,23 @@ LINES = {
     'H20': ('narr', 'Última cobrança! Se fizer, é campeão!'),
     'H21': ('narr', 'Entrouuu! Agora grita gol em inglês, bem alto!'),
     'H22': ('narr', 'É campeão! É campeão! Henrique fez o gol do título!'),
-    'T04': ('tony', 'Okay... good kick, champ.'),
+    'T04': ('tony', 'Okay... good kick champ.'),
     'H23': ('narr', 'Você ganhou a taça e a figurinha de Craque da Final! Amanhã tem treino novo com o Coach Max. Até amanhã, campeão!'),
     # Coach Max
     'HC_run':    ('coach', 'Run! Run!'),
     'HC_kick':   ('coach', 'Kick!'),
     'HC_goal':   ('coach', 'Goal! Great kick!'),
     'HC_where':  ('coach', 'Where? Red, blue, or yellow?'),
-    'HC_okay':   ('coach', 'It is okay, champ! You can do it!'),
+    'HC_okay':   ('coach', "It's okay champ! You can do it!"),
     'HC_ready':  ('coach', 'Champ! Are you ready?'),
     'HC_yes':    ('coach', 'Yes!'),
     'HC_yes__2': ('coach', 'Great!'),
     'HC_yes__3': ('coach', 'Nice!'),
-    'E_yes':     ('coach', 'Yes! Let us play!'),
+    'E_yes':     ('coach', "Yes! Let's play!"),
     'E_shoes':   ('coach', 'Cool shoes! Fast feet!'),
-    'E_ball':    ('coach', 'Yes! The ball! Let us go!'),
+    'E_ball':    ('coach', "Yes! The ball! Let's go!"),
     'E2_yes':    ('coach', 'Yes! You can do it!'),
-    'E_goal':    ('coach', 'Goal! You are a champion!'),
+    'E_goal':    ('coach', "Goal! You're a champion!"),
     'E_shirt_red':    ('coach', 'A red shirt! Nice!'),
     'E_shirt_blue':   ('coach', 'A blue shirt! Nice!'),
     'E_shirt_yellow': ('coach', 'A yellow shirt! Nice!'),
@@ -243,28 +244,28 @@ LINES = {
     'H2_03': ('narr', 'Ele disse que no sábado não vai ter gol. Vamos treinar! Primeiro o Coach confere a mochila. Desta vez ele não fala a palavra antes: você lembra!'),
     'H2_04': ('narr', 'Mochila pronta! Vamos pro campo!'),
     'H2_05': ('narr', 'Olha quem veio treinar com você: o seu irmão Lucas! Ele joga no seu time.'),
-    'H2_06': ('narr', 'Pass é passar a bola pro amigo. Escute o Coach e repita!'),
+    'H2_06': ('narr', '{Pass} é passar a bola pro amigo. Escute o Coach e repita!'),
     'H2_07': ('narr', 'Agora o Lucas vai cruzar a bola pro alto. Pra cabecear, você bate com a cabeça. Cabeça, em inglês, é...'),
-    'H2_08': ('narr', 'Agora o drible! Tem um zagueiro na frente. O Coach grita left, esquerda, ou right, direita. Toque na seta pro lado certo. Se quiser, dá um pulinho pro lado de verdade!'),
+    'H2_08': ('narr', 'Agora o drible! Tem um zagueiro na frente. O Coach grita {left}, esquerda, ou {right}, direita. Toque na seta pro lado certo. Se quiser, dá um pulinho pro lado de verdade!'),
     'H2_09': ('narr', 'Driblou! Agora o treino final: o Coach grita e você toca no que ele mandou. Passar, cabecear ou chutar!'),
     'H2_10': ('narr', 'Chegou o sábado! Revanche contra os Tubarões! E o Big Tony está no gol.'),
-    'T06':   ('tony', 'No goals today, champ!'),
+    'T06':   ('tony', 'No goals today champ!'),
     'H2_11': ('narr', 'Henrique está com a bola, mas tem um Tubarão na frente! O Lucas está livre. O que você faz?'),
     'H2_12': ('narr', 'O Lucas cruzou! A bola vem alta! Com o que você bate nela?'),
     'H2_13': ('narr', 'Goool de cabeça! Um a zero!'),
     'T07':   ('tony', 'What? A header?'),
-    'H2_14': ('narr', 'Falta pra nós! Você escolhe o canto. Fala em inglês: left ou right?'),
+    'H2_14': ('narr', 'Falta pra nós! Você escolhe o canto. Fala em inglês: {left} ou {right}?'),
     'H2_15': ('narr', 'Goool! Dois a zero! É vitória!'),
-    'T08':   ('tony', 'Okay, okay... You are good, champ.'),
+    'T08':   ('tony', "Okay, okay... You're good champ."),
     'H2_16': ('narr', 'Você ganhou a medalha de Craque do Time!'),
-    'H2_17': ('narr', 'Agora um treino fora da tela! Chama o papai e pega uma bolinha de meia. O papai grita pass, head, left ou right, e você faz. Depois troca: você é o Coach!'),
-    'HC2_what':  ('coach', 'What is this?'),
+    'H2_17': ('narr', 'Agora um treino fora da tela! Chama o papai e pega uma bolinha de meia. O papai grita {pass}, {head}, {left} ou {right}, e você faz. Depois troca: você é o Coach!'),
+    'HC2_what':  ('coach', "What's this?"),
     'HC2_pass':  ('coach', 'Pass! Pass the ball!'),
     'HC2_head':  ('coach', 'Head! Head!'),
     'HC2_left':  ('coach', 'Left!'),
     'HC2_right': ('coach', 'Right!'),
     'HC2_where': ('coach', 'Left or right?'),
-    'HC2_end':   ('coach', 'Great game, champ! You are a team player!'),
+    'HC2_end':   ('coach', "Great game champ! You're a team player!"),
     'E_pass':    ('coach', 'Nice pass! Teamwork!'),
     'E_head':    ('coach', 'Head! Great header!'),
     'E2_pass':   ('coach', 'Yes! Good pass!'),
@@ -280,18 +281,18 @@ VOCAB = {
     'wing':   {'pt': 'asa', 'say': 'uíng', 'icon': '✈️', 'ok': ['wing', 'wings', 'wink', 'wig', 'ween', 'weeing'], 'almost': [1],
                'near': [['ring', 'being', 'king', 'thing', 'sing', 'bing', 'ding', 'swing'],
                         ['win', 'when', 'wind', 'wig', 'wink', 'wit', 'we', 'winner', 'wean', 'ween', 'wine']],
-               'tips': ['Wing começa fazendo biquinho, como se fosse falar u. Escute de novo:',
+               'tips': ['{Wing} começa fazendo biquinho, como se fosse falar u. Escute de novo:',
                         'Quase! No final, o som sai pelo nariz, sem fechar a boca. Escute de novo:']},
     'rocket': {'pt': 'foguete', 'say': 'rá-quet', 'icon': '🚀', 'ok': ['rocket', 'rockets', 'rock it', 'rocked it', 'rockit', 'racket', 'rocking'], 'almost': [1],
                'near': [['pocket', 'locket', 'socket', 'racket', 'raquet', 'rack it', 'jacket', 'hockey'],
                         ['rock', 'rocky', 'rocked', 'rocks', 'rockin', 'rok', 'rocco']],
-               'tips': ['Rocket começa com o R do inglês: a língua fica enroladinha lá atrás, sem encostar em nada. E abre bem a boca. Escute:',
+               'tips': ['{Rocket} começa com o R do inglês: a língua fica enroladinha lá atrás, sem encostar em nada. E abre bem a boca. Escute:',
                         'Quase! São dois pedacinhos: rá e quet. Fala os dois, sem pular o final. Escute:']},
     'laser':  {'pt': 'laser', 'say': 'lêi-zer', 'icon': '⚡', 'ok': ['laser', 'lasers', 'lazer', 'lazers', 'lacer', 'laze her', 'lays her'], 'almost': [1],
                'near': [['loser', 'lesser', 'leisure', 'lousy', 'looser', 'user', 'lasagna'],
                         ['lazy', 'lady', 'lacy', 'layer', 'later', 'lace', 'laces', 'lay', 'lays'],
                         ['razor', 'racer', 'raiser', 'raser', 'riser']],
-               'tips': ['Laser começa com lêi, bem aberto, como em lei. Escute:',
+               'tips': ['{Laser} começa com lêi, bem aberto, como em lei. Escute:',
                         'Quase! No final vem zer, com o R enroladinho. Escute:',
                         'Começa com o som do L, igual em lua: a pontinha da língua encosta atrás dos dentes. Escute:']},
     'light':  {'pt': 'luz', 'say': 'lái-t', 'icon': '💡', 'ok': ['light', 'lights', 'lite', 'lighty', 'lighter', 'lighting', 'light it', 'lie it'], 'almost': [1],
@@ -299,86 +300,86 @@ VOCAB = {
                          'kite', 'quite', 'rite', 'wright', 'why', 'wait', 'eight', 'ight', 'hi', 'high'],
                         ['like', 'life', 'line', 'lie', 'lied', 'lies', 'lime', 'lighty', 'lighter', 'lighting',
                          'lightning', 'alike', 'lion', 'lay']],
-               'tips': ['Light começa com o som do L, igual em lua: a pontinha da língua encosta atrás dos dentes de cima. Escute:',
+               'tips': ['{Light} começa com o som do L, igual em lua: a pontinha da língua encosta atrás dos dentes de cima. Escute:',
                         'Quase! No final tem um tê bem curtinho, quase mudo, sem i no final. Escute:']},
     'red':    {'pt': 'vermelho', 'say': 'réd', 'icon': '🔴', 'ok': ['red', 'reds', 'rad', 'read', 'redd', 'rid', 'reddit'],
                'near': [['wed', 'bed', 'head', 'fed', 'had', 'rad', 'rat', 'ret', 'rent', 'ready', 'raid', 'rid',
                          'bread', 'dread', 'hey', 'ed', 'head']],
-               'tips': ['Red começa com o R do inglês: a língua fica enroladinha, sem encostar em nada. Escute:']},
+               'tips': ['{Red} começa com o R do inglês: a língua fica enroladinha, sem encostar em nada. Escute:']},
     'blue':   {'pt': 'azul', 'say': 'blu', 'icon': '🔵', 'ok': ['blue', 'blew', 'blues', 'bleu', 'blu', 'bluey', 'balloo'],
                'near': [['blow', 'below', 'glue', 'boo', 'bloom', 'blur', 'bleu', 'plu', 'pool', 'bull', 'balloon',
                          'bluey', 'flu', 'blood']],
-               'tips': ['Blue é rapidinho: junta o B com o L e termina fazendo biquinho. Escute:']},
+               'tips': ['{Blue} é rapidinho: junta o B com o L e termina fazendo biquinho. Escute:']},
     'green':  {'pt': 'verde', 'say': 'griin', 'icon': '🟢', 'ok': ['green', 'greens', 'grin', 'gree', 'greeny', 'greene'],
                'near': [['grin', 'queen', 'cream', 'grain', 'screen', 'greet', 'grim', 'gringo', 'clean', 'gree',
                          'grey', 'gray', 'grand', 'brin', 'cringe']],
-               'tips': ['Green tem um i bem comprido no meio, e o R enroladinho. Escute:']},
+               'tips': ['{Green} tem um i bem comprido no meio, e o R enroladinho. Escute:']},
     'yellow': {'pt': 'amarelo', 'say': 'iélou', 'icon': '🟡', 'ok': ['yellow', 'yellows', 'yelo', 'yello', 'hello', 'jello', 'ello'],
                'near': [['hello', 'jello', 'fellow', 'mellow', 'yell', 'yelo', 'hallo', 'hollow', 'halo', 'ello',
                          'allo', 'below', 'hey low', 'yo']],
-               'tips': ['Yellow começa com iê, como em ioiô. Não é rélou, é iélou. Escute:']},
+               'tips': ['{Yellow} começa com iê, como em ioiô. Não é rélou, é iélou. Escute:']},
     'go':     {'pt': 'vai!', 'say': 'gôu', 'icon': '🏁', 'ok': ['go', 'goes', 'gogo', 'go go', 'gone', 'gol'],
                'near': [['no', 'oh', 'so', 'ho', 'good', 'gone', 'goal', 'girl', 'cold', 'got', 'know', 'dough',
                          'toe', 'coal', 'cool', 'call']],
-               'tips': ['Go é curtinho e forte: começa com gô e termina fazendo biquinho. Escute:']},
+               'tips': ['{Go} é curtinho e forte: começa com gô e termina fazendo biquinho. Escute:']},
     'yes':    {'pt': 'sim', 'say': 'iés', 'icon': '👍', 'ok': ['yes', 'yeah', 'yep', 'yup', 'yea'],
                'near': [['jess', 'chess', 'guess', 'yet', 'this', 'is', 'ice', 's', 'say', 'yas', 'jazz', 'dress',
                          'less', 'east', 'jesus', 'his']],
-               'tips': ['Yes começa com iê e termina com um sss de cobra. Escute:']},
+               'tips': ['{Yes} começa com iê e termina com um sss de cobra. Escute:']},
     'shoes':  {'pt': 'chuteiras', 'say': 'xúz', 'icon': '👟', 'ok': ['shoes', 'shoe', 'choose', 'shoos', 'chews'],
                'near': [['juice', 'shows', 'sues', 'shoot', 'shoots', 'sushi', 'suits', 'zoos', 'soup', 'sure',
                          'shush', 'shoo', 'jews', 'news', 'suit', 'shorts', 'show']],
-               'tips': ['Shoes começa com xis, como em xícara, faz biquinho, e termina zumbindo como abelha: zzz. Escute:']},
+               'tips': ['{Shoes} começa com xis, como em xícara, faz biquinho, e termina zumbindo como abelha: zzz. Escute:']},
     'ball':   {'pt': 'bola', 'say': 'bóol', 'icon': '⚽', 'ok': ['ball', 'balls'],
                'near': [['bowl', 'bull', 'bow', 'bill', 'bell', 'paul', 'boo', 'bo', 'bol', 'bowel', 'boll', 'bold',
                          'both', 'bro', 'pole', 'poll', 'boat', 'bob', 'bowls', 'all']],
-               'tips': ['Ball tem um ó bem aberto, com a boca grande. E no final a língua encosta atrás dos dentes. Escute:']},
+               'tips': ['{Ball} tem um ó bem aberto, com a boca grande. E no final a língua encosta atrás dos dentes. Escute:']},
     'goal':   {'pt': 'gol', 'say': 'gôul', 'icon': '🥅', 'ok': ['goal', 'goals'],
                'near': [['go', 'gold', 'call', 'cool', 'girl', 'ghoul', 'coal', 'gone', 'golf', 'good', 'gol', 'cold',
                          'gall', 'goat', 'col', 'cole', 'gull', 'ball']],
-               'tips': ['Goal começa com gôu e termina com a língua encostando atrás dos dentes, como um L. Escute:']},
+               'tips': ['{Goal} começa com gôu e termina com a língua encostando atrás dos dentes, como um L. Escute:']},
     'sword':  {'pt': 'espada', 'say': 'sórd', 'icon': '🗡️', 'ok': ['sword', 'swords', 'soared', 'sord', 'sward', 'swore', 'sored', 'swored', 'sorde', 'sort'], 'almost': [1],
                'near': [['word', 'words', 'swore', 'swear', 'sward', 'swat', 'sweet', 'sweat', 'squad', 'swirl', 'world'],
                         ['sore', 'saw', 'soar', 'sorry', 'sort', 'short', 'store', 'sauce', 'sort of', 'source', 'so']],
-               'tips': ['Sword não fala o W! É só sórd, com o R enroladinho. Escute:',
+               'tips': ['{Sword} não fala o W! É só sórd, com o R enroladinho. Escute:',
                         'Quase! No final tem um d curtinho: sórd. Escute:']},
     'shield': {'pt': 'escudo', 'say': 'xíild', 'icon': '🛡️', 'ok': ['shield', 'shields', 'sheild', 'shielded', 'she ll', 'sheeld', 'shealed', 'shilled', 'shild'], 'almost': [1],
                'near': [['field', 'sealed', 'yield', 'steel', 'feel', 'seal', 'filled', 'fields', 'build'],
                         ['she', 'sheet', 'sheep', 'cheese', 'chill', 'shell', 'shill', 'she will', 'shelled', 'child', 'chilled', 'cheap']],
-               'tips': ['Shield começa com xis, como em xícara, e tem um i bem comprido. Escute:',
+               'tips': ['{Shield} começa com xis, como em xícara, e tem um i bem comprido. Escute:',
                         'Quase! No final a língua encosta atrás dos dentes, e vem um d curtinho: xíild. Escute:']},
     'pass':   {'pt': 'passar', 'say': 'péss', 'icon': '🤝', 'ok': ['pass', 'passed', 'past', 'passes', 'pas', 'pasta', 'passy'], 'almost': [1],
                'near': [['bus', 'bass', 'bath', 'bats', 'buzz', 'boss', 'bess'],
                         ['pus', 'push', 'posh', 'puss', 'pause', 'paws', 'pose', 'pace', 'piece', 'peace', 'path', 'pat', 'pack', 'pa', 'pop', 'perhaps']],
-               'tips': ['Pass começa com P, soprando, sem voz. E termina com sss de cobra. Escute:',
+               'tips': ['{Pass} começa com P, soprando, sem voz. E termina com sss de cobra. Escute:',
                         'Quase! A boca abre bem no meio, péss, e termina com sss de cobra. Escute:']},
     'head':   {'pt': 'cabeça', 'say': 'rréd', 'icon': '🙆', 'ok': ['head', 'heads', 'headed', 'hed'], 'almost': [1],
                'near': [['red', 'bed', 'dead', 'said', 'fed', 'led', 'wed', 'ed', 'ted', 'and', 'add', 'edge', 'bread'],
                         ['hey', 'hay', 'hair', 'heat', 'hit', 'hid', 'hide', 'hood', 'hat', 'hen', 'her', 'help', 'hell', 'had']],
-               'tips': ['Head começa com um sopro, como uma risadinha: rrr. E não é o R enrolado, é só o ar. Escute:',
+               'tips': ['{Head} começa com um sopro, como uma risadinha: rrr. E não é o R enrolado, é só o ar. Escute:',
                         'Quase! No final tem um d curtinho: rréd. Escute:']},
     'left':   {'pt': 'esquerda', 'say': 'léft', 'icon': '⬅️', 'ok': ['left', 'lefts', 'lefty', 'lift', 'laughed'], 'almost': [0],
                'near': [['lift', 'laughed', 'let', 'less', 'lest', 'leaf', 'loft', 'list', 'lap', 'lev', 'lef', 'lifts'],
                         ['rift', 'raft', 'west', 'wept', 'theft', 'deft', 'after', 'death', 'net', 'next']],
-               'tips': ['Left tem o é bem aberto, e termina com f e t curtinhos. Escute:',
-                        'Left começa com o som do L, igual em lua: a pontinha da língua encosta atrás dos dentes. Escute:']},
+               'tips': ['{Left} tem o é bem aberto, e termina com f e t curtinhos. Escute:',
+                        '{Left} começa com o som do L, igual em lua: a pontinha da língua encosta atrás dos dentes. Escute:']},
     'right':  {'pt': 'direita', 'say': 'ráit', 'icon': '➡️', 'ok': ['right', 'rights', 'write', 'rite', 'wright', 'alright', 'all right', 'righty', 'writ'], 'almost': [1],
                'near': [['light', 'white', 'bright', 'night', 'like', 'lite', 'height', 'why', 'wait', 'fight', 'quite', 'kite', 'hi', 'high', 'hide', 'wide'],
                         ['rye', 'rider', 'ride', 'rise', 'ripe', 'rice', 'ryan', 'rain', 'rhyme', 'riot', 'rival']],
-               'tips': ['Right começa com o R do inglês: a língua fica enroladinha lá atrás, sem encostar em nada. Escute:',
+               'tips': ['{Right} começa com o R do inglês: a língua fica enroladinha lá atrás, sem encostar em nada. Escute:',
                         'Quase! No final tem um t curtinho, quase mudo: ráit. Escute:']},
     'purple': {'pt': 'roxo', 'say': 'pârpou', 'icon': '🟣', 'ok': ['purple', 'purples', 'purpo', 'purpel', 'perple'],
                'near': [['people', 'paper', 'maple', 'pupil', 'apple', 'popple', 'bubble', 'pebble', 'purse', 'purr', 'pepper', 'puppy']],
-               'tips': ['Purple tem um R enroladinho no meio: pâr-pou. Escute:']},
+               'tips': ['{Purple} tem um R enroladinho no meio: pâr-pou. Escute:']},
     'open':   {'pt': 'abrir', 'say': 'ôu-pen', 'icon': '🚪', 'ok': ['open', 'opened', 'opens', 'opening', 'oppen', 'opan', 'o pen', 'oh pen', 'hopen'], 'almost': [1],
                'near': [['hoping', 'hope', 'oak', 'oven', 'often', 'apple', 'happen', 'up and', 'opal', 'upon', 'pen'],
                         ['ope', 'oh', 'oppa', 'opa', 'hope in', 'ocean', 'olive']],
-               'tips': ['Open começa com ôu, fazendo biquinho no final do ô. Escute:',
+               'tips': ['{Open} começa com ôu, fazendo biquinho no final do ô. Escute:',
                         'Quase! São dois pedacinhos: ôu e pen. Escute:']},
     'jump':   {'pt': 'pular', 'say': 'djâmp', 'icon': '🦘', 'ok': ['jump', 'jumps', 'jumped', 'jumping', 'jumpy', 'jumper', 'champ', 'chump'], 'almost': [1],
                'near': [['dump', 'jam', 'john', 'junk', 'gum', 'jungle', 'jim', 'joe', 'pump', 'bump', 'lump', 'yum'],
                         ['jum', 'jun', 'june', 'jumble', 'jumbo', 'just', 'jug']],
-               'tips': ['Jump começa com dj, juntinho, como em djembê. Escute:',
+               'tips': ['{Jump} começa com dj, juntinho, como em djembê. Escute:',
                         'Quase! No final a boca fecha: mp. Escute:']},
     'up':     {'pt': 'para cima', 'say': 'âp', 'icon': '⬆️'},
     'down':   {'pt': 'para baixo', 'say': 'dáun', 'icon': '⬇️'},
@@ -411,30 +412,73 @@ def jobs():
                     yield f'T_{t["helper"]}_{w}_{i}', t['helper'], tip, hv, hrate, hpitch
 
 
-async def main(force):
+# Palavra em inglês dentro de fala em português vai entre chaves: 'left é {left}'. A voz brasileira lê inglês
+# com sotaque ("rit" no lugar de right), então cada trecho entre chaves é gravado por uma voz americana
+# e os pedaços são emendados, sem o silêncio das pontas. Na legenda as chaves somem.
+EN_VOICE = {
+    'bip':  ('en-US-AnaNeural',   '-10%', '+0Hz'),
+    'narr': ('en-US-BrianNeural', '-10%', '+0Hz'),
+}
+TRIM = 'silenceremove=start_periods=1:start_threshold=-50dB,areverse,silenceremove=start_periods=1:start_threshold=-50dB,areverse'
+plain = lambda text: re.sub(r'\{([^{}"\n]+)\}', r'\1', text)
+
+
+async def tts(text, v, rate, pitch, f):
+    for tentativa in range(4):   # o serviço de voz às vezes falha de vez em quando
+        try:
+            await edge_tts.Communicate(text, v, rate=rate, pitch=pitch).save(str(f))
+            return
+        except edge_tts.exceptions.NoAudioReceived:
+            f.unlink(missing_ok=True)
+            await asyncio.sleep(2 + tentativa * 3)
+    raise SystemExit(f'falhou: {f.name}')
+
+
+async def record(who, text, v, rate, pitch, f):
+    if '{' not in text:
+        return await tts(text, v, rate, pitch, f)
+    ev, erate, epitch = EN_VOICE[who]
+    parts = [(p[1:-1], True) if p.startswith('{') else (p, False) for p in re.split(r'(\{[^}]+\})', text)]
+    parts = [(p, en) for p, en in parts if re.search(r'\w', p)]
+    with tempfile.TemporaryDirectory() as tmp:
+        files = []
+        for i, (p, en) in enumerate(parts):
+            pf = pathlib.Path(tmp) / f'{i}.mp3'
+            await tts(p, *((ev, erate, epitch) if en else (v, rate, pitch)), pf)
+            files.append(pf)
+        # cada pedaço sem silêncio nas pontas, 120 ms de respiro entre eles
+        inputs = sum((['-i', str(x)] for x in files), [])
+        chain = ''.join(f'[{i}:a]{TRIM},apad=pad_dur=0.12[a{i}];' for i in range(len(files)))
+        chain += ''.join(f'[a{i}]' for i in range(len(files))) + f'concat=n={len(files)}:v=0:a=1[out]'
+        subprocess.run(['ffmpeg', '-y', '-loglevel', 'error', *inputs, '-filter_complex', chain, '-map', '[out]',
+                        '-ar', '24000', '-ac', '1', '-b:a', '48k', str(f)], check=True)
+
+
+async def main(force, mark):
     out = ROOT / 'audio'
     out.mkdir(exist_ok=True)
+    # manifest: de que texto e voz saiu cada áudio. Mudou o texto ou a voz, regrava só aquele.
+    mf = out / 'manifest.json'
+    manifest = json.loads(mf.read_text(encoding='utf-8')) if mf.exists() else {}
+    save = lambda: mf.write_text(json.dumps(manifest, ensure_ascii=False, indent=0), encoding='utf-8')
     subs = {}
     for key, who, text, v, rate, pitch in jobs():
-        subs[key] = {'who': who, 'text': text}
+        subs[key] = {'who': who, 'text': plain(text)}
+        sig = '|'.join([text, v, rate, pitch] + (list(EN_VOICE[who]) if '{' in text else []))
         f = out / f'{key}.mp3'
-        if f.exists() and not force:
+        if mark and f.exists():
+            manifest[key] = sig
+        if f.exists() and manifest.get(key) == sig and not force:
             continue
-        for tentativa in range(4):   # o serviço de voz às vezes falha de vez em quando
-            try:
-                await edge_tts.Communicate(text, v, rate=rate, pitch=pitch).save(str(f))
-                break
-            except edge_tts.exceptions.NoAudioReceived:
-                f.unlink(missing_ok=True)
-                await asyncio.sleep(2 + tentativa * 3)
-        else:
-            raise SystemExit(f'falhou: {key}')
+        await record(who, text, v, rate, pitch, f)
+        manifest[key] = sig; save()
         print('gravado', key)
+    save()
     (ROOT / 'lines.js').write_text('// gerado por tools/roteiro.py — não editar à mão\nconst LINES = '
                                     + json.dumps(subs, ensure_ascii=False, indent=1) + ';\nconst VOCAB = '
-                                    + json.dumps(VOCAB, ensure_ascii=False, indent=1) + ';\n', encoding='utf-8')
+                                    + plain(json.dumps(VOCAB, ensure_ascii=False, indent=1)) + ';\n', encoding='utf-8')
     print(len(subs), 'falas')
 
 
 if __name__ == '__main__':
-    asyncio.run(main('--all' in sys.argv))
+    asyncio.run(main('--all' in sys.argv, '--mark' in sys.argv))
