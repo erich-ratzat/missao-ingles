@@ -17,7 +17,9 @@ CAST = {
     'coach':  ('en-US-AndrewNeural',      '-4%',  '+0Hz'),   # Coach Max (só fala inglês)
     'tony':   ('en-US-ChristopherNeural', '-6%',  '-14Hz'),  # Big Tony, goleiro rival (inglês)
     'narr':   ('pt-BR-AntonioNeural',     '+10%', '+0Hz'),   # narrador do jogo (português)
+    'lumi':   ('en-GB-MaisieNeural',      '-14%', '+0Hz'),   # Lumi, a estrelinha (voz de criança, só inglês)
 }
+STORY_RATE = '-16%'  # frases da história em inglês (missão 4 em diante): mais devagar que o normal
 WORD_RATE = '-25%'   # palavra-modelo: devagar e clara
 SLOW_RATE = '-50%'   # palavra-modelo bem devagar (segunda correção)
 
@@ -176,6 +178,69 @@ LINES = {
     'E_bip_green':  ('nova', 'A green robot! I love it!'),
     'E_bip_yellow': ('nova', 'A yellow robot! I love it!'),
     'E_bip_purple': ('nova', 'A purple robot! I love it!'),
+
+    # ---------------- LUCAS · Missão 4 · As Estrelas Roubadas ----------------
+    # Mais inglês, em frases curtas e devagar. As frases da história vêm em "sanduíche": o inglês, a tradução
+    # do Bip (a mesma chave com _pt) e, nas frases que ensinam alguma coisa, o inglês de novo.
+    # Um terceiro item na fala muda a velocidade só dela.
+    'L4_01': ('bip',  'Lucas, olha que noite linda! O céu está cheio de estrelas.'),
+    'L4_02': ('bip',  'Ué... As estrelas estão sumindo! Uma, duas, três... Alguma coisa está puxando as estrelas!'),
+    'V11':    ('vortex', 'Ha ha ha! Look at the sky! The stars are mine!', STORY_RATE),
+    'V11_pt': ('bip', 'Olhem o céu! As estrelas são minhas!'),
+    'V12':    ('vortex', 'My big machine eats the stars. No more light!', STORY_RATE),
+    'V12_pt': ('bip', 'Minha máquina gigante come as estrelas. Acabou a luz!'),
+    'L4_03': ('bip',  'Uma máquina que come estrelas? Sem estrelas, a noite vai ficar escura pra sempre!'),
+    'L4_04': ('bip',  'Olha! Uma estrela caiu bem aqui do nosso lado!'),
+    'L4_05':    ('lumi', "Hello! I'm Lumi. I'm a little star."),
+    'L4_05_pt': ('bip', 'Olá! Eu sou a Lumi. Eu sou uma estrelinha.'),
+    'L4_06':    ('lumi', 'Vortex took my family. Help! Help me, please!'),
+    'L4_06_pt': ('bip', 'O Vortex levou a minha família. Socorro! Me ajuda, por favor!'),
+    'L4_07': ('bip',  'A Lumi pediu ajuda! Quando a gente precisa de alguém, a gente grita bem forte. Ajuda, em inglês, é...'),
+    'E_help':  ('lumi', 'Help! Yes! Thank you, Lucas!'),
+    'L4_08': ('bip',  'A Lumi sabe onde fica a máquina: perto do Buraco Negro! Vamos pra nave, rápido!'),
+    'L4_09': ('bip',  'Antes de decolar, vistoria! Uma peça está piscando. Fala o nome dela em inglês!'),
+    'L4_10': ('bip',  'Tudo pronto! Desta vez a gente vai na velocidade da luz! Fala a palavra de decolar quando a Capitã terminar de contar!'),
+    'L4_11':    ('lumi', 'Fly, Lucas! Fly to the black hole!'),
+    'L4_11_pt': ('bip', 'Voa, Lucas! Voa até o buraco negro!'),
+    'L4_12': ('bip',  'Abre os braços, como asas de passarinho! Voar, em inglês, é...'),
+    'E_fly':   ('lumi', 'Fly, fly, fly! Wheee!'),
+    'L4_13': ('bip',  'Olha lá na frente: o Buraco Negro! Ele puxa tudo pra dentro. Se a gente chegar muito perto, ele puxa a nave!'),
+    'L4_14':    ('nova', 'Stop, Lucas! Stop the ship!', STORY_RATE),
+    'L4_14_pt': ('bip', 'Para, Lucas! Para a nave!'),
+    'L4_15': ('bip',  'Põe a mão pra frente, assim, igual guarda de trânsito! Parar, em inglês, é...'),
+    'E_stop':  ('nova', 'Stop! Good! The ship is safe.', STORY_RATE),
+    'L4_16': ('bip',  'Agora vem uma chuva de meteoros! Quando a Capitã falar {fly}, toque na nave. Quando ela falar {stop}, toque na mão. Se quiser, voa e congela de verdade!'),
+    'LN4_fly':  ('nova', 'Fly!'),
+    'LN4_stop': ('nova', 'Stop!'),
+    'L4_17': ('bip',  'Passamos pelos meteoros! Que piloto!'),
+    'L4_18':    ('lumi', 'Look! My family! Big stars and small stars!'),
+    'L4_18_pt': ('bip', 'Olha! Minha família! Estrelas grandes e estrelas pequenas!'),
+    'L4_19': ('bip',  'As estrelas estão presas em bolhas! {Big} é grande. {Small} é pequena. A Capitã vai falar qual estrela salvar. Toque nela!'),
+    'LN4_big':   ('nova', 'A big star!', STORY_RATE),
+    'LN4_small': ('nova', 'A small star!', STORY_RATE),
+    'LN4_n1': ('nova', 'One star!'),
+    'LN4_n2': ('nova', 'Two stars!'),
+    'LN4_n3': ('nova', 'Three stars!'),
+    'LN4_n4': ('nova', 'Four stars!'),
+    'L4_20': ('bip',  'A família da Lumi está salva! Mas ainda tem muitas estrelas presas na máquina do Vortex. Olha ela ali!'),
+    'V13':    ('vortex', 'You again? Stop! This is my machine!', STORY_RATE),
+    'V13_pt': ('bip', 'Você de novo? Pare! Esta máquina é minha!'),
+    'L4_21': ('bip',  'A máquina ligou! Ela está puxando você, Lucas! Grita pedindo ajuda, em inglês!'),
+    'E2_help': ('lumi', 'We can help! Hold on, Lucas!'),
+    'L4_22': ('bip',  'Ufa! A Lumi e a família dela seguraram você! Agora, as estrelas presas estão fraquinhas. Fala a palavra que deixa tudo brilhando!'),
+    'E5_light': ('nova', 'Light! The stars are free!', STORY_RATE),
+    'V14':    ('vortex', "My machine! Nooo! I'll be back!"),
+    'V14_pt': ('bip', 'Minha máquina! Nããão! Eu vou voltar!'),
+    'L4_23':    ('lumi', 'Look! The stars are back! Thank you, Lucas!'),
+    'L4_23_pt': ('bip', 'Olha! As estrelas voltaram! Obrigada, Lucas!'),
+    'L4_24':    ('lumi', 'This is for you. A star of light!'),
+    'L4_24_pt': ('bip', 'Isto é pra você. Uma estrela de luz!'),
+    'L4_25': ('bip',  'Um presente! Quando alguém te dá um presente, ou te ajuda, a gente agradece. Obrigado, em inglês, é...'),
+    'E_thanks': ('lumi', "You're welcome, Lucas!"),
+    'L4_26': ('nova', "You did it, Lucas! You saved the stars! You're a star guardian!", STORY_RATE),
+    'L4_27': ('bip',  'Você ganhou a Estrela de Luz! Agora você é o Guardião das Estrelas!'),
+    'L4_28': ('bip',  'Missão fora da tela! Chama o papai pra brincar de estátua. Ele fala {fly}: você voa pela sala. Ele fala {stop}: você congela! Depois troca!'),
+    'L4_29': ('lumi', 'Bye, Lucas! See you soon!'),
 
     # ---------------- HENRIQUE · A Grande Final · Missão 1 ----------------
     'H01': ('narr', 'Olá, olá, torcida! Hoje é dia de grande final!'),
@@ -381,6 +446,27 @@ VOCAB = {
                         ['jum', 'jun', 'june', 'jumble', 'jumbo', 'just', 'jug']],
                'tips': ['{Jump} começa com dj, juntinho, como em djembê. Escute:',
                         'Quase! No final a boca fecha: mp. Escute:']},
+    'help':   {'pt': 'ajuda', 'say': 'rrélp', 'icon': '🆘', 'ok': ['help', 'helps', 'helped', 'helping', 'helper', 'help me', 'elp'], 'almost': [1],
+               'near': [['yelp', 'kelp', 'elf', 'self', 'shelf', 'well', 'fell', 'tell', 'bell', 'yell', 'health', 'hope', 'hip', 'hop'],
+                        ['hell', 'held', 'hel', 'helm', 'hells']],
+               'tips': ['{Help} começa com um sopro, como uma risadinha: rrr. Não é o R enrolado, é só o ar. Escute:',
+                        'Quase! No final a boca fecha: p. Escute:']},
+    'fly':    {'pt': 'voar', 'say': 'flái', 'icon': '🕊️', 'ok': ['fly', 'flies', 'flying', 'flight', 'fli', 'flai', 'fly fly'],
+               'near': [['fry', 'fried', 'fries', 'free', 'pry', 'frye', 'cry', 'try', 'dry'],
+                        ['five', 'fine', 'fight', 'fi', 'fai', 'hi', 'high', 'why', 'buy', 'bye', 'pie', 'sky', 'lie', 'flip', 'flat']],
+               'tips': ['{Fly} tem o L, não o R: depois do f, a pontinha da língua encosta atrás dos dentes. Escute:',
+                        'Quase! Começa com f e l juntinhos: flái. Escute:']},
+    'stop':   {'pt': 'parar', 'say': 'stóp', 'icon': '✋', 'ok': ['stop', 'stops', 'stopped', 'stopping', 'stoppe', 'is top', 'es top'],
+               'near': [['top', 'tops', 'stuff', 'step', 'stock', 'shop', 'spot', 'chop', 'pop', 'stomp', 'dop'],
+                        ['stuck', 'store', 'storm', 'start', 'star', 'stone', 'stall', 'stall', 'stole']],
+               'tips': ['{Stop} começa com um sss de cobra, colado no t: sss-tóp. Escute:',
+                        'Quase! No final a boca fecha: p. Escute:']},
+    'thanks': {'pt': 'obrigado', 'label': 'thank you', 'say': 'tênk-iú', 'icon': '🙏',
+               'ok': ['thank you', 'thanks', 'thank', 'thankyou', 'thank ya', 'thanks you', 'thank u', 'think you'],
+               'near': [['tank', 'tanks', 'sink', 'sank', 'sing', 'thing', 'think', 'dank', 'bank', 'pink', 'tango', 'fank'],
+                        ['you', 'chiu', 'q', 'cue']],
+               'tips': ['{Thank you} começa com a pontinha da língua entre os dentes, soprando um ventinho: th. Escute:',
+                        'Quase! Fala as duas partes: thank... you. Escute:']},
     'up':     {'pt': 'para cima', 'say': 'âp', 'icon': '⬆️'},
     'down':   {'pt': 'para baixo', 'say': 'dáun', 'icon': '⬇️'},
     'run':    {'pt': 'correr', 'say': 'rân', 'icon': '🏃'},
@@ -390,21 +476,22 @@ VOCAB = {
 # quem ensina cada palavra (voz-modelo) e quem dá as dicas de pronúncia
 TEACH = {
     'nova':  {'helper': 'bip',  'words': ['wing', 'rocket', 'laser', 'light', 'red', 'blue', 'green', 'go', 'up', 'down',
-                                          'sword', 'shield', 'left', 'right', 'yellow', 'purple', 'open', 'jump']},
+                                          'sword', 'shield', 'left', 'right', 'yellow', 'purple', 'open', 'jump',
+                                          'help', 'fly', 'stop', 'thanks']},
     'coach': {'helper': 'narr', 'words': ['yes', 'red', 'blue', 'yellow', 'shoes', 'ball', 'goal', 'run', 'kick',
                                           'pass', 'head', 'left', 'right']},
 }
 
 
 def jobs():
-    for key, (who, text) in LINES.items():
+    for key, (who, text, *own) in LINES.items():
         v, rate, pitch = CAST[who]
-        yield key, who, text, v, rate, pitch
+        yield key, who, text, v, own[0] if own else rate, pitch
     for who, t in TEACH.items():
         v, _, pitch = CAST[who]
         hv, hrate, hpitch = CAST[t['helper']]
         for w in t['words']:
-            W = w.capitalize()
+            W = VOCAB[w].get('label', w).capitalize()
             yield f'W_{who}_{w}', who, W + '.', v, WORD_RATE, pitch
             if 'ok' in VOCAB[w]:
                 yield f'S_{who}_{w}', who, f'{W}... {W}.', v, SLOW_RATE, pitch

@@ -2,7 +2,7 @@
 
 MVP de inglês para crianças: missões curtas com história, personagens e reconhecimento de voz.
 
-- Lucas: Esquadrão Estelar. Missão 1: monta a nave e escapa do Lorde Vortex. Missão 2: ganha espada e escudo e recupera o Cristal de Luz. Missão 3: entra no castelo do Vortex (open, jump, números, setas) e resgata o Bip.
+- Lucas: Esquadrão Estelar. Missão 1: monta a nave e escapa do Lorde Vortex. Missão 2: ganha espada e escudo e recupera o Cristal de Luz. Missão 3: entra no castelo do Vortex (open, jump, números, setas) e resgata o Bip. Missão 4: com a estrelinha Lumi, salva as estrelas que a máquina do Vortex engoliu (help, fly, stop, thank you; big/small só para entender).
 - Henrique: A Grande Final. Ele se arruma no vestiário, joga a final e bate os pênaltis contra o Big Tony.
 
 ## Como cada palavra é ensinada
@@ -12,6 +12,16 @@ MVP de inglês para crianças: missões curtas com história, personagens e reco
 3. **Reconhecer.** O personagem fala em inglês e a criança toca no botão certo, sem palavra escrita. São as peças da nave, up/down, run/kick.
 4. **Lembrar sozinho.** Mais tarde, a história pede a palavra sem dizer qual é (luz apagada → *light*; pênalti → a cor do alvo). Lembrar dá mais memória do que repetir.
 5. **Usar em frases.** Depois do acerto, o personagem repete a palavra numa frase curta ("Light! Now we can see!").
+
+### A partir da Missão 4 do Lucas
+
+- **Mais inglês na história.** A história é contada em frases curtas em inglês, faladas mais devagar (`STORY_RATE` no roteiro).
+- **Sanduíche.** A frase vem em inglês, o Bip fala a tradução e, quando a frase ensina alguma coisa, o inglês volta ("Help me, please!" → "Me ajuda, por favor!" → "Help me, please!"). A criança ouve o inglês de novo já sabendo o que quer dizer. A tradução fica na mesma chave com `_pt`. Frase que já apareceu volta só em inglês.
+- **Ouvir antes de falar.** A palavra aparece na história algumas vezes antes de a criança precisar falar (a Lumi diz "Thank you" duas vezes antes de o Lucas aprender a dizer).
+- **Gesto junto com a palavra.** Braços abertos no *fly*, mão pra frente no *stop*, e um jogo de estátua (fly/stop) na tela e em casa.
+- **Só entender.** Algumas palavras (big, small) a criança só precisa entender e tocar, sem falar. Isso amplia o inglês que ela entende sem aumentar o que ela precisa falar.
+- **Poucas palavras novas, muita revisão.** São 4 palavras novas para falar. As palavras das missões anteriores voltam para a criança lembrar sozinha, espalhadas pela história.
+- Efeitos visuais (faíscas, explosões, velocidade da luz, cometas, fogos) ficam em `fx.js`, num canvas por cima da cena.
 
 ## Correção
 

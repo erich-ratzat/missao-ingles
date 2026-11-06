@@ -47,10 +47,18 @@ const TR = {
   E_open:'Open! A porta abriu!', E2_open:'Open! O Bip está livre!', E_jump:'Pula! Belo pulo!', E4_light:'Luz! Olha o castelo!',
   E_bip_red:'Um robô vermelho! Amei!', E_bip_blue:'Um robô azul! Amei!', E_bip_green:'Um robô verde! Amei!',
   E_bip_yellow:'Um robô amarelo! Amei!', E_bip_purple:'Um robô roxo! Amei!',
+  // missão 4 (as frases da história têm a tradução falada, na chave _pt)
+  E_help:'Socorro! Isso! Obrigada, Lucas!', E_fly:'Voa, voa, voa! Iupiii!', E_stop:'Parou! Muito bem! A nave está segura.',
+  LN4_fly:'Voa!', LN4_stop:'Para!', LN4_big:'Uma estrela grande!', LN4_small:'Uma estrela pequena!',
+  LN4_n1:'Uma estrela!', LN4_n2:'Duas estrelas!', LN4_n3:'Três estrelas!', LN4_n4:'Quatro estrelas!',
+  E2_help:'A gente ajuda! Segura firme, Lucas!', E5_light:'Luz! As estrelas estão livres!', E_thanks:'De nada, Lucas!',
+  L4_26:'Você conseguiu, Lucas! Você salvou as estrelas! Você é um guardião das estrelas!', L4_29:'Tchau, Lucas! Até logo!',
 };
 const WHO = {nova:['Capitã Nova', ART.nova], vortex:['Lorde Vortex', ART.vortex], bip:['Bip', ART.bip],
-  coach:['Coach Max', ART.coach], tony:['Big Tony', ART.tony], narr:['Narrador', ART.narr]};
-const SPEAKS_EN = new Set(['nova', 'vortex', 'coach', 'tony']);
+  coach:['Coach Max', ART.coach], tony:['Big Tony', ART.tony], narr:['Narrador', ART.narr], lumi:['Lumi', ART.lumi]};
+const SPEAKS_EN = new Set(['nova', 'vortex', 'coach', 'tony', 'lumi']);
+// como a palavra aparece escrita (thanks → thank you)
+const label = w => VOCAB[w].label || w;
 
 // ---------------- reconhecimento: só a palavra certa vale ----------------
 const norm = s => s.toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim();
@@ -182,7 +190,7 @@ function shell(kid, title, icons){
   el('quit').onclick = () => { G = null; voice.pause(); home(); };
   el('rep').onclick = () => { try { voice.currentTime = 0; voice.play(); } catch (e) {} };
 }
-const setScene = html => { el('scene').innerHTML = html; };
+const setScene = html => { el('scene').innerHTML = html; FX.mount(el('scene')); };
 const act = html => { el('act').innerHTML = html; };
 function track(i){ const t = el('track').children[i]; if (t) t.classList.add('on'); }
 function addStar(){
@@ -190,6 +198,7 @@ function addStar(){
 }
 function trOf(key){
   if (TR[key]) return TR[key];
+  if (LINES[key + '_pt']) return LINES[key + '_pt'].text;
   const m = key.match(/^[WS]_[a-z]+_([a-z]+)$/); return m && VOCAB[m[1]] ? VOCAB[m[1]].pt : '';
 }
 // falas que se repetem muito (Yes!, Escute de novo...) têm versões key__2, key__3: sorteia uma diferente da última
@@ -208,6 +217,9 @@ async function line(key){
   el('tr').textContent = en ? trOf(key) : '';
   try { await play(key); } finally { const f = el('face'); if (f) f.classList.remove('talking'); }
 }
+// "sanduíche": a frase em inglês, a tradução falada pelo Bip e (quando a frase ensina algo) o inglês de novo,
+// para a criança ouvir o inglês já sabendo o que quer dizer
+async function sandwich(key, again = false){ await line(key); await line(key + '_pt'); if (again) await line(key); }
 function confetti(n = 60){
   const sc = el('scene'), cols = ['#FFD23F', '#E5484D', '#2F7CF6', '#2DBE6C', '#fff', '#FF8A1F'];
   for (let i = 0; i < n; i++) { const c = document.createElement('i'); c.className = 'confetti';
@@ -266,7 +278,7 @@ function showHeard(r, w){
   const h = el('heard'); if (!h) return;
   if (!r.heard) { h.textContent = ''; return; }
   h.className = 'heard bad';
-  h.innerHTML = `Ouvi <b>“${r.heard}”</b>` + (w ? ` · a palavra é <b>“${w}”</b>` : '');
+  h.innerHTML = `Ouvi <b>“${r.heard}”</b>` + (w ? ` · a palavra é <b>“${label(w)}”</b>` : '');
 }
 const tipKey = (w, near) => `T_${G.H}_${w}_${near && near.w === w ? near.g : 0}`;
 
@@ -279,10 +291,10 @@ async function speak(w, {model = true, hide = !model, intro = [], say = false, e
   let phon = false, heardMsg = null, peek = false, adult = false;
   const draw = () => {
     act(`<div class="word"><button class="ear" id="ear" aria-label="Ouvir">🔊</button>
-        <div><div class="w" id="ww">${hide ? V.icon + ' ?' : w}</div><div class="pt" id="wpt">${phon ? `fala assim: <b class="ph">${V.say}</b>` : hide ? 'lembra o nome em inglês?' : V.pt}</div></div></div>
+        <div><div class="w" id="ww">${hide ? V.icon + ' ?' : label(w)}</div><div class="pt" id="wpt">${phon ? `fala assim: <b class="ph">${V.say}</b>` : hide ? 'lembra o nome em inglês?' : V.pt}</div></div></div>
       ${micButton()}<div class="heard" id="heard"></div>${adultButton(adult)}`);
     // mostrar a palavra sem redesenhar: o microfone pode estar esperando o toque
-    el('ear').onclick = () => { if (hide) { hide = false; peek = true; el('ww').textContent = w; el('wpt').textContent = V.pt; } play(`W_${T}_${w}`).catch(() => {}); };
+    el('ear').onclick = () => { if (hide) { hide = false; peek = true; el('ww').textContent = label(w); el('wpt').textContent = V.pt; } play(`W_${T}_${w}`).catch(() => {}); };
     if (heardMsg) showHeard(heardMsg, w);
   };
   draw();
@@ -393,8 +405,8 @@ function reward({badge, title, next, kid, homeplay}){
   const div = document.createElement('div'); div.className = 'reward';
   div.innerHTML = `<div class="badge">${badge}</div><h2>${title}</h2>
     <div class="row"><span class="chip">⭐ ${G.stars} de ${G.max}</span><span class="chip">🔥 ${SAVE[kid].streak} ${SAVE[kid].streak === 1 ? 'dia' : 'dias'}</span></div>
-    <div class="row">${words.map(w => `<span class="chip ${G.result[w]}">${G.result[w] === 'ok' ? '✅' : '🔁'} ${w}</span>`).join('')}</div>
-    ${review.length ? `<div class="small-note">🔁 treinar amanhã: ${review.join(', ')}</div>` : ''}
+    <div class="row">${words.map(w => `<span class="chip ${G.result[w]}">${G.result[w] === 'ok' ? '✅' : '🔁'} ${label(w)}</span>`).join('')}</div>
+    ${review.length ? `<div class="small-note">🔁 treinar amanhã: ${review.map(label).join(', ')}</div>` : ''}
     ${homeplay ? `<div class="homeplay">🏠 ${homeplay}</div>` : ''}
     <div class="locked">${next}</div><div class="row" id="rbtns"></div>`;
   app.appendChild(div); confetti(80);
@@ -413,8 +425,8 @@ const PAINT = {red:'#E5484D', blue:'#2F7CF6', green:'#2DBE6C', yellow:'#F5C400',
 const PAINT_DARK = {red:'#A82A2F', blue:'#1F4FA8', green:'#1B7E45'};
 const BLADE = {red:'#FF5A5F', blue:'#5FD3F3', green:'#4BE38A', yellow:'#FFE14D', purple:'#B57BFF'};
 const paintShip = sc => { const k = SAVE.lucas.ship || 'blue'; sc.style.setProperty('--ship', PAINT[k]); sc.style.setProperty('--ship-dark', PAINT_DARK[k]); };
-// os drones atiram, o escudo cresce e devolve cada tiro
-async function reflectDrones(drones, heroX){
+// os drones atiram, o escudo cresce e devolve cada tiro (onBoom: efeito extra em cada explosão)
+async function reflectDrones(drones, heroX, onBoom){
   const bolt = el('bolt'), boom = el('boom'), shield = el('hshield');
   shield.classList.add('big'); SFX.build();
   for (const d of drones) {
@@ -422,7 +434,7 @@ async function reflectDrones(drones, heroX){
     place(bolt, `translate(${x}px,${y}px)`); bolt.style.transition = 'transform .4s linear';
     bolt.style.transform = `translate(${heroX + 20}px,300px)`; SFX.enemy(); await wait(450);
     restart(shield, 'flash'); bolt.style.transform = `translate(${x}px,${y}px)`; await wait(450);
-    boom.setAttribute('transform', `translate(${x} ${y})`); restart(boom, 'go'); SFX.boom();
+    boom.setAttribute('transform', `translate(${x} ${y})`); restart(boom, 'go'); SFX.boom(); if (onBoom) onBoom(x, y);
     place(d, 'translate(950px,120px)'); place(bolt, 'translate(900px,300px)'); await wait(300);
   }
   shield.classList.remove('big');
@@ -833,9 +845,167 @@ async function lessonLucas3(){
     onOk:k => { SAVE.lucas.bip = k; persist(); restart(el('bipfree'), 'hop'); SFX.build(); }});
 
   await line('L3_18');
-  reward({kid:'lucas', badge:ART.keyBadge, title:'Herói do Castelo!', next:'🔒 Missão 4 · em breve',
+  reward({kid:'lucas', badge:ART.keyBadge, title:'Herói do Castelo!', next:'🔓 Missão 4 liberada: As Estrelas Roubadas',
     homeplay:'Brincadeira com o papai: ele fala <b>open</b> (você abre as mãos), <b>jump</b> (você pula) ou <b>one</b>, <b>two</b>, <b>three</b> (você mostra os dedos). Depois troquem!'});
   await line('L3_19'); await line('L3_20');
+  endButtons('lucas');
+}
+
+// ================= LUCAS · Missão 4 · As Estrelas Roubadas =================
+// Mais inglês, em frases curtas e devagar. A história vem em "sanduíche" (inglês, tradução falada pelo Bip e,
+// nas frases que ensinam, o inglês de novo); frase que já apareceu volta só em inglês.
+// Palavras novas para falar: help, fly, stop e, no final, thank you. Big e small só para entender e tocar.
+// Lembrar sozinho: uma peça da nave, go, shield, help (de novo, mais tarde) e light.
+// Cada palavra nova vem com um gesto (braços abertos no fly, mão pra frente no stop).
+async function lessonLucas4(){
+  shell('lucas', 'Esquadrão Estelar · Missão 4', ['🆘', '🕊️', '✋', '⭐', '💥', '🙏']);
+  Object.assign(G, {T:'nova', H:'bip', P:'LB', max:9});
+  const sc = el('scene');
+  paintShip(sc); sc.style.setProperty('--saber', BLADE[SAVE.lucas.saber || 'blue']);
+  const heroIn = (x, y) => { const h = el('hero'); el('hsaber').classList.add('on'); el('hshield').classList.add('on'); h.style.transform = `translate(${x}px,${y}px)`; return h; };
+  const hopLumi = l => { const x = l.querySelector('.lumi-in'); restart(x, 'hop'); setTimeout(() => x.classList.remove('hop'), 1100); };
+  // as estrelas do céu vão sumindo até o ponto que puxa (away) ou voltam de lá para o lugar
+  const PULL = [730, 40];
+  const pullStars = away => sc.querySelectorAll('.sstar').forEach((s, i) => {
+    const tf = `translate(${PULL[0] - s.getAttribute('cx')}px,${PULL[1] - s.getAttribute('cy')}px) scale(0)`;
+    if (away) { s.style.transitionDelay = i * 22 + 'ms'; s.style.transform = tf; }
+    else { place(s, tf); s.style.transitionDelay = i * 18 + 'ms'; s.style.transform = ''; }
+  });
+
+  // 1. a noite em que as estrelas sumiram; cai uma estrelinha: a Lumi
+  setScene(ART.roof());
+  await line('L4_01');
+  pullStars(true); SFX.dark(); SFX.beam();
+  const stopPull = FX.spiral(...PULL, {color:'#C9B6FF', rate:40, r:260});
+  await line('L4_02');
+  el('holov').classList.add('show'); SFX.villain();
+  await sandwich('V11'); await sandwich('V12');
+  el('holov').classList.remove('show'); stopPull();
+  await line('L4_03');
+  SFX.whoosh(); await FX.comet(760, -20, 520, 300, {ms:1200, color:'#FFE066', size:14, arc:60});
+  FX.flash('#FFF6B0'); FX.shake(); SFX.boom(); FX.burst(520, 300, {n:70, speed:320}); FX.ring(520, 300, {color:'#FFE066'});
+  const lumi = el('lumir'); lumi.classList.add('on');
+  await line('L4_04');
+  await sandwich('L4_05');
+  await sandwich('L4_06', true);
+  await speak('help', {intro:['L4_07'], say:true, expand:'E_help', onOk:() => {
+    hopLumi(lumi); FX.burst(520, 300, {n:40, colors:['#FFE066', '#FFFFFF']}); SFX.build(); track(0); }});
+  await line('L4_08');
+
+  // 2. revisão no hangar e decolagem na velocidade da luz
+  setScene(ART.hangar());
+  const ship = el('ship');
+  place(ship, 'translate(450px,270px) scale(.78)');
+  ['wing', 'rocket', 'laser', 'light'].forEach(k => el('p-' + k).classList.add('on'));
+  sc.querySelector('svg').insertAdjacentHTML('beforeend', `<g class="lumi-fig on" transform="translate(250 130)"><g class="lumi-pop"><g class="lumi-in"><g transform="scale(.5)">${LUMI}</g></g></g></g>`);
+  const [part] = pickReview(['wing', 'rocket', 'laser', 'light'], 1), pe = el('p-' + part);
+  pe.classList.add('broken');
+  await speak(part, {model:false, intro:['L4_09'], expand:'E_' + part, onOk:() => { pe.classList.remove('broken'); restart(pe, 'ping'); SFX.build(); }});
+  await speak('go', {model:false, intro:['L4_10', 'LN_count'], expand:'E_go',
+    onOk:async () => { ship.classList.add('flying', 'launch'); SFX.launch(); ship.style.transform = 'translate(1300px,120px) scale(.78)'; await wait(1100); }});
+
+  // 3. espaço fundo: fly (palavra nova), o buraco negro puxa e stop (palavra nova)
+  setScene(ART.deep());
+  const fship = el('fship'), bh = el('bh');
+  bh.classList.add('far');
+  FX.flash('#BFF4FF'); SFX.whoosh(); await FX.warp(2600);
+  await sandwich('L4_11', true);
+  await speak('fly', {intro:['L4_12'], say:true, expand:'E_fly', onOk:async () => {
+    SFX.whoosh(); bh.classList.remove('far'); await FX.warp(1600); track(1); }});
+  FX.spiral(650, 200, {color:'#FFB86B', rate:14, r:220, squash:.35, hole:52});      // o buraco negro puxa poeira o tempo todo
+  await line('L4_13');
+  fship.classList.add('pulled'); fship.style.transform = 'translate(400px,215px) scale(.36)'; SFX.beam();
+  await sandwich('L4_14', true);
+  await speak('stop', {intro:['L4_15'], say:true, expand:'E_stop', onOk:async () => {
+    fship.classList.remove('pulled'); fship.style.transform = 'translate(190px,225px) scale(.45)';
+    FX.burst(250, 225, {n:40, colors:['#9EF0FF', '#FFFFFF'], speed:300}); SFX.whoosh(); await wait(800); track(2); }});
+
+  // jogo da estátua: fly = a nave avança; stop = a nave para e o meteoro passa na frente
+  await line('L4_16');
+  tapButtons([['fly', '🚀', 'Voar'], ['stop', '✋', 'Parar']]);
+  const meteor = el('meteor');
+  for (const k of shuffle(['fly', 'fly', 'stop', 'stop', 'fly'])) {
+    await listenTap(k, 'LN4_' + k, 'LB_wrong');
+    if (k === 'fly') { SFX.whoosh(); await FX.warp(1100); continue; }
+    place(meteor, 'translate(760px,-80px)'); meteor.classList.add('go'); meteor.style.transform = 'translate(330px,520px)';
+    FX.comet(760, -80, 330, 520, {ms:1000, color:'#FF8A1F', size:16, linear:true}); SFX.whoosh();
+    await wait(1100); meteor.classList.remove('go');
+  }
+  act(''); SFX.good();
+  await line('L4_17');
+
+  // 4. a família da Lumi presa em bolhas: ouvir big ou small e tocar
+  const fam = [['big', 470, 140, '#FF9AD5', '#E0559A'], ['small', 380, 320, '#9EF0FF', '#3AA8C8'],
+    ['big', 560, 320, '#C9B6FF', '#8E6BE0'], ['small', 620, 120, '#FFB86B', '#E07A22']];
+  el('bubbles').innerHTML = fam.map(([s, x, y, f, e], i) => bubble('bub' + i, s, x, y, f, e)).join('');
+  fam.forEach(([, x, y]) => FX.burst(x, y, {n:16, colors:['#CFF8FF', '#FFFFFF'], speed:120}));
+  await sandwich('L4_18', true);
+  await line('L4_19');
+  tapButtons([['big', '<span class="bigstar">⭐</span>', 'Grande'], ['small', '<span class="smallstar">⭐</span>', 'Pequena']]);
+  let saved = 0;
+  for (const k of shuffle(['big', 'big', 'small', 'small'])) {
+    await listenTap(k, 'LN4_' + k, 'LB_wrong');
+    const i = fam.findIndex(([s], j) => s === k && !el('bub' + j).classList.contains('saved')), [, x, y, f] = fam[i];
+    el('bub' + i).classList.add('saved'); SFX.build();
+    FX.burst(x, y, {n:36, colors:[f, '#FFFFFF'], speed:240}); FX.ring(x, y, {color:'#CFF8FF', r:90, width:6});
+    FX.comet(x, y, 110, 110, {ms:900, color:f, size:9});                // a estrela voa até a Lumi
+    await line('LN4_n' + ++saved);
+  }
+  act(''); track(3);
+  await line('L4_20');
+
+  // 5. a máquina do Vortex: lembrar shield, help e light sozinho
+  setScene(ART.machine());
+  const hero = heroIn(150, 400), vx = el('vortexfig'), machine = el('machine'), lm = el('lumim');
+  const drones = [el('drone'), el('drone2'), el('drone3')];
+  FX.spiral(580, 80, {color:'#FFE066', rate:10, r:200, squash:.4});     // a máquina continua engolindo estrelas
+  vx.style.transform = 'translate(720px,400px)'; SFX.villain(); await wait(700);
+  await sandwich('V13');
+  await line('V06');
+  drones.forEach((d, i) => { d.style.transform = `translate(${[290, 380, 330][i]}px,${[110, 140, 215][i]}px)`; }); SFX.enemy();
+  await line('L3_14');
+  await speak('shield', {model:false, expand:'E2_shield', onOk:() => reflectDrones(drones, 150, (x, y) => {
+    FX.burst(x, y, {n:50, speed:300}); FX.ring(x, y, {color:'#FF8A1F', r:110}); FX.shake(); })});
+
+  machine.classList.add('on'); const pull = FX.spiral(468, 240, {color:'#B57BFF', rate:45, r:240, hole:30});
+  hero.style.transition = 'transform 5s ease-in'; hero.style.transform = 'translate(330px,400px)'; SFX.beam();
+  await line('L4_21');
+  await speak('help', {model:false, expand:'E2_help', onOk:async () => {
+    lm.style.transform = 'translate(250px,250px)';
+    ['#FF9AD5', '#9EF0FF', '#C9B6FF', '#FFB86B'].forEach((c, i) => later(i * 150, () => FX.comet(-20, 80 + i * 60, 210 + i * 12, 290, {ms:800, color:c, size:9})));
+    await wait(900); pull(); machine.classList.remove('on');
+    hero.style.transition = ''; hero.style.transform = 'translate(150px,400px)'; SFX.whoosh(); await wait(800); }});
+
+  await line('L4_22');
+  await speak('light', {model:false, expand:'E5_light', onOk:async () => {
+    machine.classList.add('overload'); SFX.beam();
+    const glow = FX.sparkle(570, 230, {color:'#FFF6B0', r:90, rate:40}); await wait(1300); glow();
+    FX.flash(); FX.shake(); SFX.boom(); later(250, SFX.boom);
+    FX.burst(570, 230, {n:150, speed:560, size:7, life:1.6, colors:['#FFE066', '#FFFFFF', '#FF8A1F', '#B57BFF']});
+    FX.ring(570, 230, {r:520, width:26}); FX.ring(570, 230, {color:'#FFE066', r:320, width:14, life:.9});
+    machine.classList.add('gone');
+    const cols = ['#FFE066', '#FFFFFF', '#FF9AD5', '#9EF0FF', '#C9B6FF', '#FFB86B'];
+    for (let i = 0; i < 16; i++) later(150 + i * 80, () => FX.comet(570, 230, 40 + Math.random() * 720, -40, {ms:1200, color:cols[i % 6], size:8, arc:40}));
+    await wait(1800); track(4); }});
+  restart(vx.querySelector('.vortex-body'), 'hit');
+  await sandwich('V14');
+  vx.style.transform = 'translate(1050px,250px)'; SFX.whoosh(); await wait(800);
+
+  // 6. as estrelas voltam para o céu; a Lumi dá um presente e ele agradece: thank you
+  setScene(ART.roof());
+  const lumi2 = el('lumir'); lumi2.classList.add('on');
+  pullStars(false); SFX.beam(); FX.fireworks(4500);
+  later(1800, () => { const c = el('constel'); if (c) c.classList.add('on'); });
+  await wait(1200);
+  await sandwich('L4_23', true);
+  el('gift').classList.add('on'); SFX.build(); FX.sparkle(400, 268, {r:70, rate:8});
+  await sandwich('L4_24');
+  await speak('thanks', {intro:['L4_25'], say:true, expand:'E_thanks', onOk:() => {
+    hopLumi(lumi2); FX.burst(400, 268, {n:60, speed:300}); SFX.build(); track(5); }});
+  await line('L4_26');
+  reward({kid:'lucas', badge:ART.starBadge, title:'Guardião das Estrelas!', next:'🔒 Missão 5 · em breve',
+    homeplay:'Brincadeira de estátua com o papai: ele fala <b>fly</b> (você voa pela sala de braços abertos) e <b>stop</b> (você congela!). Depois troquem. E quando alguém te ajudar, fala <b>thank you</b>.'});
+  await line('L4_27'); await line('L4_28'); await line('L4_29');
   endButtons('lucas');
 }
 
@@ -931,13 +1101,13 @@ async function lessonHenrique2(){
 
 // ---------------- início ----------------
 let runSeq = 0;
-const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3], henrique:[lessonHenrique, lessonHenrique2]};
-const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche']};
+const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3, lessonLucas4], henrique:[lessonHenrique, lessonHenrique2]};
+const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo', 'Missão 4 · As Estrelas'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche']};
 function start(kid, m = 1){
   actx();                                   // libera o som dentro do toque
   voice.src = 'audio/' + (kid === 'lucas' ? 'L01' : 'H01') + '.mp3'; voice.play().catch(() => {}); voice.pause();
   G = {id:++runSeq, kid, m, stars:0, max:0, noMic:false, result:{}};
-  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'E4_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'E_', 'E2_', 'W_coach', 'S_coach', 'T_narr']);
+  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'E4_', 'E5_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'E_', 'E2_', 'W_coach', 'S_coach', 'T_narr']);
   LESSONS[kid][m - 1]().catch(e => { if (e !== CANCEL) console.error(e); });
 }
 

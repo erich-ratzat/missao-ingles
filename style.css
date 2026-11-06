@@ -232,6 +232,50 @@ body.henrique .mic{background:#E5484D}
 @keyframes fade{from{opacity:0}}
 @keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
 
+/* missão 4: efeitos em canvas por cima da cena, tremor e clarão */
+.scene canvas.fx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.scene.shake{animation:sshake .5s}
+.flash{position:absolute;inset:0;pointer-events:none;animation:flash .9s forwards}
+.sstar{transform-box:fill-box;transform-origin:center;animation:twk 2.6s ease-in-out infinite;transition:transform 1.8s cubic-bezier(.6,0,.9,.5)}
+.constel polyline{fill:none;stroke:#BFF6FF;stroke-width:3.5;stroke-linejoin:round;stroke-dasharray:900;stroke-dashoffset:900;opacity:.75;transition:stroke-dashoffset 3s ease-in-out}
+.constel .cdot{opacity:0;transition:opacity .6s}
+.constel.on polyline{stroke-dashoffset:0}
+.constel.on .cdot{opacity:1;animation:blink 1.6s infinite}
+.lumi-pop,.lumi-in,.lumi-art,.gift-in,.bub-in,.m-in,.mouth,.bh-in,.bh-disk{transform-box:fill-box;transform-origin:center}
+.lumi-fig{transition:transform 1s cubic-bezier(.3,1.2,.5,1)}
+.lumi-pop{opacity:0}
+.lumi-fig.on .lumi-pop{opacity:1;animation:install .8s cubic-bezier(.2,1.6,.4,1)}
+.lumi-in{animation:bob 2.6s ease-in-out infinite}
+.lumi-in.hop{animation:hop .5s 2}
+.lglow{animation:lpulse 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.gift{opacity:0;transition:opacity .6s}
+.gift.on{opacity:1}
+.gift.on .gift-in{animation:pop .8s,spin 14s linear .8s infinite}
+.bh-in{transition:transform 1.6s cubic-bezier(.3,.8,.3,1)}
+#bh.far .bh-in{transform:scale(.35)}
+.bh-disk{animation:spin 5s linear infinite}
+.meteor{transition:none}
+.meteor.go{transition:transform 1s linear}
+.bubble{transition:transform 1s cubic-bezier(.3,.8,.3,1)}
+.bub-in{animation:bob 3s ease-in-out infinite;transition:transform .35s,opacity .35s}
+.bubble.saved .bub-in{animation:none;transform:scale(1.5);opacity:0}
+.arrow .bigstar{font-size:3.2rem;line-height:1}
+.arrow .smallstar{font-size:1.4rem}
+.caught{animation:blink 1.4s infinite}
+.mouth{animation:spin 4s linear infinite}
+.machine.on .mouth{animation-duration:.6s}
+.machine.overload .m-in{animation:shake .14s infinite}
+.machine .tankglow{transition:filter 1s}
+.machine.overload .tankglow{filter:brightness(2.6)}
+.machine{transition:opacity .3s}
+.machine.gone{opacity:0}
+.fship.pulled{transition:transform 5s ease-in!important}
+.fship.pulled .fship-in{animation:wobble .5s infinite}
+@keyframes sshake{10%,50%,90%{transform:translate(-7px,3px)}30%,70%{transform:translate(7px,-3px)}}
+@keyframes flash{from{opacity:.95}to{opacity:0}}
+@keyframes twk{50%{opacity:.35}}
+@keyframes lpulse{50%{transform:scale(1.15);opacity:.75}}
+
 @media (max-height:620px){.say .face{width:52px;height:52px}.mic{width:80px;height:80px;font-size:2.2rem}.act{min-height:84px}.word .w{font-size:2rem}}
 @media (max-width:520px){.track{display:none}}
 /* celular ou tablet em pé: a cena aparece inteira e a fala ocupa o resto da tela */

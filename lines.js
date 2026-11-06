@@ -588,6 +588,238 @@ const LINES = {
   "who": "nova",
   "text": "A purple robot! I love it!"
  },
+ "L4_01": {
+  "who": "bip",
+  "text": "Lucas, olha que noite linda! O céu está cheio de estrelas."
+ },
+ "L4_02": {
+  "who": "bip",
+  "text": "Ué... As estrelas estão sumindo! Uma, duas, três... Alguma coisa está puxando as estrelas!"
+ },
+ "V11": {
+  "who": "vortex",
+  "text": "Ha ha ha! Look at the sky! The stars are mine!"
+ },
+ "V11_pt": {
+  "who": "bip",
+  "text": "Olhem o céu! As estrelas são minhas!"
+ },
+ "V12": {
+  "who": "vortex",
+  "text": "My big machine eats the stars. No more light!"
+ },
+ "V12_pt": {
+  "who": "bip",
+  "text": "Minha máquina gigante come as estrelas. Acabou a luz!"
+ },
+ "L4_03": {
+  "who": "bip",
+  "text": "Uma máquina que come estrelas? Sem estrelas, a noite vai ficar escura pra sempre!"
+ },
+ "L4_04": {
+  "who": "bip",
+  "text": "Olha! Uma estrela caiu bem aqui do nosso lado!"
+ },
+ "L4_05": {
+  "who": "lumi",
+  "text": "Hello! I'm Lumi. I'm a little star."
+ },
+ "L4_05_pt": {
+  "who": "bip",
+  "text": "Olá! Eu sou a Lumi. Eu sou uma estrelinha."
+ },
+ "L4_06": {
+  "who": "lumi",
+  "text": "Vortex took my family. Help! Help me, please!"
+ },
+ "L4_06_pt": {
+  "who": "bip",
+  "text": "O Vortex levou a minha família. Socorro! Me ajuda, por favor!"
+ },
+ "L4_07": {
+  "who": "bip",
+  "text": "A Lumi pediu ajuda! Quando a gente precisa de alguém, a gente grita bem forte. Ajuda, em inglês, é..."
+ },
+ "E_help": {
+  "who": "lumi",
+  "text": "Help! Yes! Thank you, Lucas!"
+ },
+ "L4_08": {
+  "who": "bip",
+  "text": "A Lumi sabe onde fica a máquina: perto do Buraco Negro! Vamos pra nave, rápido!"
+ },
+ "L4_09": {
+  "who": "bip",
+  "text": "Antes de decolar, vistoria! Uma peça está piscando. Fala o nome dela em inglês!"
+ },
+ "L4_10": {
+  "who": "bip",
+  "text": "Tudo pronto! Desta vez a gente vai na velocidade da luz! Fala a palavra de decolar quando a Capitã terminar de contar!"
+ },
+ "L4_11": {
+  "who": "lumi",
+  "text": "Fly, Lucas! Fly to the black hole!"
+ },
+ "L4_11_pt": {
+  "who": "bip",
+  "text": "Voa, Lucas! Voa até o buraco negro!"
+ },
+ "L4_12": {
+  "who": "bip",
+  "text": "Abre os braços, como asas de passarinho! Voar, em inglês, é..."
+ },
+ "E_fly": {
+  "who": "lumi",
+  "text": "Fly, fly, fly! Wheee!"
+ },
+ "L4_13": {
+  "who": "bip",
+  "text": "Olha lá na frente: o Buraco Negro! Ele puxa tudo pra dentro. Se a gente chegar muito perto, ele puxa a nave!"
+ },
+ "L4_14": {
+  "who": "nova",
+  "text": "Stop, Lucas! Stop the ship!"
+ },
+ "L4_14_pt": {
+  "who": "bip",
+  "text": "Para, Lucas! Para a nave!"
+ },
+ "L4_15": {
+  "who": "bip",
+  "text": "Põe a mão pra frente, assim, igual guarda de trânsito! Parar, em inglês, é..."
+ },
+ "E_stop": {
+  "who": "nova",
+  "text": "Stop! Good! The ship is safe."
+ },
+ "L4_16": {
+  "who": "bip",
+  "text": "Agora vem uma chuva de meteoros! Quando a Capitã falar fly, toque na nave. Quando ela falar stop, toque na mão. Se quiser, voa e congela de verdade!"
+ },
+ "LN4_fly": {
+  "who": "nova",
+  "text": "Fly!"
+ },
+ "LN4_stop": {
+  "who": "nova",
+  "text": "Stop!"
+ },
+ "L4_17": {
+  "who": "bip",
+  "text": "Passamos pelos meteoros! Que piloto!"
+ },
+ "L4_18": {
+  "who": "lumi",
+  "text": "Look! My family! Big stars and small stars!"
+ },
+ "L4_18_pt": {
+  "who": "bip",
+  "text": "Olha! Minha família! Estrelas grandes e estrelas pequenas!"
+ },
+ "L4_19": {
+  "who": "bip",
+  "text": "As estrelas estão presas em bolhas! Big é grande. Small é pequena. A Capitã vai falar qual estrela salvar. Toque nela!"
+ },
+ "LN4_big": {
+  "who": "nova",
+  "text": "A big star!"
+ },
+ "LN4_small": {
+  "who": "nova",
+  "text": "A small star!"
+ },
+ "LN4_n1": {
+  "who": "nova",
+  "text": "One star!"
+ },
+ "LN4_n2": {
+  "who": "nova",
+  "text": "Two stars!"
+ },
+ "LN4_n3": {
+  "who": "nova",
+  "text": "Three stars!"
+ },
+ "LN4_n4": {
+  "who": "nova",
+  "text": "Four stars!"
+ },
+ "L4_20": {
+  "who": "bip",
+  "text": "A família da Lumi está salva! Mas ainda tem muitas estrelas presas na máquina do Vortex. Olha ela ali!"
+ },
+ "V13": {
+  "who": "vortex",
+  "text": "You again? Stop! This is my machine!"
+ },
+ "V13_pt": {
+  "who": "bip",
+  "text": "Você de novo? Pare! Esta máquina é minha!"
+ },
+ "L4_21": {
+  "who": "bip",
+  "text": "A máquina ligou! Ela está puxando você, Lucas! Grita pedindo ajuda, em inglês!"
+ },
+ "E2_help": {
+  "who": "lumi",
+  "text": "We can help! Hold on, Lucas!"
+ },
+ "L4_22": {
+  "who": "bip",
+  "text": "Ufa! A Lumi e a família dela seguraram você! Agora, as estrelas presas estão fraquinhas. Fala a palavra que deixa tudo brilhando!"
+ },
+ "E5_light": {
+  "who": "nova",
+  "text": "Light! The stars are free!"
+ },
+ "V14": {
+  "who": "vortex",
+  "text": "My machine! Nooo! I'll be back!"
+ },
+ "V14_pt": {
+  "who": "bip",
+  "text": "Minha máquina! Nããão! Eu vou voltar!"
+ },
+ "L4_23": {
+  "who": "lumi",
+  "text": "Look! The stars are back! Thank you, Lucas!"
+ },
+ "L4_23_pt": {
+  "who": "bip",
+  "text": "Olha! As estrelas voltaram! Obrigada, Lucas!"
+ },
+ "L4_24": {
+  "who": "lumi",
+  "text": "This is for you. A star of light!"
+ },
+ "L4_24_pt": {
+  "who": "bip",
+  "text": "Isto é pra você. Uma estrela de luz!"
+ },
+ "L4_25": {
+  "who": "bip",
+  "text": "Um presente! Quando alguém te dá um presente, ou te ajuda, a gente agradece. Obrigado, em inglês, é..."
+ },
+ "E_thanks": {
+  "who": "lumi",
+  "text": "You're welcome, Lucas!"
+ },
+ "L4_26": {
+  "who": "nova",
+  "text": "You did it, Lucas! You saved the stars! You're a star guardian!"
+ },
+ "L4_27": {
+  "who": "bip",
+  "text": "Você ganhou a Estrela de Luz! Agora você é o Guardião das Estrelas!"
+ },
+ "L4_28": {
+  "who": "bip",
+  "text": "Missão fora da tela! Chama o papai pra brincar de estátua. Ele fala fly: você voa pela sala. Ele fala stop: você congela! Depois troca!"
+ },
+ "L4_29": {
+  "who": "lumi",
+  "text": "Bye, Lucas! See you soon!"
+ },
  "H01": {
   "who": "narr",
   "text": "Olá, olá, torcida! Hoje é dia de grande final!"
@@ -1183,6 +1415,70 @@ const LINES = {
  "T_bip_jump_1": {
   "who": "bip",
   "text": "Quase! No final a boca fecha: mp. Escute:"
+ },
+ "W_nova_help": {
+  "who": "nova",
+  "text": "Help."
+ },
+ "S_nova_help": {
+  "who": "nova",
+  "text": "Help... Help."
+ },
+ "T_bip_help_0": {
+  "who": "bip",
+  "text": "Help começa com um sopro, como uma risadinha: rrr. Não é o R enrolado, é só o ar. Escute:"
+ },
+ "T_bip_help_1": {
+  "who": "bip",
+  "text": "Quase! No final a boca fecha: p. Escute:"
+ },
+ "W_nova_fly": {
+  "who": "nova",
+  "text": "Fly."
+ },
+ "S_nova_fly": {
+  "who": "nova",
+  "text": "Fly... Fly."
+ },
+ "T_bip_fly_0": {
+  "who": "bip",
+  "text": "Fly tem o L, não o R: depois do f, a pontinha da língua encosta atrás dos dentes. Escute:"
+ },
+ "T_bip_fly_1": {
+  "who": "bip",
+  "text": "Quase! Começa com f e l juntinhos: flái. Escute:"
+ },
+ "W_nova_stop": {
+  "who": "nova",
+  "text": "Stop."
+ },
+ "S_nova_stop": {
+  "who": "nova",
+  "text": "Stop... Stop."
+ },
+ "T_bip_stop_0": {
+  "who": "bip",
+  "text": "Stop começa com um sss de cobra, colado no t: sss-tóp. Escute:"
+ },
+ "T_bip_stop_1": {
+  "who": "bip",
+  "text": "Quase! No final a boca fecha: p. Escute:"
+ },
+ "W_nova_thanks": {
+  "who": "nova",
+  "text": "Thank you."
+ },
+ "S_nova_thanks": {
+  "who": "nova",
+  "text": "Thank you... Thank you."
+ },
+ "T_bip_thanks_0": {
+  "who": "bip",
+  "text": "Thank you começa com a pontinha da língua entre os dentes, soprando um ventinho: th. Escute:"
+ },
+ "T_bip_thanks_1": {
+  "who": "bip",
+  "text": "Quase! Fala as duas partes: thank... you. Escute:"
  },
  "W_coach_yes": {
   "who": "coach",
@@ -2291,6 +2587,186 @@ const VOCAB = {
   "tips": [
    "Jump começa com dj, juntinho, como em djembê. Escute:",
    "Quase! No final a boca fecha: mp. Escute:"
+  ]
+ },
+ "help": {
+  "pt": "ajuda",
+  "say": "rrélp",
+  "icon": "🆘",
+  "ok": [
+   "help",
+   "helps",
+   "helped",
+   "helping",
+   "helper",
+   "help me",
+   "elp"
+  ],
+  "almost": [
+   1
+  ],
+  "near": [
+   [
+    "yelp",
+    "kelp",
+    "elf",
+    "self",
+    "shelf",
+    "well",
+    "fell",
+    "tell",
+    "bell",
+    "yell",
+    "health",
+    "hope",
+    "hip",
+    "hop"
+   ],
+   [
+    "hell",
+    "held",
+    "hel",
+    "helm",
+    "hells"
+   ]
+  ],
+  "tips": [
+   "Help começa com um sopro, como uma risadinha: rrr. Não é o R enrolado, é só o ar. Escute:",
+   "Quase! No final a boca fecha: p. Escute:"
+  ]
+ },
+ "fly": {
+  "pt": "voar",
+  "say": "flái",
+  "icon": "🕊️",
+  "ok": [
+   "fly",
+   "flies",
+   "flying",
+   "flight",
+   "fli",
+   "flai",
+   "fly fly"
+  ],
+  "near": [
+   [
+    "fry",
+    "fried",
+    "fries",
+    "free",
+    "pry",
+    "frye",
+    "cry",
+    "try",
+    "dry"
+   ],
+   [
+    "five",
+    "fine",
+    "fight",
+    "fi",
+    "fai",
+    "hi",
+    "high",
+    "why",
+    "buy",
+    "bye",
+    "pie",
+    "sky",
+    "lie",
+    "flip",
+    "flat"
+   ]
+  ],
+  "tips": [
+   "Fly tem o L, não o R: depois do f, a pontinha da língua encosta atrás dos dentes. Escute:",
+   "Quase! Começa com f e l juntinhos: flái. Escute:"
+  ]
+ },
+ "stop": {
+  "pt": "parar",
+  "say": "stóp",
+  "icon": "✋",
+  "ok": [
+   "stop",
+   "stops",
+   "stopped",
+   "stopping",
+   "stoppe",
+   "is top",
+   "es top"
+  ],
+  "near": [
+   [
+    "top",
+    "tops",
+    "stuff",
+    "step",
+    "stock",
+    "shop",
+    "spot",
+    "chop",
+    "pop",
+    "stomp",
+    "dop"
+   ],
+   [
+    "stuck",
+    "store",
+    "storm",
+    "start",
+    "star",
+    "stone",
+    "stall",
+    "stall",
+    "stole"
+   ]
+  ],
+  "tips": [
+   "Stop começa com um sss de cobra, colado no t: sss-tóp. Escute:",
+   "Quase! No final a boca fecha: p. Escute:"
+  ]
+ },
+ "thanks": {
+  "pt": "obrigado",
+  "label": "thank you",
+  "say": "tênk-iú",
+  "icon": "🙏",
+  "ok": [
+   "thank you",
+   "thanks",
+   "thank",
+   "thankyou",
+   "thank ya",
+   "thanks you",
+   "thank u",
+   "think you"
+  ],
+  "near": [
+   [
+    "tank",
+    "tanks",
+    "sink",
+    "sank",
+    "sing",
+    "thing",
+    "think",
+    "dank",
+    "bank",
+    "pink",
+    "tango",
+    "fank"
+   ],
+   [
+    "you",
+    "chiu",
+    "q",
+    "cue"
+   ]
+  ],
+  "tips": [
+   "Thank you começa com a pontinha da língua entre os dentes, soprando um ventinho: th. Escute:",
+   "Quase! Fala as duas partes: thank... you. Escute:"
   ]
  },
  "up": {

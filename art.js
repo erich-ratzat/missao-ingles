@@ -466,3 +466,157 @@ ART.keyBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
     <rect x="65" y="61" width="10" height="58"/><rect x="75" y="98" width="16" height="8"/><rect x="75" y="110" width="12" height="8"/></g>
   <path d="M104 30 l3 6 6.5 1 -4.7 4.5 1.1 6.5 -5.9 -3.1 -5.9 3.1 1.1 -6.5 -4.7 -4.5 6.5 -1 Z" fill="#FFF1A6"/>
 </svg>`;
+
+// ---------------- Lucas, Missão 4: as estrelas roubadas ----------------
+// estrela de n pontas centrada em 0,0 (R = ponta, r = vão)
+const starPath = (R, r, n = 5) => Array.from({length: n * 2}, (_, i) => { const a = -Math.PI / 2 + i * Math.PI / n, d = i % 2 ? r : R;
+  return `${i ? 'L' : 'M'}${(Math.cos(a) * d).toFixed(1)} ${(Math.sin(a) * d).toFixed(1)}`; }).join(' ') + ' Z';
+// estrelinha com rosto (a Lumi e a família dela)
+const starFace = (fill = '#FFD84D', edge = '#FFB800') => `<path d="${starPath(40, 21)}" fill="${fill}" stroke="${edge}" stroke-width="7" stroke-linejoin="round"/>
+  <path d="${starPath(26, 14)}" fill="#fff" opacity=".28"/>
+  <ellipse cx="-8" cy="2" rx="3.8" ry="4.8" fill="#3A2400"/><ellipse cx="8" cy="2" rx="3.8" ry="4.8" fill="#3A2400"/>
+  <circle cx="-7" cy="0" r="1.4" fill="#fff"/><circle cx="9" cy="0" r="1.4" fill="#fff"/>
+  <ellipse cx="-15" cy="10" rx="4" ry="2.4" fill="#FF7A96" opacity=".7"/><ellipse cx="15" cy="10" rx="4" ry="2.4" fill="#FF7A96" opacity=".7"/>
+  <path d="M-5 10 q5 5 10 0" stroke="#3A2400" stroke-width="2.4" fill="none" stroke-linecap="round"/>`;
+const sparkle4 = (x, y, s, fill = '#fff') => `<path transform="translate(${x} ${y}) scale(${s})" d="M0 -10 Q1.5 -1.5 10 0 Q1.5 1.5 0 10 Q-1.5 1.5 -10 0 Q-1.5 -1.5 0 -10 Z" fill="${fill}"/>`;
+const LUMI = `<g class="lumi-art"><circle r="66" fill="url(#lglow)" class="lglow"/>${starFace()}
+  <g class="blink">${sparkle4(34, -34, .8)}${sparkle4(-36, 26, .55)}</g></g>`;
+
+ART.lumi = `<svg viewBox="0 0 100 100" aria-hidden="true">
+  <defs><radialGradient id="lumipg"><stop offset="0" stop-color="#6B4BD8"/><stop offset="1" stop-color="#1A1240"/></radialGradient></defs>
+  <circle cx="50" cy="50" r="50" fill="url(#lumipg)"/>
+  <g transform="translate(50 54) scale(.95)">${starFace()}</g>${sparkle4(80, 24, .7)}${sparkle4(20, 78, .5)}
+</svg>`;
+
+const M4DEFS = `<defs>
+  <radialGradient id="lglow"><stop offset="0" stop-color="#FFF6B0" stop-opacity=".9"/><stop offset=".45" stop-color="#FFD84D" stop-opacity=".35"/><stop offset="1" stop-color="#FFD84D" stop-opacity="0"/></radialGradient>
+  <radialGradient id="bhglow"><stop offset=".3" stop-color="#000" stop-opacity="0"/><stop offset=".42" stop-color="#FF9A3C" stop-opacity=".55"/><stop offset=".6" stop-color="#FF4D8D" stop-opacity=".25"/><stop offset="1" stop-color="#7A3CFF" stop-opacity="0"/></radialGradient>
+  <linearGradient id="bhdisk" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF1C4"/><stop offset=".35" stop-color="#FF9A3C"/><stop offset=".7" stop-color="#FF4D8D"/><stop offset="1" stop-color="#7A3CFF"/></linearGradient>
+  <radialGradient id="tankglow"><stop offset="0" stop-color="#FFF6B0" stop-opacity=".8"/><stop offset="1" stop-color="#5FD3F3" stop-opacity=".15"/></radialGradient>
+  <filter id="soft" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="4"/></filter>
+  <filter id="haze" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="26"/></filter>
+</defs>`;
+
+// nuvens coloridas de nebulosa (desfocadas e paradas: o que mexe fica por cima)
+function nebula(seed, cols, n = 7){
+  const r = rng(seed);
+  return `<g filter="url(#haze)">${Array.from({length: n}, (_, i) => { const x = (r() * 800).toFixed(0), y = (r() * 450).toFixed(0);
+    return `<ellipse cx="${x}" cy="${y}" rx="${(110 + r() * 200).toFixed(0)}" ry="${(45 + r() * 90).toFixed(0)}" fill="${cols[i % cols.length]}" opacity="${(.22 + r() * .3).toFixed(2)}" transform="rotate(${(-30 + r() * 60).toFixed(0)} ${x} ${y})"/>`; }).join('')}</g>`;
+}
+// buraco negro: brilho, disco de luz girando (achatado) e a parte da frente do disco por cima do buraco
+const blackHole = (x, y, s) => `<g id="bh" transform="translate(${x} ${y}) scale(${s})"><g class="bh-in">
+  <circle r="190" fill="url(#bhglow)"/>
+  <g transform="scale(1 .3)"><g class="bh-disk">
+    <circle r="125" fill="none" stroke="url(#bhdisk)" stroke-width="64" opacity=".9"/>
+    <circle r="132" fill="none" stroke="#FFF1C4" stroke-width="5" stroke-dasharray="40 60 12 80" opacity=".85"/>
+    <circle r="104" fill="none" stroke="#FFD08A" stroke-width="4" stroke-dasharray="16 44" opacity=".8"/></g></g>
+  <path d="M-74 -6 A74 70 0 0 1 74 -6" stroke="#FFC979" stroke-width="12" fill="none" opacity=".7" filter="url(#soft)"/>
+  <circle r="64" fill="none" stroke="#FFE2A8" stroke-width="5" opacity=".9"/>
+  <circle r="59" fill="#000"/>
+  <path d="M-150 0 A150 42 0 0 0 150 0" fill="none" stroke="url(#bhdisk)" stroke-width="18" opacity=".95"/>
+  <path d="M-128 4 A128 34 0 0 0 128 4" fill="none" stroke="#FFF1C4" stroke-width="3" stroke-dasharray="22 30" opacity=".7"/></g></g>`;
+
+// céu de estrelas que podem sumir (cada uma vai sozinha até o ponto que puxa e depois volta)
+function skyStars(n, seed){
+  const r = rng(seed); let s = '';
+  for (let i = 0; i < n; i++) { const x = r() * 800, y = r() * 300, big = r() < .15;
+    s += `<circle class="sstar" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(big ? 2.4 + r() * 1.4 : .6 + r() * 1.4).toFixed(2)}" fill="${big ? '#FFF6D0' : '#fff'}" style="animation-delay:${(r() * 3).toFixed(2)}s"/>`; }
+  return s;
+}
+const holoV = () => `<g id="holov" class="holo holov"><rect x="24" y="30" width="190" height="150" rx="14" fill="#FF3B3B" opacity=".14" stroke="#FF3B3B" stroke-width="3"/>
+  <g transform="translate(64 44) scale(1.1)" opacity=".92">${ART.vortex.replace(/<svg[^>]*>/, '').replace('</svg>', '')}</g>
+  <text x="119" y="170" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="15" fill="#FF6B6B" letter-spacing="1.5">LORDE VORTEX</text></g>`;
+// constelação em forma de nave, que se desenha quando as estrelas voltam
+const CONSTEL = [[250, 170], [330, 142], [440, 146], [520, 172], [440, 198], [330, 202], [250, 170]];
+const CONSTEL_FIN = [[330, 142], [300, 108], [380, 144]];
+const GIFT = `<g class="gift-in"><circle r="70" fill="url(#lglow)"/>${Array.from({length: 12}, (_, i) => `<rect x="-2" y="-64" width="4" height="22" rx="2" fill="#FFF1A6" opacity=".8" transform="rotate(${i * 30})"/>`).join('')}
+  <path d="${starPath(34, 16)}" fill="#FFD84D" stroke="#FFF6D0" stroke-width="4" stroke-linejoin="round"/><path d="${starPath(18, 9)}" fill="#fff" opacity=".6"/></g>`;
+
+// telhado da base, de noite
+ART.roof = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}${M4DEFS}
+  <defs><linearGradient id="rsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#03051A"/><stop offset=".6" stop-color="#1A1450"/><stop offset="1" stop-color="#4A2380"/></linearGradient></defs>
+  <rect width="800" height="450" fill="url(#rsky)"/>
+  <g filter="url(#haze)"><ellipse cx="420" cy="150" rx="520" ry="58" fill="#6B4BD8" opacity=".5" transform="rotate(-16 420 150)"/>
+    <ellipse cx="400" cy="158" rx="360" ry="22" fill="#D9CCFF" opacity=".45" transform="rotate(-16 400 158)"/>
+    <ellipse cx="590" cy="105" rx="150" ry="46" fill="#FF6FB5" opacity=".3"/><ellipse cx="170" cy="230" rx="160" ry="40" fill="#2F7CF6" opacity=".3"/></g>
+  <g id="skystars">${skyStars(110, 61)}</g>
+  <g id="constel" class="constel"><polyline points="${CONSTEL.map(p => p.join(',')).join(' ')}"/><polyline points="${CONSTEL_FIN.map(p => p.join(',')).join(' ')}"/>
+    ${CONSTEL.slice(0, -1).concat(CONSTEL_FIN.slice(1, 2)).map(([x, y]) => `<g class="cdot">${sparkle4(x, y, 1.1, '#FFF6D0')}</g>`).join('')}</g>
+  <g fill="#0B0A26">
+    <path d="M0 340 V300 Q60 262 120 300 V340 Z"/><rect x="150" y="270" width="60" height="70"/><path d="M230 340 V290 Q300 240 370 290 V340 Z"/>
+    <rect x="560" y="250" width="40" height="90"/><path d="M620 340 V296 Q690 256 760 296 V340 Z"/><rect x="760" y="280" width="40" height="60"/></g>
+  <g stroke="#0B0A26" stroke-width="4"><line x1="180" y1="270" x2="180" y2="226"/><line x1="580" y1="250" x2="580" y2="200"/></g>
+  <circle cx="180" cy="224" r="4" fill="#FF3B3B" class="blink"/><circle cx="580" cy="198" r="4" fill="#FF3B3B" class="blink"/>
+  <g fill="#FFD27A" opacity=".85">${[[160, 285], [188, 285], [160, 310], [568, 266], [568, 292], [580, 318], [298, 300], [680, 300], [60, 312]].map(([x, y]) => `<rect x="${x}" y="${y}" width="12" height="9" rx="2"/>`).join('')}</g>
+  <rect y="340" width="800" height="110" fill="#151236"/>
+  <g stroke="#241F52" stroke-width="3">${[372, 404, 436].map(y => `<line x1="0" y1="${y}" x2="800" y2="${y}"/>`).join('')}</g>
+  <line x1="0" y1="344" x2="800" y2="344" stroke="#2E2866" stroke-width="5"/>
+  <g transform="translate(680 430)"><path d="M0 0 L-30 -70 M0 0 L30 -70 M0 0 V-70" stroke="#5B6478" stroke-width="6"/>
+    <g transform="translate(0 -78) rotate(-32)"><rect x="-60" y="-14" width="120" height="28" rx="10" fill="#8A94A8" stroke="#1B2232" stroke-width="3"/>
+      <rect x="54" y="-18" width="16" height="36" rx="5" fill="#5B6478" stroke="#1B2232" stroke-width="3"/><circle cx="70" cy="0" r="9" fill="#5FD3F3" opacity=".8"/></g></g>
+  ${holoV()}
+  <g id="gift" class="gift" transform="translate(400 268)">${GIFT}</g>
+  <g id="hero" class="fig" transform="translate(260 430)">${HERO}</g>
+  <g id="bipr" class="bip-float" transform="translate(80 236)"><g>${BIP_INNER()}</g></g>
+  <g id="lumir" class="lumi-fig" transform="translate(520 300)"><g class="lumi-pop"><g class="lumi-in"><g transform="scale(.75)">${LUMI}</g></g></g></g>
+</svg>`;
+
+// espaço fundo: nebulosa, buraco negro, meteoro e as bolhas com as estrelas presas
+ART.deep = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}${M4DEFS}
+  <rect width="800" height="450" fill="url(#space)"/>
+  ${nebula(41, ['#8E4DFF', '#FF4D8D', '#2F7CF6', '#5FD3F3'])}
+  <g class="stars-far"><g>${stars(110, 43)}</g><g transform="translate(800 0)">${stars(110, 43)}</g></g>
+  ${blackHole(650, 200, .8)}
+  <g class="stars-near"><g>${stars(40, 47)}</g><g transform="translate(800 0)">${stars(40, 47)}</g></g>
+  <g id="bubbles"></g>
+  <g id="meteor" class="meteor" transform="translate(900 -120)"><g class="rock-art">
+    <path d="M-40 -10 L-22 -36 L10 -40 L36 -20 L40 12 L20 36 L-14 38 L-38 20 Z" fill="#7A5B4E" stroke="#3A2F28" stroke-width="4"/>
+    <circle cx="-10" cy="-8" r="9" fill="#5E473D"/><circle cx="14" cy="14" r="6" fill="#5E473D"/></g></g>
+  <g id="fship" class="fship" transform="translate(170 225) scale(.45)"><g class="fship-in">${shipSVG(['rocket', 'wing', 'laser', 'light'])}</g></g>
+  <g id="lumid" class="lumi-fig on" transform="translate(110 110)"><g class="lumi-pop"><g class="lumi-in"><g transform="scale(.5)">${LUMI}</g></g></g></g>
+</svg>`;
+// bolha com uma estrela da família presa (big ou small)
+const bubble = (id, size, x, y, fill, edge) => { const R = size === 'big' ? 62 : 34, s = size === 'big' ? .95 : .48;
+  return `<g id="${id}" class="bubble ${size}" transform="translate(${x} ${y})"><g class="bub-in" style="animation-delay:${(x % 7) * .3}s">
+    <g transform="scale(${s})">${starFace(fill, edge)}</g>
+    <circle r="${R}" fill="#9EF0FF" fill-opacity=".12" stroke="#CFF8FF" stroke-width="3"/>
+    <path d="M${-R * .6} ${-R * .45} A${R * .75} ${R * .75} 0 0 1 ${-R * .1} ${-R * .72}" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round" opacity=".75"/></g></g>`; };
+
+// a máquina do Vortex, numa pedra perto do buraco negro
+ART.machine = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}${M4DEFS}
+  <rect width="800" height="450" fill="url(#space)"/>
+  ${nebula(53, ['#FF4D8D', '#8E4DFF', '#FF8A1F'], 6)}
+  ${stars(90, 57)}
+  ${blackHole(130, 110, .62)}
+  <path d="M0 360 Q120 328 260 350 T520 342 T800 352 V450 H0 Z" fill="#3A2F4A" stroke="#5B4A6B" stroke-width="3"/>
+  <g fill="#2A2238">${[[90, 392, 34], [330, 410, 22], [700, 400, 30], [470, 430, 16]].map(([x, y, r]) => `<ellipse cx="${x}" cy="${y}" rx="${r * 1.6}" ry="${r * .5}"/>`).join('')}</g>
+  <g id="machine" class="machine"><g class="m-in">
+    <path d="M512 160 L470 76 L690 76 L628 160 Z" fill="#3B2F5C" stroke="#8E4DFF" stroke-width="5"/>
+    <path d="M486 88 H674" stroke="#B57BFF" stroke-width="4" opacity=".6"/>
+    <rect x="500" y="150" width="140" height="160" rx="28" fill="#0E1A3A" stroke="#9EF0FF" stroke-width="5"/>
+    <rect x="510" y="160" width="120" height="140" rx="22" fill="url(#tankglow)" class="tankglow"/>
+    ${[[540, 200, '#FFD84D'], [600, 190, '#FF9AD5'], [570, 250, '#9EF0FF'], [532, 268, '#FFB86B'], [610, 262, '#C9B6FF'], [574, 196, '#FFFFFF']].map(([x, y, c], i) => `<path class="caught" style="animation-delay:${i * .25}s" transform="translate(${x} ${y})" d="${starPath(13, 6)}" fill="${c}"/>`).join('')}
+    <path d="M520 168 Q514 220 522 280" stroke="#fff" stroke-width="5" fill="none" opacity=".35" stroke-linecap="round"/>
+    <rect x="470" y="300" width="200" height="62" rx="12" fill="#2B2140" stroke="#8E4DFF" stroke-width="4"/>
+    ${[495, 525, 555, 585, 615, 645].map((x, i) => `<circle cx="${x}" cy="346" r="6" fill="${['#FF3B3B', '#FFD23F', '#4BE38A'][i % 3]}" class="blink" style="animation-delay:${i * .2}s"/>`).join('')}
+    <text x="570" y="334" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="26" fill="#E2CCFF">V</text>
+    <g transform="translate(468 240)"><circle r="44" fill="#2B2140" stroke="#8E4DFF" stroke-width="5"/><circle r="32" fill="#05020A"/>
+      <g class="mouth"><path d="M0 -28 A28 28 0 0 1 28 0 M0 28 A28 28 0 0 1 -28 0" stroke="#B57BFF" stroke-width="4" fill="none"/>
+        <path d="M0 -16 A16 16 0 0 1 16 0 M0 16 A16 16 0 0 1 -16 0" stroke="#E2CCFF" stroke-width="3" fill="none"/></g></g></g></g>
+  <g id="bolt" class="bolt" transform="translate(900 300)"><circle r="16" fill="#B57BFF" opacity=".5"/><circle r="9" fill="#F3E8FF"/></g>
+  <g id="vortexfig" class="fig" transform="translate(1000 400)">${VORTEX}</g>
+  <g id="hero" class="fig" transform="translate(-150 400)">${HERO}</g>
+  <g id="lumim" class="lumi-fig on" transform="translate(-120 200)"><g class="lumi-pop"><g class="lumi-in"><g transform="scale(.55)">${LUMI}</g></g></g></g>
+  <g id="drone" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="drone2" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="drone3" class="drone" transform="translate(950 120)">${ART.drone}</g>
+  <g id="boom" class="boom" transform="translate(-200 -200)">${Array.from({length: 10}, (_, i) => `<circle class="spark" r="${8 + (i % 3) * 5}" fill="${['#FFE066', '#FF8A1F', '#FF4D4D'][i % 3]}" style="--a:${i * 36}deg"/>`).join('')}</g>
+</svg>`;
+
+ART.starBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
+  <defs><radialGradient id="sbg"><stop offset="0" stop-color="#4A2C9E"/><stop offset="1" stop-color="#140C38"/></radialGradient></defs>
+  <circle cx="70" cy="70" r="62" fill="url(#sbg)" stroke="#FFD23F" stroke-width="6"/>
+  <g transform="translate(70 72)">${Array.from({length: 12}, (_, i) => `<rect x="-2" y="-58" width="4" height="16" rx="2" fill="#FFF1A6" opacity=".85" transform="rotate(${i * 30})"/>`).join('')}
+    <g transform="scale(.95)">${starFace()}</g></g>
+  ${sparkle4(108, 34, .9)}${sparkle4(30, 104, .6)}
+</svg>`;
