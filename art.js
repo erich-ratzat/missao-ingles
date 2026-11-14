@@ -724,3 +724,53 @@ ART.fireBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
   <path d="M70 26 C92 52 100 70 92 92 C88 104 78 110 70 110 C58 110 46 102 46 86 C46 72 56 64 58 50 C64 60 66 66 70 68 C72 56 70 40 70 26 Z" fill="url(#fbf)" stroke="#FFF1A6" stroke-width="3"/>
   <path d="M70 70 C80 82 82 92 76 100 C72 104 64 104 62 96 C60 88 68 84 70 70 Z" fill="#FFF1A6"/>
 </svg>`;
+
+// ---------------- Henrique, Missão 3: goleiro na Copa da Cidade (à noite) ----------------
+// luva de goleiro (centro da palma no 0,0; dedos para cima)
+const GLOVE = (fill = '#FF8A1F', edge = '#11151F') => `<g>
+  ${[-12, -4, 4, 12].map((x, i) => `<rect x="${x - 4}" y="${-30 + Math.abs(i - 1.5) * 3}" width="8.5" height="26" rx="4.2" fill="${fill}" stroke="${edge}" stroke-width="2.5"/>`).join('')}
+  <rect x="-23" y="-12" width="9" height="22" rx="4.5" fill="${fill}" stroke="${edge}" stroke-width="2.5" transform="rotate(-28 -18 0)"/>
+  <rect x="-17" y="-12" width="34" height="30" rx="11" fill="${fill}" stroke="${edge}" stroke-width="3"/>
+  <path d="M-9 0 h18 M-9 7 h18" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".8"/>
+  <rect x="-15" y="16" width="30" height="11" rx="3" fill="#fff" stroke="${edge}" stroke-width="2.5"/></g>`;
+
+// Henrique de goleiro: braços para cima, luvas, camisa da cor que ele escolheu
+const HKEEPER = `<g class="keeper-body">
+  <rect x="-13" y="-6" width="11" height="34" rx="4" fill="#E9B48A"/><rect x="2" y="-6" width="11" height="34" rx="4" fill="#E9B48A"/>
+  <rect x="-14" y="12" width="13" height="18" rx="4" fill="#fff"/><rect x="1" y="12" width="13" height="18" rx="4" fill="#fff"/>
+  <path d="M-16 30 h15 v6 h-19 Z M1 30 h15 l4 6 h-19 Z" fill="#11151F"/>
+  <path d="M-22 -14 L22 -14 L20 4 L-20 4 Z" fill="#11151F"/>
+  <path d="M-24 -52 L24 -52 L26 -12 L-26 -12 Z" fill="var(--shirt)" stroke="#11151F" stroke-width="2.5"/>
+  <text x="0" y="-25" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="20" fill="#fff">1</text>
+  <path d="M-24 -48 L-46 -72 M24 -48 L46 -72" stroke="var(--shirt)" stroke-width="11" stroke-linecap="round"/>
+  <path d="M-24 -48 L-46 -72 M24 -48 L46 -72" stroke="#11151F" stroke-width="2" stroke-linecap="round" opacity=".25"/>
+  <g transform="translate(-50 -84) scale(.62) rotate(-18)">${GLOVE()}</g><g transform="translate(50 -84) scale(.62) rotate(18)">${GLOVE()}</g>
+  <circle cx="0" cy="-66" r="14" fill="#E9B48A"/><path d="M-14 -68 C-15 -86 15 -86 14 -68 C11 -74 -11 -74 -14 -68 Z" fill="#5A3A22"/>
+  <circle cx="-5" cy="-65" r="1.8" fill="#111"/><circle cx="5" cy="-65" r="1.8" fill="#111"/>
+  <path d="M-5 -58 q5 4 10 0" stroke="#7A2E1F" stroke-width="1.8" fill="none" stroke-linecap="round"/></g>`;
+
+// lua grande e fogos ficam no céu, acima da torcida
+const MOON = `<g><circle cx="610" cy="56" r="40" fill="#FFF6C9" opacity=".18"/><circle cx="610" cy="56" r="24" fill="#FFF3B8"/>
+  <circle cx="602" cy="50" r="5" fill="#EADB91"/><circle cx="617" cy="63" r="3.5" fill="#EADB91"/></g>`;
+const CUP_BANNER = `<g transform="translate(400 96)"><rect x="-120" y="-16" width="240" height="30" rx="8" fill="#0E1322" stroke="#FFD23F" stroke-width="3"/>
+  <text x="0" y="6" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="19" fill="#FFD23F">🏆 COPA DA CIDADE</text></g>`;
+const night = svg => svg.replace('<polygon points="0,100 800,100', MOON + '<polygon points="0,100 800,100').replace('<g id="crowd"', CUP_BANNER + '<g id="crowd"');
+
+ART.locker3 = () => ART.locker().replace('font-size="30" fill="#17233A">GRANDE FINAL', 'font-size="25" fill="#17233A">COPA DA CIDADE')
+  .replace('<g id="coachbig"', `<g transform="translate(340 300)"><g id="gloves" class="item">
+    <g transform="translate(-24 0) rotate(-12)">${GLOVE()}</g><g transform="translate(24 0) rotate(12)">${GLOVE()}</g></g></g><g id="coachbig"`);
+
+// Henrique no gol (no lugar do goleiro), o Big Tony e o Lucas chutando de baixo
+ART.keeperView = () => night(ART.stadium(true)).replace(KEEPER, HKEEPER)
+  .replace(`<g id="player" class="player" transform="translate(330 330)">${PLAYER}</g>`,
+    `<g id="player" class="player" transform="translate(-200 330)"><g transform="scale(1.15)">${playerSVG('BIG TONY', '#4B5563')}</g></g>`);
+// a outra área: Henrique ataca no último minuto
+ART.cupNight = () => night(ART.stadium(true));
+
+ART.gloveBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
+  <circle cx="70" cy="70" r="64" fill="#17233A" stroke="#FFD23F" stroke-width="5"/>
+  ${Array.from({length: 12}, (_, i) => `<rect x="68" y="12" width="4" height="16" rx="2" fill="#FFD23F" opacity=".55" transform="rotate(${i * 30} 70 70)"/>`).join('')}
+  <g transform="translate(70 76) scale(1.45)">${GLOVE('url(#gold3)', '#9A6A00')}</g>
+  <path d="M70 92 l4 8 9 1.3 -6.5 6.2 1.6 9 -8.1 -4.3 -8.1 4.3 1.6 -9 -6.5 -6.2 9 -1.3 Z" fill="#fff"/>
+  <defs><radialGradient id="gold3" cx=".35" cy=".3"><stop offset="0" stop-color="#FFF1A6"/><stop offset=".6" stop-color="#F5B700"/><stop offset="1" stop-color="#B07800"/></radialGradient></defs>
+</svg>`;

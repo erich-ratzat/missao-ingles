@@ -3,7 +3,7 @@
 MVP de inglês para crianças: missões curtas com história, personagens e reconhecimento de voz.
 
 - Lucas: Esquadrão Estelar. Missão 1: monta a nave e escapa do Lorde Vortex. Missão 2: ganha espada e escudo e recupera o Cristal de Luz. Missão 3: entra no castelo do Vortex (open, jump, números, setas) e resgata o Bip. Missão 4: com a estrelinha Lumi, salva as estrelas que a máquina do Vortex engoliu (help, fly, stop, thank you; big/small só para entender).  Missão 5: no planeta de gelo, solta o Puff e derrete o canhão do Vortex (cold, fire, hello, friend; four/five só para entender).
-- Henrique: A Grande Final. Ele se arruma no vestiário, joga a final e bate os pênaltis contra o Big Tony.
+- Henrique: A Grande Final. Ele se arruma no vestiário, joga a final e bate os pênaltis contra o Big Tony. Missão 2: treina com o Lucas e ganha a revanche (pass, head; left/right). Missão 3: vira goleiro na Copa da Cidade, à noite, defende a bola de fogo do Big Tony e faz o gol de cabeça no último minuto (hands, catch, jump, win; up só para entender). Segue o jeito de ensinar da Missão 4 do Lucas, com o narrador falando a tradução.
 
 ## Como cada palavra é ensinada
 

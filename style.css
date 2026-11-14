@@ -304,6 +304,9 @@ body.henrique .mic{background:#E5484D}
 .cannon.gone{opacity:0}
 @keyframes shiver{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
 
+/* Henrique, missão 3: bola de fogo */
+.ball.fire .ball-spin{filter:drop-shadow(0 0 8px #FF8A1F) drop-shadow(0 0 16px #FF4D2E);animation:spin .4s linear infinite}
+.ball.fire .ball-spin>circle{fill:#FFB020}
 @media (max-height:620px){.say .face{width:52px;height:52px}.mic{width:80px;height:80px;font-size:2.2rem}.act{min-height:84px}.word .w{font-size:2rem}}
 @media (max-width:520px){.track{display:none}}
 /* celular ou tablet em pé: a cena aparece inteira e a fala ocupa o resto da tela */

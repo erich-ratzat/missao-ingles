@@ -57,6 +57,11 @@ const TR = {
   E_cold:'Frio, frio, frio! Brrr!', E_fire:'Fogo! Quente, quente, quente!', E_hello:'Oi, Lucas! Obrigado!', E_friend:'Amigos! Eba!',
   LN5_three:'Três cristais!', LN5_four:'Quatro cristais!', LN5_five:'Cinco cristais!',
   E2_stop:'Pare! Uau! As bolas de neve pararam!', E2_fire:'Fogo! O canhão está derretendo!',
+  // Henrique, missão 3
+  HC3_up:'Pra cima!', HC3_save:'Bela defesa!', HC3_save__2:'Mãos seguras!', HC3_save__3:'Que defesa!',
+  E_hands:'Mãos grandes! Mãos fortes!', E_catch:'Bela pegada! Mãos seguras!', E3_jump:'Pula! Que pulo!',
+  E2_catch:'Agarrou! A bola de fogo está segura!', E3_head:'Cabeçada! Gol! Gol!', E3_goal:'Gol! Você é um supergoleiro!',
+  E_win:'Isso! A gente ganhou! Campeões!',
   L5_24:'Você conseguiu, Lucas! O planeta de gelo está salvo! Você é um cavaleiro do fogo!', L5_27:'Tchau, amigo! Até logo!',
 };
 const WHO = {nova:['Capitã Nova', ART.nova], vortex:['Lorde Vortex', ART.vortex], bip:['Bip', ART.bip],
@@ -1240,21 +1245,171 @@ async function lessonHenrique2(){
   await wait(750);
   restart(net, 'shake'); restart(el('crowd'), 'cheer'); SFX.roar(); confetti(60); score('Henrique 2 x 0 Tubarões'); track(4);
   await line('H2_15'); await line('T08'); await line('HC2_end'); track(5);
-  reward({kid:'henrique', badge:ART.medal, title:'Craque do Time!', next:'🔒 Missão 3 · em breve',
+  reward({kid:'henrique', badge:ART.medal, title:'Craque do Time!', next:'🔓 Missão 3 liberada: O Goleiro Paredão',
     homeplay:'Treino com o papai: com uma bolinha de meia, ele grita <b>pass</b>, <b>head</b>, <b>left</b> ou <b>right</b> e você faz. Depois troquem!'});
   await line('H2_16'); await line('H2_17');
   endButtons('henrique');
 }
 
+// ================= HENRIQUE · Missão 3 · O Goleiro Paredão =================
+// Como a Missão 4 do Lucas: a história vem em frases curtas em inglês, devagar, e o narrador fala a tradução
+// (sanduíche). Quatro palavras novas para falar (hands, catch, jump, win), up para entender e tocar,
+// e revisão de mochila, left/right, head e goal, que ele lembra sozinho. Gesto junto: mãos abertas, pular.
+async function lessonHenrique3(){
+  shell('henrique', 'O Goleiro Paredão', ['🎒', '🙌', '🧤', '🦘', '🔥', '🏆']);
+  Object.assign(G, {T:'coach', H:'narr', P:'HN', max:9});
+  const colors = {red:'#E5484D', blue:'#2F7CF6', yellow:'#F5C400'};
+  const sc = el('scene');
+  sc.style.setProperty('--shirt', colors[SAVE.henrique.shirt || 'blue']);
+
+  // 1. vestiário: o goleiro ficou doente, o Henrique vai pro gol
+  setScene(ART.locker3());
+  SFX.crowd(.12, 3);
+  await line('H3_01'); await line('H3_02');
+  el('coachbig').classList.add('show');
+  await sandwich('HC3_01'); await sandwich('HC3_02', true);
+  await line('H3_03');
+  await sandwich('T3_01');
+  await line('H3_04');
+  for (const w of pickReview(['shoes', 'ball', 'yes'], 1)) {
+    if (w === 'yes') { await speak('yes', {model:false, intro:['HC_ready'], expand:'E2_yes'}); continue; }
+    const item = el(w === 'shoes' ? 'shoes' : 'lball'); item.classList.add('on');
+    await speak(w, {model:false, intro:['HC2_what'], expand:'E_' + w, onOk:() => { restart(item, 'on'); SFX.build(); }});
+  }
+  track(0);
+  const gloves = el('gloves');
+  await line('H3_05');
+  gloves.classList.add('on'); SFX.build(); FX.burst(340, 290, {n:40, colors:['#FF8A1F', '#FFE066', '#FFFFFF']});
+  const glow = FX.sparkle(340, 290, {color:'#FFB020', r:60, rate:12});
+  await sandwich('HC3_03', true);
+  await speak('hands', {intro:['H3_06'], say:true, expand:'E_hands', onOk:() => {
+    restart(gloves, 'on'); FX.ring(340, 290, {color:'#FF8A1F', r:140}); SFX.build(); track(1); }});
+  glow();
+
+  // 2. treino no gol: o Lucas chuta, o Henrique agarra e pula
+  setScene(ART.keeperView());
+  let ball = el('ball'), keeper = el('keeper'), net = el('goal').querySelector('.net');
+  const tony = el('player'), mate = el('mate');
+  const KEEP = 'translate(400px,258px)', FEET = 'translate(400px,392px)', HOLD = 'translate(400px,226px) scale(.5)';
+  // onde a bola chega e para onde o goleiro voa
+  const SPOT = {mid:[400, 222, .5], up:[400, 140, .5], left:[262, 182, .55], right:[538, 182, .55]};
+  const DIVE = {mid:KEEP, up:'translate(400px,212px)', left:'translate(305px,250px) rotate(-70deg)', right:'translate(495px,250px) rotate(70deg)'};
+  const savedFx = (x, y, big) => {
+    FX.burst(x, y, {n:big ? 80 : 34, colors:big ? ['#FF8A1F', '#FFE066', '#FFFFFF'] : ['#FFFFFF', '#FFE066'], speed:big ? 340 : 220});
+    FX.ring(x, y, {color:big ? '#FF8A1F' : '#FFFFFF', r:big ? 220 : 120});
+    if (big) { FX.flash('#FFE9B0'); FX.shake(); }
+    SFX.kick(); restart(el('crowd'), 'cheer'); SFX.roar();
+  };
+  // chute de quem estiver na bola; o goleiro voa e agarra; depois fica com a bola no peito
+  async function shoot(kicker, dir){
+    const [x, y, s] = SPOT[dir];
+    kicker.style.transform = 'translate(360px,336px)'; await wait(300);
+    SFX.kick(); ball.style.transform = `translate(${x}px,${y}px) scale(${s})`; keeper.style.transform = DIVE[dir];
+    if (dir === 'up') restart(keeper.querySelector('.keeper-body'), 'hop');
+    await wait(750); savedFx(x, y);
+    await wait(500); keeper.style.transform = KEEP; ball.style.transform = HOLD; kicker.style.transform = 'translate(330px,322px)';
+    await wait(700);
+  }
+  const ready = kicker => { place(ball, FEET); kicker.style.transform = 'translate(330px,322px)'; };
+  place(keeper, KEEP); place(ball, FEET);
+  await line('H3_07');
+  ready(mate); await wait(700);
+  await sandwich('HC3_04', true);
+  await speak('catch', {intro:['H3_08'], expand:'E_catch', onOk:async () => { await shoot(mate, 'mid'); track(2); }});
+  ready(mate);
+  await sandwich('HC3_05', true);
+  await speak('jump', {intro:['H3_09'], expand:'E3_jump', onOk:async () => { await shoot(mate, 'up'); track(3); }});
+
+  // 3. ouvir para onde vai a bola (up / left / right) e tocar na seta
+  await line('H3_10');
+  const arrows = () => tapButtons([['left', '⬅️', 'Esquerda'], ['up', '⬆️', 'Para cima'], ['right', '➡️', 'Direita']]);
+  const sayDir = d => d === 'up' ? 'HC3_up' : 'HC2_' + d;
+  for (const d of [...shuffle(['left', 'up', 'right']), Math.random() < .5 ? 'left' : 'right']) {
+    ready(mate); arrows();
+    await listenTap(d, sayDir(d), 'HN_wrong');
+    act(''); await shoot(mate, d); await line('HC3_save');
+  }
+
+  // 4. a Copa: o Big Tony ataca
+  mate.style.transform = 'translate(-200px,330px)';
+  SFX.whistle(); SFX.roar();
+  sc.insertAdjacentHTML('beforeend', '<div class="overlay" style="align-items:flex-start;padding-top:10px"><span class="chip score" id="score">Henrique 0 x 0 Tubarões</span></div>');
+  const score = t => { el('score').textContent = t; restart(el('score'), 'bump'); };
+  await line('H3_11');
+  ready(tony); await wait(700);
+  await sandwich('T3_02');
+  for (const d of shuffle(['left', 'up', 'right']).slice(0, 2)) {
+    ready(tony); arrows();
+    await listenTap(d, sayDir(d), 'HN_wrong');
+    act(''); await shoot(tony, d); await line('HC3_save');
+  }
+  await line('H3_12');
+  ready(tony); await wait(500);
+  SFX.villain(); await sandwich('T3_03');
+
+  // a bola de fogo: ele lembra sozinho jump e catch
+  tony.style.transform = 'translate(360px,336px)'; await wait(300);
+  SFX.kick(); SFX.launch(); ball.classList.add('fire');
+  FX.comet(400, 392, 400, 300, {ms:700, color:'#FF8A1F', size:14});
+  ball.style.transform = 'translate(400px,300px) scale(.8)';
+  const fire = FX.flame(400, 300, {rate:60, w:12});
+  await wait(700);
+  await speak('jump', {model:false, intro:['H3_13'], expand:'E3_jump', onOk:async () => {
+    keeper.style.transform = DIVE.up; restart(keeper.querySelector('.keeper-body'), 'hop');
+    ball.style.transform = 'translate(400px,140px) scale(.5)'; FX.comet(400, 300, 400, 140, {ms:700, color:'#FF8A1F', size:14});
+    later(700, () => fire.move(400, 140)); await wait(800); }});
+  await speak('catch', {model:false, intro:['H3_14'], expand:'E2_catch', onOk:async () => {
+    fire(); ball.classList.remove('fire'); savedFx(400, 140, true);
+    await wait(600); keeper.style.transform = KEEP; ball.style.transform = HOLD; await wait(700); track(4); }});
+  tony.style.transform = 'translate(330px,322px)';
+  await sandwich('T3_04');
+
+  // 5. último minuto: o goleiro vai pra área deles e faz o gol de cabeça
+  await line('H3_15');
+  await sandwich('HC3_06', true);
+  setScene(ART.cupNight());
+  ball = el('ball'); keeper = el('keeper'); net = el('goal').querySelector('.net');
+  const player = el('player'), lucas = el('mate');
+  sc.insertAdjacentHTML('beforeend', '<div class="overlay" style="align-items:flex-start;padding-top:10px"><span class="chip score" id="score">Henrique 0 x 0 Tubarões</span></div>');
+  place(keeper, 'translate(400px,258px)'); place(player, 'translate(150px,380px) scale(.95)');
+  place(lucas, 'translate(650px,350px) scale(.85)'); place(ball, 'translate(700px,400px) scale(.85)');
+  SFX.roar(); player.style.transform = 'translate(300px,320px) scale(.85)'; await wait(900);
+  SFX.kick(); ball.style.transform = 'translate(420px,250px) scale(.75)';
+  FX.comet(700, 400, 420, 250, {ms:700, color:'#FFFFFF', size:8, arc:60});
+  await wait(700);
+  await speak('head', {model:false, intro:['H3_16'], expand:'E3_head', onOk:async () => {
+    ball.style.transform = 'translate(310px,258px) scale(.75)'; await wait(600);
+    restart(player.querySelector('.player-body'), 'hop'); SFX.kick();
+    keeper.style.transform = 'translate(495px,250px) rotate(70deg)';
+    ball.style.transform = 'translate(300px,185px) scale(.55)'; FX.comet(310, 258, 300, 185, {ms:500, color:'#FFE066', size:10});
+    await wait(700);
+    restart(net, 'shake'); restart(el('crowd'), 'cheer'); SFX.roar(); confetti(50);
+    FX.burst(300, 185, {n:70, speed:320}); FX.ring(300, 185, {color:'#FFE066'}); FX.shake();
+    score('Henrique 1 x 0 Tubarões'); }});
+  await speak('goal', {model:false, intro:['H3_17'], expand:'E3_goal', onOk:() => { SFX.roar(); restart(el('crowd'), 'cheer'); FX.fireworks(2500); }});
+
+  // 6. fim de jogo: campeões
+  SFX.whistle(); await line('H3_18');
+  FX.fireworks(6000); confetti(60); SFX.roar();
+  await sandwich('HC3_07', true);
+  await speak('win', {intro:['H3_19'], expand:'E_win', onOk:() => {
+    SFX.roar(); restart(el('crowd'), 'cheer'); FX.fireworks(5000); confetti(90); track(5); }});
+  await sandwich('T3_05');
+  reward({kid:'henrique', badge:ART.gloveBadge, title:'Goleiro Paredão!', next:'🔒 Missão 4 · em breve',
+    homeplay:'Goleiro em casa: o papai joga uma bolinha de meia e grita <b>catch</b>, <b>jump</b>, <b>up</b>, <b>left</b> ou <b>right</b>. Você defende! Depois troquem: você chuta.'});
+  await line('H3_20'); await line('H3_21');
+  endButtons('henrique');
+}
+
 // ---------------- início ----------------
 let runSeq = 0;
-const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3, lessonLucas4, lessonLucas5], henrique:[lessonHenrique, lessonHenrique2]};
-const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo', 'Missão 4 · As Estrelas', 'Missão 5 · O Planeta de Gelo'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche']};
+const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3, lessonLucas4, lessonLucas5], henrique:[lessonHenrique, lessonHenrique2, lessonHenrique3]};
+const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo', 'Missão 4 · As Estrelas', 'Missão 5 · O Planeta de Gelo'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche', 'Missão 3 · O Goleiro Paredão']};
 function start(kid, m = 1){
   actx();                                   // libera o som dentro do toque
   voice.src = 'audio/' + (kid === 'lucas' ? 'L01' : 'H01') + '.mp3'; voice.play().catch(() => {}); voice.pause();
   G = {id:++runSeq, kid, m, stars:0, max:0, noMic:false, result:{}};
-  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'E4_', 'E5_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'E_', 'E2_', 'W_coach', 'S_coach', 'T_narr']);
+  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'E4_', 'E5_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'T3', 'E_', 'E2_', 'E3_', 'W_coach', 'S_coach', 'T_narr']);
   LESSONS[kid][m - 1]().catch(e => { if (e !== CANCEL) console.error(e); });
 }
 

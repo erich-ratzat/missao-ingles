@@ -1372,6 +1372,230 @@ const LINES = {
   "who": "coach",
   "text": "Header! Goal!"
  },
+ "H3_01": {
+  "who": "narr",
+  "text": "Boa noite, campeão! Hoje é a Copa da Cidade, à noite, com fogos de artifício!"
+ },
+ "H3_02": {
+  "who": "narr",
+  "text": "Mas o Coach Max está preocupado. Escute."
+ },
+ "HC3_01": {
+  "who": "coach",
+  "text": "Oh no! Our goalkeeper is sick."
+ },
+ "HC3_01_pt": {
+  "who": "narr",
+  "text": "Ah, não! O nosso goleiro está doente."
+ },
+ "HC3_02": {
+  "who": "coach",
+  "text": "Henrique, you are the goalkeeper today!"
+ },
+ "HC3_02_pt": {
+  "who": "narr",
+  "text": "Henrique, você é o goleiro hoje!"
+ },
+ "H3_03": {
+  "who": "narr",
+  "text": "Goleiro é quem fica no gol e não deixa a bola entrar. E adivinha quem joga no ataque dos Tubarões?"
+ },
+ "T3_01": {
+  "who": "tony",
+  "text": "I'm Big Tony! Today I'm a striker. I kick very hard!"
+ },
+ "T3_01_pt": {
+  "who": "narr",
+  "text": "Eu sou o Big Tony! Hoje eu sou atacante. Eu chuto muito forte!"
+ },
+ "H3_04": {
+  "who": "narr",
+  "text": "Calma! O Coach vai te ensinar a ser goleiro. Primeiro, a mochila. Você lembra o nome?"
+ },
+ "H3_05": {
+  "who": "narr",
+  "text": "Muito bem! E tem uma coisa nova na mochila: luvas de goleiro!"
+ },
+ "HC3_03": {
+  "who": "coach",
+  "text": "Goalkeepers use their hands. Show me your hands!"
+ },
+ "HC3_03_pt": {
+  "who": "narr",
+  "text": "Goleiro usa as mãos. Me mostra as suas mãos!"
+ },
+ "H3_06": {
+  "who": "narr",
+  "text": "Mostra as mãos de verdade, bem abertas! Mãos, em inglês, é..."
+ },
+ "H3_07": {
+  "who": "narr",
+  "text": "Agora o treino no campo! O seu irmão Lucas vai chutar a bola pra você."
+ },
+ "HC3_04": {
+  "who": "coach",
+  "text": "Catch! Catch the ball!"
+ },
+ "HC3_04_pt": {
+  "who": "narr",
+  "text": "Agarra! Agarra a bola!"
+ },
+ "H3_08": {
+  "who": "narr",
+  "text": "O goleiro agarra a bola com as duas mãos. Agarrar, em inglês, é..."
+ },
+ "HC3_05": {
+  "who": "coach",
+  "text": "The ball is high! Jump!"
+ },
+ "HC3_05_pt": {
+  "who": "narr",
+  "text": "A bola está alta! Pula!"
+ },
+ "H3_09": {
+  "who": "narr",
+  "text": "Pular, em inglês, é... Escute, fale e pule de verdade!"
+ },
+ "H3_10": {
+  "who": "narr",
+  "text": "Agora o Coach grita pra onde a bola vai. Up é pra cima. Left, esquerda. Right, direita. Toque na seta e pule pro lado de verdade!"
+ },
+ "H3_11": {
+  "who": "narr",
+  "text": "Começa a Copa da Cidade! Henrique no gol!"
+ },
+ "T3_02": {
+  "who": "tony",
+  "text": "Here I come! Boom!"
+ },
+ "T3_02_pt": {
+  "who": "narr",
+  "text": "Lá vou eu! Bum!"
+ },
+ "H3_12": {
+  "who": "narr",
+  "text": "Que defesas! O Big Tony está ficando bravo!"
+ },
+ "T3_03": {
+  "who": "tony",
+  "text": "My super kick! The fire ball!"
+ },
+ "T3_03_pt": {
+  "who": "narr",
+  "text": "O meu superchute! A bola de fogo!"
+ },
+ "H3_13": {
+  "who": "narr",
+  "text": "A bola de fogo vem bem alta! O que você faz?"
+ },
+ "H3_14": {
+  "who": "narr",
+  "text": "Pulou! E agora, com as mãos, o que você faz com a bola?"
+ },
+ "T3_04": {
+  "who": "tony",
+  "text": "What? He caught my fire ball!"
+ },
+ "T3_04_pt": {
+  "who": "narr",
+  "text": "O quê? Ele pegou a minha bola de fogo!"
+ },
+ "H3_15": {
+  "who": "narr",
+  "text": "Mas está zero a zero, e falta só um minuto!"
+ },
+ "HC3_06": {
+  "who": "coach",
+  "text": "Henrique! Go! Go to the other goal!"
+ },
+ "HC3_06_pt": {
+  "who": "narr",
+  "text": "Henrique! Vai! Vai pro gol deles!"
+ },
+ "H3_16": {
+  "who": "narr",
+  "text": "Escanteio! O goleiro Henrique correu pra área deles! O Lucas cruzou a bola pro alto! Com o que você bate nela?"
+ },
+ "H3_17": {
+  "who": "narr",
+  "text": "Goool! Gol do goleiro! No último minuto! Grita gol em inglês, bem alto!"
+ },
+ "H3_18": {
+  "who": "narr",
+  "text": "Apita o juiz! Fim de jogo! Um a zero!"
+ },
+ "HC3_07": {
+  "who": "coach",
+  "text": "We win! We win the cup!"
+ },
+ "HC3_07_pt": {
+  "who": "narr",
+  "text": "A gente ganhou! A gente ganhou a copa!"
+ },
+ "H3_19": {
+  "who": "narr",
+  "text": "Ganhar, em inglês, é... Grita junto com o Coach!"
+ },
+ "T3_05": {
+  "who": "tony",
+  "text": "Okay... You are a super goalkeeper."
+ },
+ "T3_05_pt": {
+  "who": "narr",
+  "text": "Tá bom... Você é um supergoleiro."
+ },
+ "H3_20": {
+  "who": "narr",
+  "text": "Você ganhou a luva de ouro de Goleiro Paredão!"
+ },
+ "H3_21": {
+  "who": "narr",
+  "text": "Agora um treino fora da tela! Chama o papai e pega uma bolinha de meia. O papai joga e grita catch, jump, up, left ou right. Você defende! Depois troca: você chuta!"
+ },
+ "HC3_up": {
+  "who": "coach",
+  "text": "Up!"
+ },
+ "HC3_save": {
+  "who": "coach",
+  "text": "Great save!"
+ },
+ "HC3_save__2": {
+  "who": "coach",
+  "text": "Safe hands!"
+ },
+ "HC3_save__3": {
+  "who": "coach",
+  "text": "What a save!"
+ },
+ "E_hands": {
+  "who": "coach",
+  "text": "Big hands! Strong hands!"
+ },
+ "E_catch": {
+  "who": "coach",
+  "text": "Great catch! Safe hands!"
+ },
+ "E3_jump": {
+  "who": "coach",
+  "text": "Jump! What a jump!"
+ },
+ "E2_catch": {
+  "who": "coach",
+  "text": "Catch! The fire ball is safe!"
+ },
+ "E3_head": {
+  "who": "coach",
+  "text": "Header! Goal! Goal!"
+ },
+ "E3_goal": {
+  "who": "coach",
+  "text": "Goal! You're a super goalkeeper!"
+ },
+ "E_win": {
+  "who": "coach",
+  "text": "Yes! We win! Champions!"
+ },
  "W_nova_wing": {
   "who": "nova",
   "text": "Wing."
@@ -1899,6 +2123,70 @@ const LINES = {
  "T_narr_right_1": {
   "who": "narr",
   "text": "Quase! No final tem um t curtinho, quase mudo: ráit. Escute:"
+ },
+ "W_coach_hands": {
+  "who": "coach",
+  "text": "Hands."
+ },
+ "S_coach_hands": {
+  "who": "coach",
+  "text": "Hands... Hands."
+ },
+ "T_narr_hands_0": {
+  "who": "narr",
+  "text": "Hands começa com um sopro, como uma risadinha: rrr. Não é o R enrolado, é só o ar. Escute:"
+ },
+ "T_narr_hands_1": {
+  "who": "narr",
+  "text": "Quase! No final tem n, d e um zzz de abelha: rrénds. Escute:"
+ },
+ "W_coach_catch": {
+  "who": "coach",
+  "text": "Catch."
+ },
+ "S_coach_catch": {
+  "who": "coach",
+  "text": "Catch... Catch."
+ },
+ "T_narr_catch_0": {
+  "who": "narr",
+  "text": "Catch começa com k e termina com tch, como em tchau: kétch. Escute:"
+ },
+ "T_narr_catch_1": {
+  "who": "narr",
+  "text": "Quase! No final tem um tch, como em tchau: kétch. Escute:"
+ },
+ "W_coach_jump": {
+  "who": "coach",
+  "text": "Jump."
+ },
+ "S_coach_jump": {
+  "who": "coach",
+  "text": "Jump... Jump."
+ },
+ "T_narr_jump_0": {
+  "who": "narr",
+  "text": "Jump começa com dj, juntinho, como em djembê. Escute:"
+ },
+ "T_narr_jump_1": {
+  "who": "narr",
+  "text": "Quase! No final a boca fecha: mp. Escute:"
+ },
+ "W_coach_win": {
+  "who": "coach",
+  "text": "Win."
+ },
+ "S_coach_win": {
+  "who": "coach",
+  "text": "Win... Win."
+ },
+ "T_narr_win_0": {
+  "who": "narr",
+  "text": "Win começa com biquinho, como um u rapidinho, e o i é curtinho: uín. Escute:"
+ },
+ "T_narr_win_1": {
+  "who": "narr",
+  "text": "Quase! No final tem um n, que sai pelo nariz: uín. Escute:"
  }
 };
 const VOCAB = {
@@ -3204,6 +3492,159 @@ const VOCAB = {
   "tips": [
    "Friend começa com f e o R enroladinho, juntinhos: fr. Escute:",
    "Quase! No final tem n e d: frénd. Escute:"
+  ]
+ },
+ "hands": {
+  "pt": "mãos",
+  "say": "rrénds",
+  "icon": "🙌",
+  "ok": [
+   "hands",
+   "hand",
+   "handz",
+   "hans",
+   "hands up",
+   "handed",
+   "hanz"
+  ],
+  "almost": [
+   1
+  ],
+  "near": [
+   [
+    "and",
+    "ands",
+    "ends",
+    "sands",
+    "bands",
+    "pans",
+    "fans",
+    "dance",
+    "ants",
+    "end",
+    "an",
+    "ann",
+    "aunts",
+    "once"
+   ],
+   [
+    "hen",
+    "ham",
+    "hat",
+    "has",
+    "hens",
+    "hang",
+    "hug",
+    "hut",
+    "han",
+    "hun"
+   ]
+  ],
+  "tips": [
+   "Hands começa com um sopro, como uma risadinha: rrr. Não é o R enrolado, é só o ar. Escute:",
+   "Quase! No final tem n, d e um zzz de abelha: rrénds. Escute:"
+  ]
+ },
+ "catch": {
+  "pt": "agarrar",
+  "say": "kétch",
+  "icon": "🧤",
+  "ok": [
+   "catch",
+   "catches",
+   "caught",
+   "ketch",
+   "kitch",
+   "catching",
+   "catcher",
+   "cetch"
+  ],
+  "near": [
+   [
+    "cash",
+    "cats",
+    "cat",
+    "cut",
+    "kitchen",
+    "cap",
+    "cab",
+    "kept",
+    "get",
+    "gets",
+    "gas",
+    "cars",
+    "cast",
+    "kids",
+    "cake"
+   ],
+   [
+    "ca",
+    "ka",
+    "cah",
+    "que",
+    "ket",
+    "keh",
+    "catty",
+    "kat"
+   ]
+  ],
+  "tips": [
+   "Catch começa com k e termina com tch, como em tchau: kétch. Escute:",
+   "Quase! No final tem um tch, como em tchau: kétch. Escute:"
+  ]
+ },
+ "win": {
+  "pt": "ganhar",
+  "say": "uín",
+  "icon": "🏆",
+  "ok": [
+   "win",
+   "wins",
+   "winner",
+   "winning",
+   "won",
+   "wynn",
+   "wyn",
+   "we win",
+   "win win",
+   "weeny"
+  ],
+  "near": [
+   [
+    "when",
+    "wind",
+    "windy",
+    "wine",
+    "one",
+    "van",
+    "fin",
+    "bin",
+    "pin",
+    "tin",
+    "been",
+    "queen",
+    "in",
+    "wing",
+    "went",
+    "ben",
+    "gwen"
+   ],
+   [
+    "we",
+    "wee",
+    "will",
+    "wit",
+    "wish",
+    "with",
+    "wi",
+    "whip",
+    "wheat",
+    "weed"
+   ]
+  ],
+  "tips": [
+   "Win começa com biquinho, como um u rapidinho, e o i é curtinho: uín. Escute:",
+   "Quase! No final tem um n, que sai pelo nariz: uín. Escute:"
   ]
  },
  "up": {
