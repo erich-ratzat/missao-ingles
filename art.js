@@ -774,3 +774,87 @@ ART.gloveBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
   <path d="M70 92 l4 8 9 1.3 -6.5 6.2 1.6 9 -8.1 -4.3 -8.1 4.3 1.6 -9 -6.5 -6.2 9 -1.3 Z" fill="#fff"/>
   <defs><radialGradient id="gold3" cx=".35" cy=".3"><stop offset="0" stop-color="#FFF1A6"/><stop offset=".6" stop-color="#F5B700"/><stop offset="1" stop-color="#B07800"/></radialGradient></defs>
 </svg>`;
+
+// ---------------- Henrique, Missão 4: o Bolt, cachorro mascote do time ----------------
+// pés no 0,0, olhando para a direita; o rabo abana sozinho
+const DOG = `<g class="dog-in">
+  <path class="dog-tail" d="M-27 -32 Q-42 -40 -40 -56" stroke="#C98A4B" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <rect x="-20" y="-22" width="9" height="22" rx="4" fill="#C98A4B" stroke="#6F4A2E" stroke-width="2"/>
+  <rect x="12" y="-22" width="9" height="22" rx="4" fill="#C98A4B" stroke="#6F4A2E" stroke-width="2"/>
+  <ellipse cx="0" cy="-32" rx="30" ry="16" fill="#E0A869" stroke="#6F4A2E" stroke-width="2.5"/>
+  <ellipse cx="-6" cy="-27" rx="14" ry="7" fill="#F7DDB5"/>
+  <rect x="-10" y="-22" width="9" height="22" rx="4" fill="#E0A869" stroke="#6F4A2E" stroke-width="2"/>
+  <rect x="20" y="-22" width="9" height="22" rx="4" fill="#E0A869" stroke="#6F4A2E" stroke-width="2"/>
+  <path d="M14 -46 Q22 -36 31 -43" stroke="#E5484D" stroke-width="6" fill="none" stroke-linecap="round"/>
+  <circle cx="22" cy="-36" r="4" fill="#FFD23F" stroke="#B98900" stroke-width="1.5"/>
+  <circle cx="30" cy="-56" r="17" fill="#E0A869" stroke="#6F4A2E" stroke-width="2.5"/>
+  <ellipse cx="44" cy="-50" rx="11" ry="8" fill="#F7DDB5" stroke="#6F4A2E" stroke-width="2"/>
+  <circle cx="53" cy="-53" r="3.6" fill="#1B1B1B"/>
+  <path d="M43 -43 q3 9 8 1" fill="#FF6B8A" stroke="#C2405E" stroke-width="1"/>
+  <circle cx="34" cy="-61" r="3" fill="#111"/><circle cx="35" cy="-62" r="1" fill="#fff"/>
+  <path d="M18 -70 Q6 -58 14 -42 Q24 -52 28 -68 Z" fill="#8B5E3C" stroke="#6F4A2E" stroke-width="2"/>
+</g>`;
+
+ART.locker4 = () => ART.locker3().replace('COPA DA CIDADE', 'DIA DE TREINO')
+  .replace('<g id="coachbig"', `<g transform="translate(640 400)"><g id="ldog" class="item">${DOG}</g></g><g id="coachbig"`);
+// estádio de dia com o Bolt
+ART.dogField = () => ART.stadium(true).replace(/<\/svg>$/, `<g id="dog" class="fig" transform="translate(-120 430)">${DOG}</g></svg>`);
+
+ART.pawBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
+  <circle cx="70" cy="70" r="64" fill="#17233A" stroke="#FFD23F" stroke-width="5"/>
+  ${Array.from({length: 12}, (_, i) => `<rect x="68" y="12" width="4" height="16" rx="2" fill="#FFD23F" opacity=".55" transform="rotate(${i * 30} 70 70)"/>`).join('')}
+  <g fill="url(#gold4)" stroke="#9A6A00" stroke-width="3"><ellipse cx="70" cy="86" rx="24" ry="20"/>
+    <ellipse cx="44" cy="62" rx="9" ry="12" transform="rotate(-24 44 62)"/><ellipse cx="60" cy="46" rx="9" ry="12" transform="rotate(-8 60 46)"/>
+    <ellipse cx="80" cy="46" rx="9" ry="12" transform="rotate(8 80 46)"/><ellipse cx="96" cy="62" rx="9" ry="12" transform="rotate(24 96 62)"/></g>
+  <defs><radialGradient id="gold4" cx=".35" cy=".3"><stop offset="0" stop-color="#FFF1A6"/><stop offset=".6" stop-color="#F5B700"/><stop offset="1" stop-color="#B07800"/></radialGradient></defs>
+</svg>`;
+
+// ---------------- Henrique, Missão 5: futebol na praia ----------------
+const SIRI_KEEPER = KEEPER.replace(/#4B5563/g, '#E5484D').replace('#9CA3AF', '#FFC2C2');
+const waveRow = (y, a) => `M0 ${y} ` + Array.from({length: 17}, () => `q25 ${a} 50 0`).join(' ');
+ART.beach = () => { const r = rng(11); return `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}
+  <defs><linearGradient id="bsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4FB0F2"/><stop offset="1" stop-color="#C4EAFF"/></linearGradient>
+    <linearGradient id="duskg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5B3A9E"/><stop offset=".6" stop-color="#FF7A45"/><stop offset="1" stop-color="#FFC26B"/></linearGradient>
+    <radialGradient id="sunglow"><stop offset="0" stop-color="#FFF6B0" stop-opacity=".9"/><stop offset="1" stop-color="#FFE066" stop-opacity="0"/></radialGradient></defs>
+  <rect width="800" height="450" fill="url(#bsky)"/>
+  <rect id="dusk" class="dusk" width="800" height="140" fill="url(#duskg)"/>
+  <g transform="translate(110 72)"><g id="sun" class="sun-in"><circle r="80" fill="url(#sunglow)"/>
+    <g class="sun-rays">${Array.from({length: 12}, (_, i) => `<rect x="-4" y="-60" width="8" height="18" rx="4" fill="#FFD23F" transform="rotate(${i * 30})"/>`).join('')}</g>
+    <circle r="32" fill="#FFD23F" stroke="#F5A300" stroke-width="4"/>
+    <circle cx="-10" cy="-5" r="3" fill="#B86E00"/><circle cx="10" cy="-5" r="3" fill="#B86E00"/>
+    <path d="M-11 7 q11 9 22 0" stroke="#B86E00" stroke-width="3" fill="none" stroke-linecap="round"/></g></g>
+  <g fill="#fff" opacity=".92"><ellipse cx="340" cy="62" rx="46" ry="16"/><ellipse cx="370" cy="50" rx="30" ry="16"/>
+    <ellipse cx="620" cy="44" rx="40" ry="14"/><ellipse cx="645" cy="34" rx="24" ry="13"/></g>
+  <rect x="0" y="132" width="800" height="122" fill="#1E7FC8"/><rect x="0" y="132" width="800" height="14" fill="#3FA3E6"/>
+  <g stroke="#9ED8FF" stroke-width="3" fill="none" opacity=".6">${[166, 192, 218].map((y, j) => `<path d="${waveRow(y, j % 2 ? 6 : -6)}"/>`).join('')}</g>
+  <path class="waves" d="${waveRow(246, -10)} V264 H0 Z" fill="#fff" opacity=".85"/>
+  <rect x="0" y="254" width="800" height="196" fill="#F2D49B"/><rect x="0" y="254" width="800" height="28" fill="#E2BE7E"/>
+  <g fill="#DDB574">${Array.from({length: 70}, () => `<circle cx="${(r() * 800).toFixed(0)}" cy="${(290 + r() * 160).toFixed(0)}" r="${(1.5 + r() * 2).toFixed(1)}"/>`).join('')}</g>
+  <g fill="none" stroke="#2F7CF6" stroke-width="4" stroke-dasharray="12 7" opacity=".75"><polygon points="170,264 630,264 720,420 80,420"/></g>
+  <g transform="translate(58 336)"><rect x="-3" y="-128" width="6" height="134" fill="#8B5E3C"/>
+    <path d="M-72 -118 Q0 -176 72 -118 Z" fill="#E5484D" stroke="#A82A2F" stroke-width="3"/>
+    <path d="M-24 -118 Q-14 -160 0 -164 Q14 -160 24 -118 Z" fill="#fff"/></g>
+  <g transform="translate(470 432)"><path d="${starPath(16, 7)}" fill="#FF8A1F" stroke="#C25A00" stroke-width="2"/></g>
+  <g transform="translate(735 428)"><g id="bottle" class="item"><rect x="-13" y="-48" width="26" height="48" rx="8" fill="#7FD0FF" stroke="#1F6FA8" stroke-width="3"/>
+    <rect x="-7" y="-58" width="14" height="12" rx="3" fill="#2F7CF6"/><rect x="-13" y="-32" width="26" height="10" fill="#fff" opacity=".75"/></g></g>
+  <g id="goal"><g class="net" stroke="#fff" stroke-width="1.5" opacity=".65">
+      ${Array.from({length: 15}, (_, i) => `<line x1="${262 + i * 20}" y1="152" x2="${270 + i * 19}" y2="262"/>`).join('')}
+      ${Array.from({length: 6}, (_, i) => `<line x1="258" y1="${158 + i * 20}" x2="542" y2="${158 + i * 20}"/>`).join('')}</g>
+    <path d="M254 264 L254 148 L546 148 L546 264" fill="none" stroke="#fff" stroke-width="9" stroke-linejoin="round"/></g>
+  <g id="keeper" class="keeper" transform="translate(400 258)">${SIRI_KEEPER}</g>
+  <g id="defender" class="player" transform="translate(-200 330)">${playerSVG('SIRIS', '#E5484D')}</g>
+  <g id="mate" class="player" transform="translate(-200 330)">${playerSVG('LUCAS', 'var(--shirt)')}</g>
+  <g id="tony" class="fig" transform="translate(950 330)"><g transform="scale(1.1)">${playerSVG('BIG TONY', '#4B5563')}</g></g>
+  <g id="dog" class="fig" transform="translate(150 430)">${DOG}</g>
+  <g id="ball" class="ball" transform="translate(400 392)"><g class="ball-spin">${BALL}</g></g>
+  <g id="player" class="player" transform="translate(330 330)">${PLAYER}</g>
+</svg>`; };
+
+ART.shellBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
+  <circle cx="70" cy="70" r="64" fill="#1E7FC8" stroke="#FFD23F" stroke-width="5"/>
+  ${Array.from({length: 12}, (_, i) => `<rect x="68" y="12" width="4" height="16" rx="2" fill="#FFD23F" opacity=".55" transform="rotate(${i * 30} 70 70)"/>`).join('')}
+  <g transform="translate(70 76)"><path d="M0 34 L-44 -4 Q-40 -46 0 -50 Q40 -46 44 -4 Z" fill="url(#gold5)" stroke="#9A6A00" stroke-width="4" stroke-linejoin="round"/>
+    ${[-30, -15, 0, 15, 30].map(x => `<path d="M0 30 L${x} -42" stroke="#9A6A00" stroke-width="3" opacity=".6"/>`).join('')}
+    <rect x="-14" y="26" width="28" height="12" rx="5" fill="url(#gold5)" stroke="#9A6A00" stroke-width="3"/></g>
+  <defs><radialGradient id="gold5" cx=".35" cy=".3"><stop offset="0" stop-color="#FFF1A6"/><stop offset=".6" stop-color="#F5B700"/><stop offset="1" stop-color="#B07800"/></radialGradient></defs>
+</svg>`;

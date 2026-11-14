@@ -62,6 +62,13 @@ const TR = {
   E_hands:'Mãos grandes! Mãos fortes!', E_catch:'Bela pegada! Mãos seguras!', E3_jump:'Pula! Que pulo!',
   E2_catch:'Agarrou! A bola de fogo está segura!', E3_head:'Cabeçada! Gol! Gol!', E3_goal:'Gol! Você é um supergoleiro!',
   E_win:'Isso! A gente ganhou! Campeões!',
+  // Henrique, missões 4 e 5
+  HC4_sit:'Senta!', HC4_come:'Vem cá!', HC4_good:'Bom cachorro!', HC4_good__2:'Bom menino!', HC4_good__3:'Muito bem, Bolt!',
+  HE4_dog:'Um cachorro! Um cachorro feliz!', HE4_stop:'Para! O Bolt parou. Bom menino!', HE4_good:'Bom! Bom cachorro, Bolt!',
+  HE4_fast:'Rápido! Super-rápido!', HE4_fast2:'Rápido! Vai, vai, vai!', HE4_stop2:'Para! Obrigado, Bolt!', HE4_good2:'Bom cachorro! Você é o melhor, Bolt!',
+  HC5_hot:'Quente!', HC5_cold:'Frio!', HC5_hot2:'Ai! Areia quente!', HC5_cold2:'Brrr! Água fria!',
+  HE5_sun:'O sol! Grande e amarelo!', HE5_water:'Água! Glub, glub, glub!', HE5_friend:'Amigo? Sim! Amigos!',
+  HE5_thanks:'De nada, amigo!', HE5_friend2:'Amigos pra sempre!',
   L5_24:'Você conseguiu, Lucas! O planeta de gelo está salvo! Você é um cavaleiro do fogo!', L5_27:'Tchau, amigo! Até logo!',
 };
 const WHO = {nova:['Capitã Nova', ART.nova], vortex:['Lorde Vortex', ART.vortex], bip:['Bip', ART.bip],
@@ -179,6 +186,7 @@ const SFX = {
   roar(){ SFX.crowd(.6, 3.5); later(300, () => SFX.crowd(.5, 3)); },
   groan(){ noise(1.6, .3, 500, 250, .4); },
   save(){ tone(110, .2, 'sine', .4, 60); noise(.3, .25, 800, 300); SFX.groan(); },
+  bark(){ tone(520, .09, 'sawtooth', .1, 300); later(140, () => tone(600, .11, 'sawtooth', .1, 320)); },
 };
 
 // ---------------- tela de jogo ----------------
@@ -1395,21 +1403,235 @@ async function lessonHenrique3(){
   await speak('win', {intro:['H3_19'], expand:'E_win', onOk:() => {
     SFX.roar(); restart(el('crowd'), 'cheer'); FX.fireworks(5000); confetti(90); track(5); }});
   await sandwich('T3_05');
-  reward({kid:'henrique', badge:ART.gloveBadge, title:'Goleiro Paredão!', next:'🔒 Missão 4 · em breve',
+  reward({kid:'henrique', badge:ART.gloveBadge, title:'Goleiro Paredão!', next:'🔓 Missão 4 liberada: O Mascote Bolt',
     homeplay:'Goleiro em casa: o papai joga uma bolinha de meia e grita <b>catch</b>, <b>jump</b>, <b>up</b>, <b>left</b> ou <b>right</b>. Você defende! Depois troquem: você chuta.'});
   await line('H3_20'); await line('H3_21');
   endButtons('henrique');
 }
 
+// coraçõezinhos (carinho no Bolt, amizade com o Big Tony)
+const love = (x, y) => FX.burst(x, y, {n:30, colors:['#FF6B8A', '#FFD1DC', '#FFFFFF'], speed:180});
+
+// ================= HENRIQUE · Missão 4 · O Mascote Bolt =================
+// Como a Missão 3: história em inglês com o narrador traduzindo. Quatro palavras novas para falar
+// (dog, stop, good, fast), sit/come para entender e tocar (truques do Bolt), revisão da mochila e de goal.
+// Gesto junto: mão pra frente no stop, carinho no good, correr no lugar no fast.
+async function lessonHenrique4(){
+  shell('henrique', 'O Mascote Bolt', ['🐶', '🎒', '✋', '👍', '💨', '🏅']);
+  Object.assign(G, {T:'coach', H:'narr', P:'HN', max:9});
+  const colors = {red:'#E5484D', blue:'#2F7CF6', yellow:'#F5C400'};
+  const sc = el('scene');
+  sc.style.setProperty('--shirt', colors[SAVE.henrique.shirt || 'blue']);
+
+  // 1. vestiário: o time ganhou um mascote
+  setScene(ART.locker4());
+  SFX.crowd(.1, 2);
+  await line('H4_01');
+  el('coachbig').classList.add('show');
+  await sandwich('HC4_01');
+  const ldog = el('ldog'); ldog.classList.add('on'); SFX.bark(); love(640, 360);
+  await sandwich('HC4_02', true);
+  await speak('dog', {intro:['H4_02'], say:true, expand:'HE4_dog', onOk:() => {
+    restart(ldog.querySelector('.dog-in'), 'hop'); SFX.bark(); love(660, 350); track(0); }});
+  await line('H4_03');
+  for (const w of pickReview(['shoes', 'ball', 'hands'], 1)) {
+    const item = el({shoes:'shoes', ball:'lball', hands:'gloves'}[w]); item.classList.add('on');
+    await speak(w, {model:false, intro:['HC2_what'], expand:'E_' + w, onOk:() => { restart(item, 'on'); SFX.build(); }});
+  }
+  track(1);
+  await line('H4_04');
+
+  // 2. no campo: o Bolt foge com a bola
+  setScene(ART.dogField());
+  const ball = el('ball'), keeper = el('keeper'), player = el('player'), dog = el('dog'), net = el('goal').querySelector('.net');
+  const dogIn = dog.querySelector('.dog-in');
+  const atFeet = () => { place(player, 'translate(250px,360px) scale(.9)'); place(ball, 'translate(305px,412px) scale(.9)'); };
+  place(keeper, 'translate(400px,258px)'); atFeet(); place(dog, 'translate(-120px,430px)');
+  SFX.whistle(); await wait(400);
+  dog.style.transform = 'translate(290px,430px)'; await wait(700); SFX.bark();
+  dog.style.transform = 'translate(640px,430px)'; ball.style.transform = 'translate(692px,382px) scale(.6)'; await wait(800);
+  await line('H4_05');
+  await sandwich('HC4_03', true);
+  await speak('stop', {intro:['H4_06'], expand:'HE4_stop', onOk:async () => {
+    dogIn.classList.add('sit'); SFX.bark(); FX.ring(660, 400, {color:'#FFFFFF', r:120});
+    ball.style.transform = 'translate(305px,412px) scale(.9)'; await wait(700); track(2); }});
+
+  // 3. truques: ouvir sit / come e tocar
+  await line('H4_07');
+  const HOME = 'translate(600px,430px)';
+  dogIn.classList.remove('sit'); dog.style.transform = HOME; await wait(500);
+  for (const c of shuffle(['sit', 'come', 'sit', 'come'])) {
+    tapButtons([['sit', '🪑', 'Senta'], ['come', '👋', 'Vem cá']]);
+    await listenTap(c, 'HC4_' + c, 'HN_wrong');
+    act('');
+    if (c === 'sit') { dogIn.classList.add('sit'); await wait(600); }
+    else { dog.style.transform = 'translate(380px,430px) scale(-1,1)'; await wait(800); }
+    SFX.bark(); love(c === 'sit' ? 630 : 350, 375); await line('HC4_good');
+    dogIn.classList.remove('sit'); dog.style.transform = HOME; await wait(500);
+  }
+  await sandwich('HC4_04', true);
+  await speak('good', {intro:['H4_08'], expand:'HE4_good', onOk:() => {
+    restart(dogIn, 'hop'); SFX.bark(); love(630, 370); FX.ring(630, 390, {color:'#FF6B8A', r:140}); track(3); }});
+
+  // 4. corrida: fast
+  await line('H4_09');
+  dog.style.transform = 'translate(190px,430px)'; await wait(800);
+  await sandwich('HC4_05', true);
+  await speak('fast', {intro:['H4_10'], expand:'HE4_fast', onOk:async () => {
+    SFX.whoosh(); player.style.transform = 'translate(640px,360px) scale(.9)'; dog.style.transform = 'translate(700px,430px)';
+    FX.comet(250, 400, 640, 400, {ms:700, color:'#FFFFFF', size:8}); FX.comet(190, 410, 700, 410, {ms:700, color:'#FFE066', size:6});
+    await wait(800); FX.burst(680, 390, {n:44, speed:240}); track(4); }});
+  await line('H4_11');
+
+  // 5. o jogo: ele lembra fast, stop, good e goal sem ouvir antes
+  SFX.whistle(); SFX.roar();
+  sc.insertAdjacentHTML('beforeend', '<div class="overlay" style="align-items:flex-start;padding-top:10px"><span class="chip score" id="score">Henrique 0 x 0 Tubarões</span></div>');
+  const score = t => { el('score').textContent = t; restart(el('score'), 'bump'); };
+  atFeet(); place(dog, 'translate(70px,330px) scale(.75)');
+  await sandwich('T4_01');
+  await line('H4_12');
+  await speak('fast', {model:false, expand:'HE4_fast2', onOk:async () => {
+    SFX.whoosh(); player.style.transform = 'translate(340px,300px) scale(.8)'; ball.style.transform = 'translate(392px,350px) scale(.8)';
+    FX.comet(260, 390, 360, 340, {ms:600, color:'#FFFFFF', size:7}); await wait(800); }});
+  dog.style.transform = 'translate(330px,400px) scale(.85)'; await wait(700); SFX.bark();
+  dog.style.transform = 'translate(560px,400px) scale(.85)'; ball.style.transform = 'translate(598px,358px) scale(.55)'; await wait(800);
+  await line('H4_13');
+  await speak('stop', {model:false, expand:'HE4_stop2', onOk:async () => { dogIn.classList.add('sit'); SFX.bark(); await wait(400); }});
+  ball.style.transform = 'translate(392px,350px) scale(.8)'; await wait(700);
+  await line('H4_14');
+  await speak('good', {model:false, expand:'HE4_good2', onOk:() => { dogIn.classList.remove('sit'); restart(dogIn, 'hop'); SFX.bark(); love(590, 355); }});
+  dog.style.transform = 'translate(70px,330px) scale(.75)';
+  await line('H4_15');
+  tapButtons([['run', '🏃', 'Correr'], ['kick', '🦶', 'Chutar']]);
+  await listenTap('kick', 'HC_kick', 'HN_wrong'); act('');
+  SFX.kick(); keeper.style.transform = 'translate(305px,250px) rotate(-70deg)'; ball.style.transform = 'translate(480px,185px) scale(.55)';
+  FX.comet(392, 350, 480, 185, {ms:600, color:'#FFFFFF', size:8});
+  await wait(750); restart(net, 'shake'); restart(el('crowd'), 'cheer'); SFX.roar(); confetti(50);
+  FX.burst(480, 185, {n:60, speed:300}); FX.shake(); score('Henrique 1 x 0 Tubarões');
+  await speak('goal', {model:false, intro:['H4_16'], expand:'E_goal', onOk:() => { SFX.roar(); FX.fireworks(2500); }});
+
+  // 6. fim de jogo
+  SFX.whistle(); restart(dogIn, 'hop'); SFX.bark();
+  await line('H4_17'); FX.fireworks(5000); confetti(70);
+  await sandwich('T4_02');
+  await sandwich('HC4_06'); track(5);
+  reward({kid:'henrique', badge:ART.pawBadge, title:'Amigo do Bolt!', next:'🔓 Missão 5 liberada: Futebol na Praia',
+    homeplay:'Estátua com o papai: ele grita <b>fast</b> (corre no lugar), <b>stop</b> (para tudo), <b>sit</b> (senta) ou <b>come</b> (vem). Depois troquem: você é o Coach!'});
+  await line('H4_18'); await line('H4_19');
+  endButtons('henrique');
+}
+
+// ================= HENRIQUE · Missão 5 · Futebol na Praia =================
+// Quatro palavras novas (sun, water, friend, thank you), hot/cold para entender e tocar, revisão do Bolt
+// (dog, good ou stop), pass, head e win, que ele lembra sozinho. O Big Tony vira amigo.
+// Gesto junto: apontar pro sol, fingir que bebe água, abrir os braços no friend, mão no coração no thank you.
+async function lessonHenrique5(){
+  shell('henrique', 'Futebol na Praia', ['🐶', '☀️', '💧', '🤝', '🙏', '🐚']);
+  Object.assign(G, {T:'coach', H:'narr', P:'HN', max:9});
+  const colors = {red:'#E5484D', blue:'#2F7CF6', yellow:'#F5C400'};
+  const sc = el('scene');
+  sc.style.setProperty('--shirt', colors[SAVE.henrique.shirt || 'blue']);
+  setScene(ART.beach());
+  const ball = el('ball'), keeper = el('keeper'), player = el('player'), mate = el('mate'), def = el('defender'), tony = el('tony'),
+    dog = el('dog'), dogIn = dog.querySelector('.dog-in'), net = el('goal').querySelector('.net'), sun = el('sun');
+  const HOME = 'translate(250px,360px) scale(.9)';
+  place(keeper, 'translate(400px,258px)'); place(player, HOME); place(ball, 'translate(305px,412px) scale(.9)'); place(dog, 'translate(150px,430px)');
+  SFX.whoosh();
+  await line('H5_01');
+
+  // 1. revisão: uma palavra do Bolt
+  for (const w of pickReview(['dog', 'good', 'stop'], 1)) {
+    if (w === 'dog') await speak('dog', {model:false, intro:['HC2_what'], expand:'HE4_dog', onOk:() => { restart(dogIn, 'hop'); SFX.bark(); love(180, 370); }});
+    else if (w === 'good') {
+      dogIn.classList.add('sit');
+      await speak('good', {model:false, intro:['H5_qgood'], expand:'HE4_good2', onOk:() => { dogIn.classList.remove('sit'); restart(dogIn, 'hop'); SFX.bark(); love(180, 370); }});
+    } else {
+      dog.style.transform = 'translate(620px,300px) scale(.75)'; await wait(700);
+      await speak('stop', {model:false, intro:['H5_qstop'], expand:'HE4_stop', onOk:async () => { dogIn.classList.add('sit'); SFX.bark(); await wait(500); }});
+      dogIn.classList.remove('sit'); dog.style.transform = 'translate(150px,430px)';
+    }
+  }
+  track(0);
+
+  // 2. o sol
+  await line('H5_02');
+  await sandwich('HC5_01', true);
+  await speak('sun', {intro:['H5_03'], expand:'HE5_sun', onOk:() => {
+    sun.classList.add('big'); FX.burst(110, 72, {n:50, colors:['#FFE066', '#FFFFFF', '#FF8A1F'], speed:260});
+    FX.ring(110, 72, {color:'#FFE066', r:200}); SFX.build(); track(1); }});
+
+  // 3. quente ou frio: ouvir hot / cold e tocar; ele corre pra areia ou pro mar
+  await line('H5_04');
+  const SPOT = {hot:'translate(190px,350px) scale(.9)', cold:'translate(660px,215px) scale(.7)'};
+  for (const c of shuffle(['hot', 'cold', 'hot', 'cold'])) {
+    tapButtons([['hot', '🔥', 'Quente'], ['cold', '🧊', 'Frio']]);
+    await listenTap(c, 'HC5_' + c, 'HN_wrong'); act('');
+    player.style.transform = SPOT[c]; await wait(750);
+    if (c === 'hot') { restart(player.querySelector('.player-body'), 'hop'); FX.burst(190, 430, {n:36, colors:['#FF8A1F', '#FFE066', '#FF4D2E'], speed:200}); }
+    else FX.burst(660, 280, {n:50, colors:['#9ED8FF', '#FFFFFF', '#3FA3E6'], speed:240, grav:400});
+    SFX.whoosh(); await line('HC5_' + c + '2');
+  }
+  player.style.transform = HOME; await wait(700);
+
+  // 4. água
+  await line('H5_05');
+  await sandwich('HC5_02', true);
+  const bottle = el('bottle'); bottle.classList.add('on'); SFX.build();
+  await speak('water', {intro:['H5_06'], expand:'HE5_water', onOk:() => {
+    restart(bottle, 'on'); FX.burst(735, 380, {n:44, colors:['#9ED8FF', '#FFFFFF', '#3FA3E6'], speed:220}); SFX.whoosh(); track(2); }});
+
+  // 5. o Big Tony está sozinho: friend
+  tony.style.transform = 'translate(640px,330px)'; await wait(800);
+  await line('H5_07');
+  await sandwich('T5_01');
+  await sandwich('HC5_03', true);
+  await speak('friend', {intro:['H5_08'], expand:'HE5_friend', onOk:async () => {
+    tony.style.transform = 'translate(370px,340px)'; await wait(800);
+    love(370, 300); FX.ring(370, 320, {color:'#FF6B8A', r:160}); SFX.build(); track(3); }});
+  await sandwich('T5_02');
+
+  // 6. o jogo na areia: pass e head sem ouvir antes, depois thank you
+  SFX.whistle();
+  sc.insertAdjacentHTML('beforeend', '<div class="overlay" style="align-items:flex-start;padding-top:10px"><span class="chip score" id="score">Amigos 0 x 0 Siris</span></div>');
+  const score = t => { el('score').textContent = t; restart(el('score'), 'bump'); };
+  await line('H5_09');
+  def.style.transform = 'translate(340px,310px) scale(.85)'; tony.style.transform = 'translate(560px,340px) scale(.9)';
+  mate.style.transform = 'translate(700px,330px) scale(.8)'; dog.style.transform = 'translate(90px,330px) scale(.7)'; await wait(800);
+  await line('H5_10');
+  await speak('pass', {model:false, expand:'E2_pass', onOk:async () => { SFX.kick(); ball.style.transform = 'translate(612px,412px) scale(.85)'; await wait(700); }});
+  def.style.transform = 'translate(-200px,330px)'; player.style.transform = 'translate(300px,320px) scale(.85)'; await wait(600);
+  await line('H5_11');
+  await speak('head', {model:false, expand:'E2_head', onOk:async () => {
+    SFX.kick(); ball.style.transform = 'translate(310px,258px) scale(.75)'; FX.comet(612, 412, 310, 258, {ms:700, color:'#FFFFFF', size:8, arc:60}); await wait(700);
+    restart(player.querySelector('.player-body'), 'hop'); keeper.style.transform = 'translate(495px,250px) rotate(70deg)';
+    ball.style.transform = 'translate(300px,185px) scale(.55)'; await wait(700);
+    restart(net, 'shake'); SFX.roar(); confetti(50); FX.burst(300, 185, {n:70, speed:320}); FX.shake(); score('Amigos 1 x 0 Siris'); }});
+  await sandwich('T5_03');
+  await speak('thanks', {intro:['H5_12'], expand:'HE5_thanks', onOk:() => { love(590, 300); track(4); }});
+
+  // 7. fim de jogo, pôr do sol e amigos pra sempre
+  SFX.whistle(); await line('H5_13');
+  await speak('win', {model:false, intro:['H5_14'], expand:'E_win', onOk:() => { SFX.roar(); FX.fireworks(4000); confetti(80); }});
+  el('dusk').classList.add('on'); sun.classList.add('set');
+  await line('H5_15');
+  await sandwich('T5_04');
+  await speak('friend', {model:false, intro:['H5_16'], expand:'HE5_friend2', onOk:() => { love(590, 300); FX.fireworks(6000); confetti(60); }});
+  await sandwich('HC5_04'); track(5);
+  reward({kid:'henrique', badge:ART.shellBadge, title:'Amigo da Praia!', next:'🔒 Missão 6 · em breve',
+    homeplay:'Praia em casa: o papai grita <b>hot</b> (pula como se o chão queimasse) ou <b>cold</b> (treme de frio). E no lanche, peça <b>water</b> e diga <b>thank you</b>!'});
+  await line('H5_17'); await line('H5_18');
+  endButtons('henrique');
+}
+
 // ---------------- início ----------------
 let runSeq = 0;
-const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3, lessonLucas4, lessonLucas5], henrique:[lessonHenrique, lessonHenrique2, lessonHenrique3]};
-const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo', 'Missão 4 · As Estrelas', 'Missão 5 · O Planeta de Gelo'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche', 'Missão 3 · O Goleiro Paredão']};
+const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3, lessonLucas4, lessonLucas5], henrique:[lessonHenrique, lessonHenrique2, lessonHenrique3, lessonHenrique4, lessonHenrique5]};
+const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo', 'Missão 4 · As Estrelas', 'Missão 5 · O Planeta de Gelo'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche', 'Missão 3 · O Goleiro Paredão', 'Missão 4 · O Mascote Bolt', 'Missão 5 · Futebol na Praia']};
 function start(kid, m = 1){
   actx();                                   // libera o som dentro do toque
   voice.src = 'audio/' + (kid === 'lucas' ? 'L01' : 'H01') + '.mp3'; voice.play().catch(() => {}); voice.pause();
   G = {id:++runSeq, kid, m, stars:0, max:0, noMic:false, result:{}};
-  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'E4_', 'E5_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'T3', 'E_', 'E2_', 'E3_', 'W_coach', 'S_coach', 'T_narr']);
+  preload(kid === 'lucas' ? ['L', 'V', 'E_', 'E2_', 'E3_', 'E4_', 'E5_', 'W_nova', 'S_nova', 'T_bip'] : ['H', 'T0', 'T3', 'T4', 'T5', 'E_', 'E2_', 'E3_', 'W_coach', 'S_coach', 'T_narr']);
   LESSONS[kid][m - 1]().catch(e => { if (e !== CANCEL) console.error(e); });
 }
 

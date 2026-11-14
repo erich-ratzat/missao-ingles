@@ -1596,6 +1596,374 @@ const LINES = {
   "who": "coach",
   "text": "Yes! We win! Champions!"
  },
+ "H4_01": {
+  "who": "narr",
+  "text": "Bom dia, campeão! Hoje o time tem uma surpresa. Escute o Coach."
+ },
+ "HC4_01": {
+  "who": "coach",
+  "text": "Look! We have a new friend!"
+ },
+ "HC4_01_pt": {
+  "who": "narr",
+  "text": "Olha! A gente tem um amigo novo!"
+ },
+ "HC4_02": {
+  "who": "coach",
+  "text": "This is Bolt. Bolt is a dog!"
+ },
+ "HC4_02_pt": {
+  "who": "narr",
+  "text": "Este é o Bolt. O Bolt é um cachorro!"
+ },
+ "H4_02": {
+  "who": "narr",
+  "text": "Cachorro, em inglês, é... Fala bem alto pro Bolt ouvir!"
+ },
+ "H4_03": {
+  "who": "narr",
+  "text": "Antes do treino, o Coach confere a mochila. Ele não fala a palavra: você lembra!"
+ },
+ "H4_04": {
+  "who": "narr",
+  "text": "Tudo pronto! Vamos pro campo. O Bolt vai junto!"
+ },
+ "H4_05": {
+  "who": "narr",
+  "text": "Ih! O Bolt pegou a bola e saiu correndo!"
+ },
+ "HC4_03": {
+  "who": "coach",
+  "text": "Stop! Stop, Bolt!"
+ },
+ "HC4_03_pt": {
+  "who": "narr",
+  "text": "Para! Para, Bolt!"
+ },
+ "H4_06": {
+  "who": "narr",
+  "text": "Parar, em inglês, é... Fala e faz assim: a mão aberta pra frente, bem forte!"
+ },
+ "H4_07": {
+  "who": "narr",
+  "text": "Agora o Bolt vai aprender truques! O Coach fala e você toca no desenho certo. Sit é senta. Come é vem cá."
+ },
+ "HC4_04": {
+  "who": "coach",
+  "text": "Bolt is a good dog!"
+ },
+ "HC4_04_pt": {
+  "who": "narr",
+  "text": "O Bolt é um cachorro bonzinho!"
+ },
+ "H4_08": {
+  "who": "narr",
+  "text": "Bom, em inglês, é... Fala pro Bolt e faz um carinho nele!"
+ },
+ "H4_09": {
+  "who": "narr",
+  "text": "Agora a corrida! Quem chega primeiro: você ou o Bolt?"
+ },
+ "HC4_05": {
+  "who": "coach",
+  "text": "Bolt is fast! Run fast!"
+ },
+ "HC4_05_pt": {
+  "who": "narr",
+  "text": "O Bolt é rápido! Corre rápido!"
+ },
+ "H4_10": {
+  "who": "narr",
+  "text": "Rápido, em inglês, é... Fala e corre no lugar, bem rapidinho!"
+ },
+ "H4_11": {
+  "who": "narr",
+  "text": "Empatou! Os dois são muito rápidos. Agora é hora do jogo contra os Tubarões!"
+ },
+ "T4_01": {
+  "who": "tony",
+  "text": "A dog? Ha ha! Dogs can't play soccer!"
+ },
+ "T4_01_pt": {
+  "who": "narr",
+  "text": "Um cachorro? Rá rá! Cachorro não joga futebol!"
+ },
+ "H4_12": {
+  "who": "narr",
+  "text": "Começou! O Henrique pegou a bola. Como você corre? Fala em inglês!"
+ },
+ "H4_13": {
+  "who": "narr",
+  "text": "Ih! O Bolt entrou no campo e pegou a bola de novo! O que você fala pra ele?"
+ },
+ "H4_14": {
+  "who": "narr",
+  "text": "O Bolt sentou e devolveu a bola, bonitinho. Ele foi bonzinho! Fala pra ele!"
+ },
+ "H4_15": {
+  "who": "narr",
+  "text": "Agora a bola é sua, na frente do gol! Escute o Coach!"
+ },
+ "H4_16": {
+  "who": "narr",
+  "text": "Goool! Grita gol em inglês, bem alto!"
+ },
+ "H4_17": {
+  "who": "narr",
+  "text": "Apita o juiz! Fim de jogo! Um a zero! O Bolt pula de alegria!"
+ },
+ "T4_02": {
+  "who": "tony",
+  "text": "Okay... Bolt is a good dog."
+ },
+ "T4_02_pt": {
+  "who": "narr",
+  "text": "Tá bom... O Bolt é um cachorro bonzinho."
+ },
+ "HC4_06": {
+  "who": "coach",
+  "text": "Great game! Bolt is our lucky dog!"
+ },
+ "HC4_06_pt": {
+  "who": "narr",
+  "text": "Grande jogo! O Bolt é o nosso cachorro da sorte!"
+ },
+ "H4_18": {
+  "who": "narr",
+  "text": "Você ganhou a medalha de Amigo do Bolt!"
+ },
+ "H4_19": {
+  "who": "narr",
+  "text": "Agora uma brincadeira fora da tela! Chama o papai. Ele grita fast, e você corre no lugar. Stop, você para tudo. Sit, você senta. Come, você vai até ele. Depois troca: você é o Coach!"
+ },
+ "HC4_sit": {
+  "who": "coach",
+  "text": "Sit!"
+ },
+ "HC4_come": {
+  "who": "coach",
+  "text": "Come!"
+ },
+ "HC4_good": {
+  "who": "coach",
+  "text": "Good dog!"
+ },
+ "HC4_good__2": {
+  "who": "coach",
+  "text": "Good boy!"
+ },
+ "HC4_good__3": {
+  "who": "coach",
+  "text": "Good job, Bolt!"
+ },
+ "HE4_dog": {
+  "who": "coach",
+  "text": "A dog! A happy dog!"
+ },
+ "HE4_stop": {
+  "who": "coach",
+  "text": "Stop! Bolt stops. Good boy!"
+ },
+ "HE4_good": {
+  "who": "coach",
+  "text": "Good! Good dog, Bolt!"
+ },
+ "HE4_fast": {
+  "who": "coach",
+  "text": "Fast! Super fast!"
+ },
+ "HE4_fast2": {
+  "who": "coach",
+  "text": "Fast! Go, go, go!"
+ },
+ "HE4_stop2": {
+  "who": "coach",
+  "text": "Stop! Thank you, Bolt!"
+ },
+ "HE4_good2": {
+  "who": "coach",
+  "text": "Good dog! You are the best, Bolt!"
+ },
+ "H5_01": {
+  "who": "narr",
+  "text": "Bom dia, campeão! Hoje tem futebol na praia! Areia, mar e muito sol. E o Bolt veio junto!"
+ },
+ "H5_qgood": {
+  "who": "narr",
+  "text": "O Bolt sentou bonitinho do seu lado. O que você fala pra ele?"
+ },
+ "H5_qstop": {
+  "who": "narr",
+  "text": "Opa! O Bolt está correndo pro mar! O que você fala?"
+ },
+ "H5_02": {
+  "who": "narr",
+  "text": "Agora olha pro céu. Escute o Coach."
+ },
+ "HC5_01": {
+  "who": "coach",
+  "text": "Look at the sun! It's very hot!"
+ },
+ "HC5_01_pt": {
+  "who": "narr",
+  "text": "Olha o sol! Está muito quente!"
+ },
+ "H5_03": {
+  "who": "narr",
+  "text": "Sol, em inglês, é... Fala e aponta pro céu!"
+ },
+ "H5_04": {
+  "who": "narr",
+  "text": "A areia está quente e o mar está frio! O Coach grita e você toca: hot é quente, cold é frio. Se quiser, pula como se o chão queimasse, ou treme de frio!"
+ },
+ "H5_05": {
+  "who": "narr",
+  "text": "Ufa! Com tanto calor, dá uma sede..."
+ },
+ "HC5_02": {
+  "who": "coach",
+  "text": "Drink water! Water is good!"
+ },
+ "HC5_02_pt": {
+  "who": "narr",
+  "text": "Bebe água! Água faz bem!"
+ },
+ "H5_06": {
+  "who": "narr",
+  "text": "Água, em inglês, é... Fala e faz que está bebendo!"
+ },
+ "H5_07": {
+  "who": "narr",
+  "text": "Olha quem apareceu na praia: o Big Tony! Mas ele está sozinho e triste."
+ },
+ "T5_01": {
+  "who": "tony",
+  "text": "My team is not here. I have no team..."
+ },
+ "T5_01_pt": {
+  "who": "narr",
+  "text": "O meu time não veio. Eu estou sem time..."
+ },
+ "HC5_03": {
+  "who": "coach",
+  "text": "Big Tony can play with us! He is our friend!"
+ },
+ "HC5_03_pt": {
+  "who": "narr",
+  "text": "O Big Tony pode jogar com a gente! Ele é nosso amigo!"
+ },
+ "H5_08": {
+  "who": "narr",
+  "text": "Amigo, em inglês, é... Chama o Big Tony e abre os braços!"
+ },
+ "T5_02": {
+  "who": "tony",
+  "text": "Thank you, Henrique!"
+ },
+ "T5_02_pt": {
+  "who": "narr",
+  "text": "Obrigado, Henrique!"
+ },
+ "H5_09": {
+  "who": "narr",
+  "text": "Começa o jogo na areia! Henrique, Lucas e Big Tony contra os Siris!"
+ },
+ "H5_10": {
+  "who": "narr",
+  "text": "O Henrique está com a bola, mas tem um Siri na frente! O Big Tony está livre. O que você faz?"
+ },
+ "H5_11": {
+  "who": "narr",
+  "text": "O Big Tony cruzou pro alto! Com o que você bate na bola?"
+ },
+ "T5_03": {
+  "who": "tony",
+  "text": "What a goal! Great header, my friend!"
+ },
+ "T5_03_pt": {
+  "who": "narr",
+  "text": "Que gol! Bela cabeçada, meu amigo!"
+ },
+ "H5_12": {
+  "who": "narr",
+  "text": "O Big Tony te elogiou. Quando alguém é legal com a gente, a gente agradece. Obrigado, em inglês, é... Fala e põe a mão no coração!"
+ },
+ "H5_13": {
+  "who": "narr",
+  "text": "Apita o juiz! Fim de jogo! Um a zero pros amigos!"
+ },
+ "H5_14": {
+  "who": "narr",
+  "text": "Grita bem alto em inglês: a gente ganhou!"
+ },
+ "H5_15": {
+  "who": "narr",
+  "text": "O sol está indo embora. O Big Tony quer dizer uma coisa."
+ },
+ "T5_04": {
+  "who": "tony",
+  "text": "You are my best friend!"
+ },
+ "T5_04_pt": {
+  "who": "narr",
+  "text": "Você é o meu melhor amigo!"
+ },
+ "H5_16": {
+  "who": "narr",
+  "text": "Responde pra ele: amigo, em inglês!"
+ },
+ "HC5_04": {
+  "who": "coach",
+  "text": "Friends play together. Great game!"
+ },
+ "HC5_04_pt": {
+  "who": "narr",
+  "text": "Amigos jogam juntos. Grande jogo!"
+ },
+ "H5_17": {
+  "who": "narr",
+  "text": "Você ganhou a concha de ouro de Amigo da Praia!"
+ },
+ "H5_18": {
+  "who": "narr",
+  "text": "Agora uma brincadeira fora da tela! O papai grita hot, e você pula como se o chão queimasse. Cold, você treme de frio. E no lanche, pede water e diz thank you!"
+ },
+ "HC5_hot": {
+  "who": "coach",
+  "text": "Hot!"
+ },
+ "HC5_cold": {
+  "who": "coach",
+  "text": "Cold!"
+ },
+ "HC5_hot2": {
+  "who": "coach",
+  "text": "Ouch! Hot sand!"
+ },
+ "HC5_cold2": {
+  "who": "coach",
+  "text": "Brrr! Cold water!"
+ },
+ "HE5_sun": {
+  "who": "coach",
+  "text": "The sun! Big and yellow!"
+ },
+ "HE5_water": {
+  "who": "coach",
+  "text": "Water! Glug, glug, glug!"
+ },
+ "HE5_friend": {
+  "who": "tony",
+  "text": "Friend? Yes! Friends!"
+ },
+ "HE5_thanks": {
+  "who": "tony",
+  "text": "You're welcome, friend!"
+ },
+ "HE5_friend2": {
+  "who": "tony",
+  "text": "Friends forever!"
+ },
  "W_nova_wing": {
   "who": "nova",
   "text": "Wing."
@@ -2187,6 +2555,134 @@ const LINES = {
  "T_narr_win_1": {
   "who": "narr",
   "text": "Quase! No final tem um n, que sai pelo nariz: uín. Escute:"
+ },
+ "W_coach_dog": {
+  "who": "coach",
+  "text": "Dog."
+ },
+ "S_coach_dog": {
+  "who": "coach",
+  "text": "Dog... Dog."
+ },
+ "T_narr_dog_0": {
+  "who": "narr",
+  "text": "Dog começa com d, e o ó é bem aberto, de boca grande: dóg. Escute:"
+ },
+ "T_narr_dog_1": {
+  "who": "narr",
+  "text": "Quase! No final tem um g, que sai lá do fundo da garganta: dóg. Escute:"
+ },
+ "W_coach_stop": {
+  "who": "coach",
+  "text": "Stop."
+ },
+ "S_coach_stop": {
+  "who": "coach",
+  "text": "Stop... Stop."
+ },
+ "T_narr_stop_0": {
+  "who": "narr",
+  "text": "Stop começa com um sss de cobra, colado no t: sss-tóp. Escute:"
+ },
+ "T_narr_stop_1": {
+  "who": "narr",
+  "text": "Quase! No final a boca fecha: p. Escute:"
+ },
+ "W_coach_good": {
+  "who": "coach",
+  "text": "Good."
+ },
+ "S_coach_good": {
+  "who": "coach",
+  "text": "Good... Good."
+ },
+ "T_narr_good_0": {
+  "who": "narr",
+  "text": "Good começa com g, e o u é curtinho, quase um ô: gúd. Escute:"
+ },
+ "T_narr_good_1": {
+  "who": "narr",
+  "text": "Quase! No final tem um d: a língua bate atrás dos dentes. Escute:"
+ },
+ "W_coach_fast": {
+  "who": "coach",
+  "text": "Fast."
+ },
+ "S_coach_fast": {
+  "who": "coach",
+  "text": "Fast... Fast."
+ },
+ "T_narr_fast_0": {
+  "who": "narr",
+  "text": "Fast começa com f, de ventinho: os dentes de cima no lábio de baixo. E o a é bem aberto: fést. Escute:"
+ },
+ "T_narr_fast_1": {
+  "who": "narr",
+  "text": "Quase! No final tem s e t juntinhos: fést. Escute:"
+ },
+ "W_coach_sun": {
+  "who": "coach",
+  "text": "Sun."
+ },
+ "S_coach_sun": {
+  "who": "coach",
+  "text": "Sun... Sun."
+ },
+ "T_narr_sun_0": {
+  "who": "narr",
+  "text": "Sun começa com sss de cobra, e o u soa como â, curtinho: sân. Escute:"
+ },
+ "T_narr_sun_1": {
+  "who": "narr",
+  "text": "Quase! No final tem um n, que sai pelo nariz: sân. Escute:"
+ },
+ "W_coach_water": {
+  "who": "coach",
+  "text": "Water."
+ },
+ "S_coach_water": {
+  "who": "coach",
+  "text": "Water... Water."
+ },
+ "T_narr_water_0": {
+  "who": "narr",
+  "text": "Water começa com biquinho, como um u rapidinho: uó. Escute:"
+ },
+ "T_narr_water_1": {
+  "who": "narr",
+  "text": "Quase! No final tem um ter, com a língua batendo atrás dos dentes: uóter. Escute:"
+ },
+ "W_coach_friend": {
+  "who": "coach",
+  "text": "Friend."
+ },
+ "S_coach_friend": {
+  "who": "coach",
+  "text": "Friend... Friend."
+ },
+ "T_narr_friend_0": {
+  "who": "narr",
+  "text": "Friend começa com f e o R enroladinho, juntinhos: fr. Escute:"
+ },
+ "T_narr_friend_1": {
+  "who": "narr",
+  "text": "Quase! No final tem n e d: frénd. Escute:"
+ },
+ "W_coach_thanks": {
+  "who": "coach",
+  "text": "Thank you."
+ },
+ "S_coach_thanks": {
+  "who": "coach",
+  "text": "Thank you... Thank you."
+ },
+ "T_narr_thanks_0": {
+  "who": "narr",
+  "text": "Thank you começa com a pontinha da língua entre os dentes, soprando um ventinho: th. Escute:"
+ },
+ "T_narr_thanks_1": {
+  "who": "narr",
+  "text": "Quase! Fala as duas partes: thank... you. Escute:"
  }
 };
 const VOCAB = {
@@ -3645,6 +4141,239 @@ const VOCAB = {
   "tips": [
    "Win começa com biquinho, como um u rapidinho, e o i é curtinho: uín. Escute:",
    "Quase! No final tem um n, que sai pelo nariz: uín. Escute:"
+  ]
+ },
+ "dog": {
+  "pt": "cachorro",
+  "say": "dóg",
+  "icon": "🐶",
+  "ok": [
+   "dog",
+   "dogs",
+   "doggy",
+   "doggie",
+   "dawg",
+   "dug",
+   "doug",
+   "good dog"
+  ],
+  "almost": [
+   1
+  ],
+  "near": [
+   [
+    "duck",
+    "dark",
+    "talk",
+    "dot",
+    "top",
+    "dad",
+    "doll",
+    "door",
+    "box",
+    "fog",
+    "frog",
+    "hog",
+    "log",
+    "jog",
+    "the",
+    "that"
+   ],
+   [
+    "dough",
+    "dogo",
+    "dah",
+    "daw",
+    "dawn",
+    "don"
+   ]
+  ],
+  "tips": [
+   "Dog começa com d, e o ó é bem aberto, de boca grande: dóg. Escute:",
+   "Quase! No final tem um g, que sai lá do fundo da garganta: dóg. Escute:"
+  ]
+ },
+ "good": {
+  "pt": "bom, bonzinho",
+  "say": "gúd",
+  "icon": "👍",
+  "ok": [
+   "good",
+   "goods",
+   "goody",
+   "gud",
+   "good good",
+   "good boy",
+   "good job",
+   "goodie"
+  ],
+  "near": [
+   [
+    "could",
+    "would",
+    "wood",
+    "hood",
+    "food",
+    "foot",
+    "put",
+    "gold",
+    "goat",
+    "got",
+    "god",
+    "gut",
+    "book",
+    "look",
+    "cook"
+   ],
+   [
+    "goo",
+    "gu",
+    "gooo",
+    "goose",
+    "gum"
+   ]
+  ],
+  "tips": [
+   "Good começa com g, e o u é curtinho, quase um ô: gúd. Escute:",
+   "Quase! No final tem um d: a língua bate atrás dos dentes. Escute:"
+  ]
+ },
+ "fast": {
+  "pt": "rápido",
+  "say": "fést",
+  "icon": "💨",
+  "ok": [
+   "fast",
+   "faster",
+   "fastest",
+   "fest",
+   "fasting",
+   "fast fast"
+  ],
+  "almost": [
+   1
+  ],
+  "near": [
+   [
+    "past",
+    "last",
+    "cast",
+    "vast",
+    "pass",
+    "that",
+    "bus",
+    "boss",
+    "face",
+    "fish",
+    "fix",
+    "first",
+    "fact",
+    "best"
+   ],
+   [
+    "fas",
+    "fass",
+    "fes",
+    "fess"
+   ]
+  ],
+  "tips": [
+   "Fast começa com f, de ventinho: os dentes de cima no lábio de baixo. E o a é bem aberto: fést. Escute:",
+   "Quase! No final tem s e t juntinhos: fést. Escute:"
+  ]
+ },
+ "sun": {
+  "pt": "sol",
+  "say": "sân",
+  "icon": "☀️",
+  "ok": [
+   "sun",
+   "son",
+   "suns",
+   "sunny",
+   "sum",
+   "some",
+   "sunshine",
+   "the sun"
+  ],
+  "near": [
+   [
+    "fun",
+    "one",
+    "bun",
+    "done",
+    "gun",
+    "none",
+    "ton",
+    "soon",
+    "song",
+    "sing",
+    "sign",
+    "sound",
+    "sean",
+    "shawn",
+    "sam",
+    "sand"
+   ],
+   [
+    "saw",
+    "sa",
+    "so",
+    "sub",
+    "sup",
+    "such"
+   ]
+  ],
+  "tips": [
+   "Sun começa com sss de cobra, e o u soa como â, curtinho: sân. Escute:",
+   "Quase! No final tem um n, que sai pelo nariz: sân. Escute:"
+  ]
+ },
+ "water": {
+  "pt": "água",
+  "say": "uóter",
+  "icon": "💧",
+  "ok": [
+   "water",
+   "waters",
+   "wata",
+   "watter",
+   "wader",
+   "walter",
+   "warter",
+   "waiter",
+   "water water"
+  ],
+  "near": [
+   [
+    "what",
+    "want",
+    "wait",
+    "word",
+    "work",
+    "war",
+    "wall",
+    "wash",
+    "watch",
+    "waffle",
+    "order",
+    "otter",
+    "auto",
+    "daughter",
+    "quarter"
+   ],
+   [
+    "wat",
+    "wah",
+    "wa",
+    "woah",
+    "whoa",
+    "wort"
+   ]
+  ],
+  "tips": [
+   "Water começa com biquinho, como um u rapidinho: uó. Escute:",
+   "Quase! No final tem um ter, com a língua batendo atrás dos dentes: uóter. Escute:"
   ]
  },
  "up": {
