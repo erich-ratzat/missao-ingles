@@ -143,11 +143,54 @@ const FX = (() => {
     run();
     return () => { on = false; };
   }
+  // neve caindo com vento, o tempo todo. Devolve a função que muda o vento (0 = parada; ex.: blizzard(3)).
+  function snow({n = 140, wind = .6} = {}){
+    if (!cv) return () => {};
+    const F = Array.from({length: n}, () => ({x: rand(-50, 850), y: rand(-20, 460), s: rand(1, 3.2), v: rand(30, 70), ph: Math.random() * 7}));
+    let w = wind, t = 0;
+    loops.add(dt => { t += dt;
+      for (const f of F) {
+        f.y += f.v * f.s * .5 * dt; f.x += (w * 40 + Math.sin(t * 1.3 + f.ph) * 18) * dt;
+        if (f.y > 460) { f.y = -10; f.x = rand(-50, 850); } if (f.x > 860) f.x = -40; if (f.x < -60) f.x = 840;
+        g.globalAlpha = .85; dot('#FFFFFF', f.x, f.y, f.s);
+      }
+      g.globalAlpha = 1; });
+    run();
+    return v => { w = v; };
+  }
+  // aurora: faixas de luz colorida ondulando no céu
+  function aurora({y = 90, cols = ['#4BE38A', '#5FD3F3', '#B57BFF']} = {}){
+    if (!cv) return;
+    let t = 0;
+    loops.add(dt => { t += dt;
+      cols.forEach((c, i) => {
+        const base = y + i * 26, gr = g.createLinearGradient(0, base - 70, 0, base + 30);
+        gr.addColorStop(0, c + '00'); gr.addColorStop(.7, c + '55'); gr.addColorStop(1, c + '00');
+        g.fillStyle = gr; g.beginPath(); g.moveTo(-10, base + 30);
+        for (let x = -10; x <= 810; x += 20) g.lineTo(x, base + Math.sin(x / 90 + t * .7 + i * 1.7) * 22 + Math.sin(x / 37 - t * 1.1) * 7);
+        for (let x = 810; x >= -10; x -= 20) g.lineTo(x, base - 70 + Math.sin(x / 70 + t * .5 + i) * 26);
+        g.closePath(); g.globalAlpha = .55 + .25 * Math.sin(t * .8 + i * 2); g.fill();
+      });
+      g.globalAlpha = 1; });
+    run();
+  }
+  // fogo subindo de um ponto (espada de fogo). Devolve a função que apaga; move(x, y) muda o lugar.
+  function flame(x, y, {rate = 40, w = 10} = {}){
+    if (!cv) { const f = () => {}; f.move = () => {}; return f; }
+    let acc = 0, on = true;
+    const cols = ['#FFE066', '#FF8A1F', '#FF4D2E', '#FFB020'];
+    loops.add(dt => { if (!on) return false; acc += dt * rate;
+      while (acc >= 1) { acc--;
+        parts.push({x: x + rand(-w, w), y: y + rand(-w, w), vx: rand(-15, 15), vy: rand(-140, -60), t: 0, life: rand(.35, .7), size: rand(3, 6),
+          color: cols[Math.floor(Math.random() * cols.length)], grav: -60, drag: 1, streak: false}); } });
+    run();
+    const stop = () => { on = false; }; stop.move = (nx, ny) => { x = nx; y = ny; }; return stop;
+  }
   // tremor e clarão mexem no HTML da cena, não no canvas
   function shake(){ const s = cv && cv.parentNode; if (!s) return; s.classList.remove('shake'); void s.offsetWidth; s.classList.add('shake'); }
   function flash(color = '#FFFFFF'){
     const s = cv && cv.parentNode; if (!s) return;
     const d = document.createElement('div'); d.className = 'flash'; d.style.background = color; s.appendChild(d); setTimeout(() => d.remove(), 900);
   }
-  return {mount, clear, burst, ring, warp, spiral, comet, fireworks, sparkle, shake, flash};
+  return {mount, clear, burst, ring, warp, spiral, comet, fireworks, sparkle, snow, aurora, flame, shake, flash};
 })();

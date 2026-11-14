@@ -53,10 +53,15 @@ const TR = {
   LN4_n1:'Uma estrela!', LN4_n2:'Duas estrelas!', LN4_n3:'Três estrelas!', LN4_n4:'Quatro estrelas!',
   E2_help:'A gente ajuda! Segura firme, Lucas!', E5_light:'Luz! As estrelas estão livres!', E_thanks:'De nada, Lucas!',
   L4_26:'Você conseguiu, Lucas! Você salvou as estrelas! Você é um guardião das estrelas!', L4_29:'Tchau, Lucas! Até logo!',
+  // missão 5
+  E_cold:'Frio, frio, frio! Brrr!', E_fire:'Fogo! Quente, quente, quente!', E_hello:'Oi, Lucas! Obrigado!', E_friend:'Amigos! Eba!',
+  LN5_three:'Três cristais!', LN5_four:'Quatro cristais!', LN5_five:'Cinco cristais!',
+  E2_stop:'Pare! Uau! As bolas de neve pararam!', E2_fire:'Fogo! O canhão está derretendo!',
+  L5_24:'Você conseguiu, Lucas! O planeta de gelo está salvo! Você é um cavaleiro do fogo!', L5_27:'Tchau, amigo! Até logo!',
 };
 const WHO = {nova:['Capitã Nova', ART.nova], vortex:['Lorde Vortex', ART.vortex], bip:['Bip', ART.bip],
-  coach:['Coach Max', ART.coach], tony:['Big Tony', ART.tony], narr:['Narrador', ART.narr], lumi:['Lumi', ART.lumi]};
-const SPEAKS_EN = new Set(['nova', 'vortex', 'coach', 'tony', 'lumi']);
+  coach:['Coach Max', ART.coach], tony:['Big Tony', ART.tony], narr:['Narrador', ART.narr], lumi:['Lumi', ART.lumi], puff:['Puff', ART.puff]};
+const SPEAKS_EN = new Set(['nova', 'vortex', 'coach', 'tony', 'lumi', 'puff']);
 // como a palavra aparece escrita (thanks → thank you)
 const label = w => VOCAB[w].label || w;
 
@@ -1003,9 +1008,151 @@ async function lessonLucas4(){
   await speak('thanks', {intro:['L4_25'], say:true, expand:'E_thanks', onOk:() => {
     hopLumi(lumi2); FX.burst(400, 268, {n:60, speed:300}); SFX.build(); track(5); }});
   await line('L4_26');
-  reward({kid:'lucas', badge:ART.starBadge, title:'Guardião das Estrelas!', next:'🔒 Missão 5 · em breve',
+  reward({kid:'lucas', badge:ART.starBadge, title:'Guardião das Estrelas!', next:'🔓 Missão 5 liberada: O Planeta de Gelo',
     homeplay:'Brincadeira de estátua com o papai: ele fala <b>fly</b> (você voa pela sala de braços abertos) e <b>stop</b> (você congela!). Depois troquem. E quando alguém te ajudar, fala <b>thank you</b>.'});
   await line('L4_27'); await line('L4_28'); await line('L4_29');
+  endButtons('lucas');
+}
+
+// ================= LUCAS · Missão 5 · O Planeta de Gelo =================
+// Mesmo jeito da missão 4: frases curtas em inglês em sanduíche, gesto junto com a palavra nova.
+// Palavras novas para falar: cold, fire, hello, friend. Só entender e tocar: four e five (com one, two, three).
+// Lembrar sozinho: go, jump, stop, shield e fire de novo no final.
+async function lessonLucas5(){
+  shell('lucas', 'Esquadrão Estelar · Missão 5', ['🥶', '🔥', '👋', '🤝', '🔢', '❄️']);
+  Object.assign(G, {T:'nova', H:'bip', P:'LB', max:9});
+  const sc = el('scene');
+  paintShip(sc); sc.style.setProperty('--saber', BLADE[SAVE.lucas.saber || 'blue']);
+  const heroIn = (x, y) => { const h = el('hero'); el('hsaber').classList.add('on'); el('hshield').classList.add('on'); h.style.transform = `translate(${x}px,${y}px)`; return h; };
+  const hopFig = f => { restart(f, 'hop'); setTimeout(() => f.classList.remove('hop'), 1100); };
+  // espada de fogo: lâmina laranja e chamas saindo da ponta (o herói tem os pés em x, y)
+  const fireSword = (x, y) => { sc.style.setProperty('--saber', '#FF8A1F'); return FX.flame(x + 30, y - 190, {rate:35, w:8}); };
+
+  // 1. no hangar: a Lumi traz a notícia e o Vortex aparece no holograma
+  setScene(ART.hangar());
+  const ship = el('ship');
+  place(ship, 'translate(450px,270px) scale(.78)');
+  ['wing', 'rocket', 'laser', 'light'].forEach(k => el('p-' + k).classList.add('on'));
+  sc.querySelector('svg').insertAdjacentHTML('beforeend', `<g class="lumi-fig on" transform="translate(250 130)"><g class="lumi-pop"><g class="lumi-in"><g transform="scale(.5)">${LUMI}</g></g></g></g>`);
+  sc.classList.add('alarm-on'); SFX.alarm();
+  await line('L5_01');
+  await sandwich('L5_02');
+  el('holov').classList.add('show'); SFX.villain();
+  await sandwich('V15');
+  el('holov').classList.remove('show'); sc.classList.remove('alarm-on');
+  await line('L5_03');
+  await speak('go', {model:false, intro:['L5_04', 'LN_count'], expand:'E_go',
+    onOk:async () => { ship.classList.add('flying', 'launch'); SFX.launch(); ship.style.transform = 'translate(1300px,120px) scale(.78)'; await wait(1100); }});
+
+  // 2. o planeta de gelo: cold e fire (palavras novas); a espada derrete o gelo e solta o Puff
+  setScene(ART.ice());
+  FX.flash('#BFF4FF'); await FX.warp(1600);
+  FX.aurora({y:70}); const wind = FX.snow();
+  let hero = heroIn(200, 420); SFX.whoosh(); await wait(800);
+  sc.insertAdjacentHTML('beforeend', '<div class="frost" id="frost"></div>');
+  const frost = el('frost'); later(50, () => frost.classList.add('on'));
+  await line('L5_05');
+  await sandwich('L5_06', true);
+  let hb = hero.querySelector('.hero-body'); hb.classList.add('shiver');
+  await speak('cold', {intro:['L5_07'], say:true, expand:'E_cold', onOk:() => { SFX.whoosh(); wind(4); later(1600, () => wind(.6)); track(0); }});
+  await line('L5_08');
+  hero.style.transform = 'translate(360px,420px)'; await wait(700);
+  await sandwich('L5_09');
+  await sandwich('L5_10', true);
+  let flame = null;
+  await speak('fire', {intro:['L5_11'], say:true, expand:'E_fire', onOk:async () => {
+    flame = fireSword(360, 420); restart(el('hsaber'), 'swing'); SFX.launch();
+    FX.burst(390, 230, {n:50, colors:['#FFE066', '#FF8A1F', '#FF4D2E']}); await wait(500);
+    el('iceblock').classList.add('melt'); FX.burst(560, 290, {n:70, colors:['#E6FDFF', '#9EF0FF', '#FFFFFF'], speed:220, grav:-50, life:1.4});
+    frost.classList.remove('on'); hb.classList.remove('shiver'); await wait(1400);
+    el('puff').classList.add('alive'); track(1); }});
+
+  // 3. o Puff acorda: hello e friend (palavras novas)
+  const puff = el('puff');
+  await sandwich('L5_12', true);
+  await speak('hello', {intro:['L5_13'], say:true, expand:'E_hello', onOk:() => {
+    hopFig(puff); FX.burst(560, 260, {n:40, colors:['#FFE066', '#FFFFFF']}); SFX.build(); track(2); }});
+  await sandwich('L5_14', true);
+  await speak('friend', {intro:['L5_15'], say:true, expand:'E_friend', onOk:() => {
+    hero.style.transform = 'translate(450px,420px)'; if (flame) later(400, () => flame.move(480, 230)); hopFig(puff); SFX.build();
+    FX.burst(510, 270, {n:60, colors:['#FF8FB0', '#FFE066', '#FFFFFF'], speed:260}); FX.ring(510, 270, {color:'#FF8FB0', r:140, width:8}); track(3); }});
+
+  // 4. a ponte de gelo: ouvir o número (four e five são novos) e tocar; depois jump sozinho
+  setScene(ART.bridge());
+  FX.aurora({y:70}); FX.snow({n:90});
+  hero = heroIn(110, 330);
+  const puffb = el('puffb'), crs = BRIDGE_X.map((_, i) => el('cr' + (i + 1)));
+  puffb.style.transform = 'translate(40px,304px)'; el('lumib').style.transform = 'translate(300px,110px)'; await wait(700);
+  await sandwich('L5_16');
+  await line('L5_17');
+  tapButtons(['one', 'two', 'three', 'four', 'five'].map((k, i) => [k, `<b class="num">${i + 1}</b>`, k]));
+  const N = {three:3, four:4, five:5};
+  for (const k of [...shuffle(['four', 'three', 'four']), 'five']) {
+    crs.forEach(c => c.classList.remove('on'));
+    await listenTap(k, 'LN5_' + k, 'LB_wrong');
+    for (let i = 0; i < N[k]; i++) later(i * 160, () => { crs[i].classList.add('on'); SFX.tap(); FX.burst(BRIDGE_X[i], 282, {n:14, colors:['#BFF6FF', '#FFFFFF'], speed:140}); });
+    await wait(N[k] * 160 + 700);
+  }
+  act(''); el('bridge').classList.add('lit'); SFX.good(); track(4);
+  await line('L5_18');
+  hero.style.transform = 'translate(380px,330px)'; puffb.style.transform = 'translate(300px,304px)'; await wait(900);
+  await speak('jump', {model:false, intro:['L5_19'], expand:'E_jump', onOk:async () => {
+    hero.style.transform = 'translate(580px,330px)'; restart(hero.querySelector('.hero-body'), 'bighop'); SFX.whoosh(); await wait(900);
+    puffb.style.transform = 'translate(500px,304px)'; hopFig(puffb.querySelector('.puff-fig')); await wait(700); }});
+
+  // 5. o canhão de gelo: lembrar stop, shield e fire sozinho
+  setScene(ART.cliff());
+  FX.aurora({y:60}); const wind2 = FX.snow({n:100});
+  hero = heroIn(130, 410); el('puffc').style.transform = 'translate(55px,368px)';
+  fireSword(130, 410);
+  const vx = el('vortexfig'), cannon = el('cannon');
+  vx.style.transform = 'translate(730px,400px)'; SFX.villain(); await wait(700);
+  await sandwich('V16');
+  const balls = [1, 2, 3].map(i => el('sb' + i));
+  balls.forEach((b, i) => place(b, `translate(${560 + i * 70}px,${334 - i * 5}px)`));
+  later(60, () => balls.forEach((b, i) => { b.style.transform = `translate(${290 + i * 60}px,${334 - i * 5}px)`; })); SFX.crowd(.3, 2.5);
+  await line('L5_20');
+  await speak('stop', {model:false, expand:'E2_stop', onOk:async () => {
+    const at = balls.map(b => { const m = getComputedStyle(b).transform.match(/-?[\d.]+/g).map(Number); b.style.transition = 'none';
+      b.style.transform = `translate(${m[4]}px,${m[5]}px)`; b.classList.add('frozen'); return m.slice(4); });
+    SFX.build(); await wait(600);
+    at.forEach(([x, y], i) => { FX.burst(x, y, {n:30, colors:['#FFFFFF', '#BFF6FF'], speed:220}); balls[i].classList.add('gone'); });
+    SFX.boom(); await wait(400); }});
+
+  await line('L5_21');
+  await speak('shield', {model:false, expand:'E2_shield', onOk:async () => {
+    const sh = el('hshield'), b = el('ibolt'); sh.classList.add('big'); SFX.build();
+    for (let i = 0; i < 2; i++) {
+      place(b, 'translate(400px,305px)'); b.style.transform = 'translate(110px,310px)'; SFX.laser(); await wait(450);
+      restart(sh, 'flash'); FX.burst(110, 310, {n:30, colors:['#E6FDFF', '#5FD3F3', '#FFFFFF']}); b.style.transform = 'translate(410px,300px)'; await wait(450);
+      FX.burst(410, 300, {n:24, colors:['#E6FDFF', '#FFFFFF']}); SFX.boom(); place(b, 'translate(900px,300px)'); await wait(250);
+    }
+    sh.classList.remove('big'); }});
+
+  await line('L5_22');
+  await speak('fire', {model:false, expand:'E2_fire', onOk:async () => {
+    restart(el('hsaber'), 'swing'); SFX.launch();
+    for (let i = 0; i < 14; i++) later(i * 70, () => FX.comet(160, 220, 470 + Math.random() * 160, 250 + Math.random() * 70,
+      {ms:600, color:['#FFE066', '#FF8A1F', '#FF4D2E'][i % 3], size:10, linear:true}));
+    await wait(1100);
+    cannon.classList.add('hot'); const heat = FX.flame(560, 300, {rate:70, w:70}); await wait(1500); heat();
+    FX.flash('#FFE6C4'); FX.shake(); SFX.boom(); later(250, SFX.boom);
+    FX.burst(560, 280, {n:160, speed:560, size:7, life:1.6, colors:['#E6FDFF', '#9EF0FF', '#FFFFFF', '#FF8A1F']});
+    FX.ring(560, 280, {r:520, width:26}); FX.ring(560, 280, {color:'#9EF0FF', r:300, width:14, life:.9});
+    cannon.classList.add('gone'); wind2(.2); await wait(1200); track(5); }});
+  restart(vx.querySelector('.vortex-body'), 'hit');
+  await sandwich('V17');
+  vx.style.transform = 'translate(1050px,330px)'; SFX.whoosh(); await wait(800);
+
+  // 6. a família do Puff sai da toca para agradecer
+  sc.querySelector('svg').insertAdjacentHTML('beforeend', [[520, .42], [615, .34], [700, .46]].map(([x, s]) => `<g transform="translate(${x} ${360 - 48 * s})"><g class="lumi-fig on"><g class="lumi-pop">
+    <g class="puff-fig alive"><g class="puff-in"><g transform="scale(${s})">${PUFF}</g></g></g></g></g></g>`).join(''));
+  FX.fireworks(4500); SFX.good();
+  await sandwich('L5_23', true);
+  await line('L5_24');
+  reward({kid:'lucas', badge:ART.fireBadge, title:'Cavaleiro do Fogo!', next:'🔒 Missão 6 · em breve',
+    homeplay:'Brincadeira com o papai: ele fala <b>cold</b> (você treme e se abraça: brrr!) ou <b>fire</b> (você pula com os braços pra cima). Quando alguém chegar em casa, fala <b>hello</b>! E contem nos dedos até <b>five</b>.'});
+  await line('L5_25'); await line('L5_26'); await line('L5_27');
   endButtons('lucas');
 }
 
@@ -1101,8 +1248,8 @@ async function lessonHenrique2(){
 
 // ---------------- início ----------------
 let runSeq = 0;
-const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3, lessonLucas4], henrique:[lessonHenrique, lessonHenrique2]};
-const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo', 'Missão 4 · As Estrelas'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche']};
+const LESSONS = {lucas:[lessonLucas, lessonLucas2, lessonLucas3, lessonLucas4, lessonLucas5], henrique:[lessonHenrique, lessonHenrique2]};
+const MISSIONS = {lucas:['Missão 1 · A Nave', 'Missão 2 · A Espada de Luz', 'Missão 3 · O Castelo', 'Missão 4 · As Estrelas', 'Missão 5 · O Planeta de Gelo'], henrique:['Missão 1 · A Grande Final', 'Missão 2 · A Revanche']};
 function start(kid, m = 1){
   actx();                                   // libera o som dentro do toque
   voice.src = 'audio/' + (kid === 'lucas' ? 'L01' : 'H01') + '.mp3'; voice.play().catch(() => {}); voice.pause();

@@ -620,3 +620,107 @@ ART.starBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
     <g transform="scale(.95)">${starFace()}</g></g>
   ${sparkle4(108, 34, .9)}${sparkle4(30, 104, .6)}
 </svg>`;
+
+// ---------------- Lucas, Missão 5: o planeta de gelo ----------------
+// contorno peludo: círculo com n tufinhos
+const fluff = (R, n) => { const p = (a, r) => `${(Math.cos(a) * r).toFixed(1)} ${(Math.sin(a) * r).toFixed(1)}`; let d = '';
+  for (let i = 0; i < n; i++) { const a0 = i / n * 2 * Math.PI, a1 = (i + 1) / n * 2 * Math.PI; d += (i ? '' : 'M' + p(a0, R)) + ` Q${p((a0 + a1) / 2, R * 1.2)} ${p(a1, R)}`; }
+  return d + ' Z'; };
+// Puff, o filhote de iéti (centro em 0,0; pés em y=48)
+const PUFF_FACE = `<path d="M-30 -34 Q-44 -64 -20 -52 Z M30 -34 Q44 -64 20 -52 Z" fill="#F2DDB0" stroke="#C9A86A" stroke-width="2"/>
+  <path d="${fluff(48, 16)}" fill="#F6FAFF" stroke="#BCD2EA" stroke-width="3"/>
+  <ellipse cx="0" cy="6" rx="28" ry="23" fill="#A7DDF7"/>
+  <circle cx="-10" cy="2" r="7.5" fill="#15284A"/><circle cx="10" cy="2" r="7.5" fill="#15284A"/>
+  <circle cx="-8" cy="-1" r="2.6" fill="#fff"/><circle cx="12" cy="-1" r="2.6" fill="#fff"/>
+  <ellipse cx="-19" cy="14" rx="4.5" ry="2.6" fill="#FF8FB0" opacity=".75"/><ellipse cx="19" cy="14" rx="4.5" ry="2.6" fill="#FF8FB0" opacity=".75"/>
+  <path d="M-7 15 q7 7 14 0" stroke="#15284A" stroke-width="2.6" fill="none" stroke-linecap="round"/>`;
+const PUFF = `<g class="puff-art"><ellipse cx="-20" cy="46" rx="13" ry="7" fill="#DCE8F6" stroke="#BCD2EA" stroke-width="2"/>
+  <ellipse cx="20" cy="46" rx="13" ry="7" fill="#DCE8F6" stroke="#BCD2EA" stroke-width="2"/>
+  <ellipse cx="-50" cy="12" rx="11" ry="17" fill="#F6FAFF" stroke="#BCD2EA" stroke-width="2.5" transform="rotate(20 -50 12)"/>
+  <ellipse cx="50" cy="12" rx="11" ry="17" fill="#F6FAFF" stroke="#BCD2EA" stroke-width="2.5" transform="rotate(-20 50 12)"/>
+  ${PUFF_FACE}</g>`;
+ART.puff = `<svg viewBox="0 0 100 100" aria-hidden="true">
+  <defs><radialGradient id="puffpg"><stop offset="0" stop-color="#5FB8E8"/><stop offset="1" stop-color="#0E3A66"/></radialGradient></defs>
+  <circle cx="50" cy="50" r="50" fill="url(#puffpg)"/><g transform="translate(50 58) scale(.78)">${PUFF_FACE}</g>
+</svg>`;
+
+const M5DEFS = `<defs>
+  <linearGradient id="isky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#030B24"/><stop offset=".55" stop-color="#0B2E57"/><stop offset="1" stop-color="#1F6E93"/></linearGradient>
+  <linearGradient id="snowg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2FAFF"/><stop offset="1" stop-color="#B9DDF2"/></linearGradient>
+  <linearGradient id="iceg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6FBFF"/><stop offset=".5" stop-color="#9EDDF5"/><stop offset="1" stop-color="#5BA9D6"/></linearGradient>
+  <linearGradient id="chasm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0B2E57"/><stop offset="1" stop-color="#01040E"/></linearGradient>
+  <radialGradient id="crglow"><stop offset="0" stop-color="#E6FDFF" stop-opacity=".95"/><stop offset=".4" stop-color="#5FD3F3" stop-opacity=".45"/><stop offset="1" stop-color="#5FD3F3" stop-opacity="0"/></radialGradient>
+  <radialGradient id="hotglow"><stop offset="0" stop-color="#FFF1A6" stop-opacity=".95"/><stop offset=".45" stop-color="#FF7A1A" stop-opacity=".55"/><stop offset="1" stop-color="#FF3B1A" stop-opacity="0"/></radialGradient>
+</defs>`;
+// montanhas de gelo ao fundo (cume com neve)
+const iceMountains = (seed, y, h, fill, op = 1) => { const r = rng(seed); let s = '';
+  for (let x = -60; x < 860; x += 110 + r() * 60) { const w = 140 + r() * 90, top = y - h * (.6 + r() * .4);
+    s += `<path d="M${x} ${y} L${x + w / 2} ${top} L${x + w} ${y} Z" fill="${fill}" opacity="${op}"/><path d="M${x + w * .32} ${top + (y - top) * .36} L${x + w / 2} ${top} L${x + w * .68} ${top + (y - top) * .36} L${x + w * .56} ${top + (y - top) * .3} L${x + w / 2} ${top + (y - top) * .42} L${x + w * .44} ${top + (y - top) * .3} Z" fill="#F2FAFF" opacity="${op}"/>`; }
+  return s; };
+// cristal de gelo (ponta para cima, base em 0,0)
+const iceSpike = (x, y, s, fill = 'url(#iceg)') => `<g transform="translate(${x} ${y}) scale(${s})"><path d="M-14 0 L-6 -58 L0 -70 L6 -56 L14 0 Z" fill="${fill}" stroke="#E6FBFF" stroke-width="2"/><path d="M0 -70 L-2 0" stroke="#fff" stroke-width="2" opacity=".6"/></g>`;
+const iceSky = (seed) => `<rect width="800" height="450" fill="url(#isky)"/>${stars(70, seed, 800, 220)}
+  ${iceMountains(seed + 1, 300, 150, '#5E93BE', .55)}${iceMountains(seed + 2, 330, 120, '#8DBCDD')}`;
+
+// chegada: campo de neve, Puff preso num bloco de gelo
+ART.ice = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}${M4DEFS}${M5DEFS}
+  ${iceSky(71)}
+  <path d="M0 330 Q160 310 330 326 T640 318 T800 326 V450 H0 Z" fill="url(#snowg)"/>
+  <path d="M0 380 Q200 368 420 384 T800 378" stroke="#D3ECFA" stroke-width="6" fill="none"/>
+  ${iceSpike(690, 344, 1.2)}${iceSpike(722, 350, .8)}${iceSpike(30, 352, .9)}${iceSpike(250, 340, .6)}
+  <g transform="translate(110 340) scale(.26)"><g>${shipSVG(['rocket', 'wing', 'laser', 'light'])}</g></g>
+  <g transform="translate(560 300)"><g id="puff" class="puff-fig"><g class="puff-in">${PUFF}</g></g></g>
+  <g id="iceblock" class="iceblock"><rect x="492" y="218" width="136" height="138" rx="16" fill="#9EF0FF" fill-opacity=".5" stroke="#E6FDFF" stroke-width="4"/>
+    <path d="M506 232 L546 232 M506 246 L524 246 M612 330 L612 300" stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".8"/>
+    <path d="M560 222 L548 262 L572 290 L556 352" stroke="#E6FDFF" stroke-width="2" fill="none" opacity=".7"/></g>
+  <g id="hero" class="fig" transform="translate(-150 420)">${HERO}</g>
+  <g id="lumii" class="lumi-fig on" transform="translate(380 130)"><g class="lumi-pop"><g class="lumi-in"><g transform="scale(.5)">${LUMI}</g></g></g></g>
+</svg>`;
+
+// a ponte de gelo sobre o abismo, com 5 cristais que acendem
+const BRIDGE_X = [150, 270, 390, 530, 650];
+ART.bridge = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}${M4DEFS}${M5DEFS}
+  ${iceSky(81)}
+  <rect y="300" width="800" height="150" fill="url(#chasm)"/>
+  <path d="M0 300 L70 300 L60 450 L0 450 Z M800 300 L730 300 L740 450 L800 450 Z" fill="#8DBCDD"/>
+  <g id="bridge" class="bridge"><path d="M60 330 H440 M490 330 H740" stroke="#7FB4D6" stroke-width="16" stroke-linecap="round"/>
+    <path d="M60 330 H440 M490 330 H740" stroke="#E6FBFF" stroke-width="4" class="bglow"/>
+    ${[100, 160, 220, 280, 340, 400, 530, 590, 650, 710].map(x => `<rect x="${x - 4}" y="330" width="8" height="34" fill="#5E93BE"/>`).join('')}</g>
+  ${BRIDGE_X.map((x, i) => `<g id="cr${i + 1}" class="crystal5" transform="translate(${x} 322)"><circle cy="-40" r="46" fill="url(#crglow)" class="crg"/>
+    <path d="M-12 0 L-16 -44 L0 -74 L16 -44 L12 0 Z" class="crb" stroke="#E6FBFF" stroke-width="2.5"/><path d="M0 -74 L-3 0" stroke="#fff" stroke-width="2" opacity=".55"/>
+    <text y="22" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="20" fill="#E6FBFF" opacity=".8">${i + 1}</text></g>`).join('')}
+  <g id="hero" class="fig" transform="translate(-150 330)">${HERO}</g>
+  <g id="puffb" class="fig" transform="translate(-200 290)"><g class="puff-fig alive"><g class="puff-in"><g transform="scale(.55)">${PUFF}</g></g></g></g>
+  <g id="lumib" class="lumi-fig on" transform="translate(-120 120)"><g class="lumi-pop"><g class="lumi-in"><g transform="scale(.45)">${LUMI}</g></g></g></g>
+</svg>`;
+
+// o canhão de gelo do Vortex, no alto do penhasco
+ART.cliff = () => `<svg viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" class="scene-svg">${DEFS}${M4DEFS}${M5DEFS}
+  ${iceSky(91)}
+  <path d="M0 360 Q180 340 360 356 T800 350 V450 H0 Z" fill="url(#snowg)"/>
+  ${iceSpike(40, 362, 1)}${iceSpike(300, 358, .7)}${iceSpike(770, 356, 1.1)}
+  <g id="cannon" class="cannon"><g class="can-in">
+    <circle cx="560" cy="260" r="120" fill="url(#hotglow)" class="cheat"/>
+    <path d="M500 360 L530 290 L650 290 L680 360 Z" fill="#3B2F5C" stroke="#8E4DFF" stroke-width="4"/>
+    <circle cx="590" cy="292" r="34" fill="#2B2140" stroke="#8E4DFF" stroke-width="4"/>
+    <g transform="rotate(-12 590 270)"><rect x="410" y="240" width="190" height="62" rx="20" fill="url(#iceg)" stroke="#E6FBFF" stroke-width="4"/>
+      <rect x="400" y="232" width="36" height="78" rx="12" fill="#5BA9D6" stroke="#E6FBFF" stroke-width="4"/>
+      <ellipse cx="402" cy="271" rx="12" ry="30" fill="#0B2E57"/>
+      ${[460, 500, 540].map(x => `<rect x="${x}" y="244" width="10" height="54" rx="4" fill="#8E4DFF" opacity=".55"/>`).join('')}
+      ${iceSpike(600, 242, .5)}${iceSpike(560, 242, .4)}</g>
+    <text x="590" y="304" text-anchor="middle" font-family="Baloo 2, sans-serif" font-weight="800" font-size="26" fill="#E2CCFF">V</text></g></g>
+  ${[1, 2, 3].map(i => `<g id="sb${i}" class="snowball" transform="translate(900 330)"><g class="sb-in"><circle r="${16 + i * 5}" fill="#F6FAFF" stroke="#BCD2EA" stroke-width="3"/><path d="M-6 -6 q4 -4 9 -2" stroke="#fff" stroke-width="4" fill="none"/></g></g>`).join('')}
+  <g id="ibolt" class="bolt" transform="translate(900 300)"><path d="M-22 0 L0 -10 L24 0 L0 10 Z" fill="#E6FDFF" stroke="#5FD3F3" stroke-width="3"/></g>
+  <g id="vortexfig" class="fig" transform="translate(1000 400)">${VORTEX}</g>
+  <g id="hero" class="fig" transform="translate(-150 410)">${HERO}</g>
+  <g id="puffc" class="fig" transform="translate(-200 370)"><g class="puff-fig alive"><g class="puff-in"><g transform="scale(.5)">${PUFF}</g></g></g></g>
+</svg>`;
+
+ART.fireBadge = `<svg viewBox="0 0 140 140" aria-hidden="true">
+  <defs><radialGradient id="fbg"><stop offset="0" stop-color="#1F6E93"/><stop offset="1" stop-color="#0B1F3D"/></radialGradient>
+    <linearGradient id="fbf" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#FF4D2E"/><stop offset=".6" stop-color="#FF8A1F"/><stop offset="1" stop-color="#FFE066"/></linearGradient></defs>
+  <circle cx="70" cy="70" r="62" fill="url(#fbg)" stroke="#FFD23F" stroke-width="6"/>
+  <g stroke="#CFF8FF" stroke-width="4" stroke-linecap="round" opacity=".55">${[0, 60, 120].map(a => `<path d="M70 26 V114 M70 36 l-8 -8 M70 36 l8 -8 M70 104 l-8 8 M70 104 l8 8" transform="rotate(${a} 70 70)"/>`).join('')}</g>
+  <path d="M70 26 C92 52 100 70 92 92 C88 104 78 110 70 110 C58 110 46 102 46 86 C46 72 56 64 58 50 C64 60 66 66 70 68 C72 56 70 40 70 26 Z" fill="url(#fbf)" stroke="#FFF1A6" stroke-width="3"/>
+  <path d="M70 70 C80 82 82 92 76 100 C72 104 64 104 62 96 C60 88 68 84 70 70 Z" fill="#FFF1A6"/>
+</svg>`;

@@ -276,6 +276,34 @@ body.henrique .mic{background:#E5484D}
 @keyframes twk{50%{opacity:.35}}
 @keyframes lpulse{50%{transform:scale(1.15);opacity:.75}}
 
+/* missão 5: gelo, frio, cristais e fogo */
+.frost{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.6s;
+  background:radial-gradient(ellipse at center,rgba(255,255,255,0) 42%,rgba(190,235,255,.45) 72%,rgba(240,252,255,.92) 100%)}
+.frost.on{opacity:1}
+.puff-fig,.puff-in,.iceblock,.crystal5 .crg,.can-in,.sb-in{transform-box:fill-box;transform-origin:center bottom}
+.puff-fig.alive .puff-in{animation:bob 2.2s ease-in-out infinite}
+.puff-fig.hop .puff-in{animation:hop .5s 2}
+.hero-body.shiver{animation:shiver .12s infinite}
+.iceblock{transition:transform 1.6s ease-in,opacity 1.6s ease-in}
+.iceblock.melt{transform:scaleY(.05);opacity:0}
+.crystal5 .crb{fill:#2E4A66;transition:fill .4s}
+.crystal5 .crg{opacity:0;transition:opacity .4s}
+.crystal5.on .crb{fill:#BFF6FF}
+.crystal5.on .crg{opacity:1;animation:lpulse 1.6s ease-in-out infinite}
+.bridge .bglow{opacity:.15;transition:opacity 1s}
+.bridge.lit .bglow{opacity:1;filter:drop-shadow(0 0 6px #5FD3F3)}
+.snowball{transition:transform 3s cubic-bezier(.3,.6,.4,1)}
+.snowball .sb-in{animation:spin 1s linear infinite;transform-origin:center}
+.snowball.frozen .sb-in{animation:none}
+.snowball.gone{opacity:0;transition:opacity .2s}
+#ibolt{transition:transform .45s linear}
+.cannon .cheat{opacity:0;transition:opacity 1.2s}
+.cannon.hot .cheat{opacity:1}
+.cannon.hot .can-in{animation:shake .14s infinite}
+.cannon{transition:opacity .4s}
+.cannon.gone{opacity:0}
+@keyframes shiver{25%{transform:translateX(-2px)}75%{transform:translateX(2px)}}
+
 @media (max-height:620px){.say .face{width:52px;height:52px}.mic{width:80px;height:80px;font-size:2.2rem}.act{min-height:84px}.word .w{font-size:2rem}}
 @media (max-width:520px){.track{display:none}}
 /* celular ou tablet em pé: a cena aparece inteira e a fala ocupa o resto da tela */

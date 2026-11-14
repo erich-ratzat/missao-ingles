@@ -820,6 +820,206 @@ const LINES = {
   "who": "lumi",
   "text": "Bye, Lucas! See you soon!"
  },
+ "L5_01": {
+  "who": "bip",
+  "text": "Lucas! A Lumi chegou voando, bem rápido. Ela tem uma notícia!"
+ },
+ "L5_02": {
+  "who": "lumi",
+  "text": "Lucas! Vortex is back! He is on the ice planet."
+ },
+ "L5_02_pt": {
+  "who": "bip",
+  "text": "Lucas! O Vortex voltou! Ele está no planeta de gelo."
+ },
+ "V15": {
+  "who": "vortex",
+  "text": "Ha ha ha! My ice cannon is ready! Everything will freeze!"
+ },
+ "V15_pt": {
+  "who": "bip",
+  "text": "Meu canhão de gelo está pronto! Tudo vai congelar!"
+ },
+ "L5_03": {
+  "who": "bip",
+  "text": "Um canhão de gelo! Ele quer congelar o planeta inteiro. E lá moram os amigos da Lumi!"
+ },
+ "L5_04": {
+  "who": "bip",
+  "text": "Pra nave! Fala a palavra de decolar quando a Capitã terminar de contar!"
+ },
+ "L5_05": {
+  "who": "bip",
+  "text": "Chegamos no Planeta de Gelo! Olha a neve caindo, e as luzes coloridas no céu! Brrr... Tá muito frio!"
+ },
+ "L5_06": {
+  "who": "nova",
+  "text": "Brrr! It's cold! Very, very cold!"
+ },
+ "L5_06_pt": {
+  "who": "bip",
+  "text": "Brrr! Está frio! Muito, muito frio!"
+ },
+ "L5_07": {
+  "who": "bip",
+  "text": "Abraça o corpo e treme, assim: brrr! Frio, em inglês, é..."
+ },
+ "E_cold": {
+  "who": "lumi",
+  "text": "Cold, cold, cold! Brrr!"
+ },
+ "L5_08": {
+  "who": "bip",
+  "text": "Olha ali! Tem alguém preso dentro de um bloco de gelo!"
+ },
+ "L5_09": {
+  "who": "lumi",
+  "text": "It's Puff! My friend! He is frozen!"
+ },
+ "L5_09_pt": {
+  "who": "bip",
+  "text": "É o Puff! Meu amigo! Ele está congelado!"
+ },
+ "L5_10": {
+  "who": "nova",
+  "text": "Lucas, your sword can make fire!"
+ },
+ "L5_10_pt": {
+  "who": "bip",
+  "text": "Lucas, a sua espada pode fazer fogo!"
+ },
+ "L5_11": {
+  "who": "bip",
+  "text": "Levanta a espada bem alto! Fogo, em inglês, é..."
+ },
+ "E_fire": {
+  "who": "nova",
+  "text": "Fire! Hot, hot, hot!"
+ },
+ "L5_12": {
+  "who": "puff",
+  "text": "Hello! I'm Puff. Hello, hello!"
+ },
+ "L5_12_pt": {
+  "who": "bip",
+  "text": "Olá! Eu sou o Puff. Olá, olá!"
+ },
+ "L5_13": {
+  "who": "bip",
+  "text": "O Puff está dizendo oi! Acena com a mão pra ele e responde. Oi, em inglês, é..."
+ },
+ "E_hello": {
+  "who": "puff",
+  "text": "Hello, Lucas! Thank you!"
+ },
+ "L5_14": {
+  "who": "puff",
+  "text": "You're my friend! Friend!"
+ },
+ "L5_14_pt": {
+  "who": "bip",
+  "text": "Você é meu amigo! Amigo!"
+ },
+ "L5_15": {
+  "who": "bip",
+  "text": "Ele disse que você é amigo dele! Dá um abraço bem apertado. Amigo, em inglês, é..."
+ },
+ "E_friend": {
+  "who": "puff",
+  "text": "Friends! Yay!"
+ },
+ "L5_16": {
+  "who": "puff",
+  "text": "Look! The ice bridge! It needs crystals."
+ },
+ "L5_16_pt": {
+  "who": "bip",
+  "text": "Olha! A ponte de gelo! Ela precisa de cristais."
+ },
+ "L5_17": {
+  "who": "bip",
+  "text": "A ponte só acende com cristais mágicos. A Capitã vai falar quantos. Você já sabe one, two e three. Agora tem mais dois: four é quatro, five é cinco. Escute e toque no número certo!"
+ },
+ "LN5_three": {
+  "who": "nova",
+  "text": "Three crystals!"
+ },
+ "LN5_four": {
+  "who": "nova",
+  "text": "Four crystals!"
+ },
+ "LN5_five": {
+  "who": "nova",
+  "text": "Five crystals!"
+ },
+ "L5_18": {
+  "who": "bip",
+  "text": "A ponte acendeu inteirinha! Vamos atravessar!"
+ },
+ "L5_19": {
+  "who": "bip",
+  "text": "Ih, tem um buraco no meio da ponte! O que você fala pra passar?"
+ },
+ "V16": {
+  "who": "vortex",
+  "text": "You again? Snowballs! Get him!"
+ },
+ "V16_pt": {
+  "who": "bip",
+  "text": "Você de novo? Bolas de neve! Peguem ele!"
+ },
+ "L5_20": {
+  "who": "bip",
+  "text": "Uma avalanche de bolas de neve! Fala a palavra que faz tudo parar!"
+ },
+ "E2_stop": {
+  "who": "puff",
+  "text": "Stop! Wow! The snowballs stopped!"
+ },
+ "L5_21": {
+  "who": "bip",
+  "text": "O canhão vai atirar gelo em você! O que te protege?"
+ },
+ "L5_22": {
+  "who": "bip",
+  "text": "Agora é a hora! Derrete o canhão de gelo! Qual é a palavra do fogo?"
+ },
+ "E2_fire": {
+  "who": "nova",
+  "text": "Fire! The cannon is melting!"
+ },
+ "V17": {
+  "who": "vortex",
+  "text": "My cannon! Nooo! I'm cold! Brrr!"
+ },
+ "V17_pt": {
+  "who": "bip",
+  "text": "Meu canhão! Nããão! Estou com frio! Brrr!"
+ },
+ "L5_23": {
+  "who": "puff",
+  "text": "Thank you, Lucas! You're my best friend!"
+ },
+ "L5_23_pt": {
+  "who": "bip",
+  "text": "Obrigado, Lucas! Você é o meu melhor amigo!"
+ },
+ "L5_24": {
+  "who": "nova",
+  "text": "You did it, Lucas! The ice planet is safe! You're a fire knight!"
+ },
+ "L5_25": {
+  "who": "bip",
+  "text": "Você ganhou a medalha de Cavaleiro do Fogo!"
+ },
+ "L5_26": {
+  "who": "bip",
+  "text": "Missão fora da tela! Chama o papai. Ele fala cold: você treme, brrr! Ele fala fire: você pula com os braços pra cima! E contem juntos nos dedos: one, two, three, four, five!"
+ },
+ "L5_27": {
+  "who": "puff",
+  "text": "Bye, friend! See you soon!"
+ },
  "H01": {
   "who": "narr",
   "text": "Olá, olá, torcida! Hoje é dia de grande final!"
@@ -1479,6 +1679,70 @@ const LINES = {
  "T_bip_thanks_1": {
   "who": "bip",
   "text": "Quase! Fala as duas partes: thank... you. Escute:"
+ },
+ "W_nova_cold": {
+  "who": "nova",
+  "text": "Cold."
+ },
+ "S_nova_cold": {
+  "who": "nova",
+  "text": "Cold... Cold."
+ },
+ "T_bip_cold_0": {
+  "who": "bip",
+  "text": "Cold começa com k, e o ô termina num biquinho: kôu. Escute:"
+ },
+ "T_bip_cold_1": {
+  "who": "bip",
+  "text": "Quase! No final tem um L e um d curtinho: kôuld. Escute:"
+ },
+ "W_nova_fire": {
+  "who": "nova",
+  "text": "Fire."
+ },
+ "S_nova_fire": {
+  "who": "nova",
+  "text": "Fire... Fire."
+ },
+ "T_bip_fire_0": {
+  "who": "bip",
+  "text": "Fire começa com f: os dentes de cima encostam no lábio de baixo e sai um ventinho. Escute:"
+ },
+ "T_bip_fire_1": {
+  "who": "bip",
+  "text": "Quase! No final tem um R enroladinho: fáier. Escute:"
+ },
+ "W_nova_hello": {
+  "who": "nova",
+  "text": "Hello."
+ },
+ "S_nova_hello": {
+  "who": "nova",
+  "text": "Hello... Hello."
+ },
+ "T_bip_hello_0": {
+  "who": "bip",
+  "text": "Hello começa com um sopro, como uma risadinha: rrr. Não é iê, é rre. Escute:"
+ },
+ "T_bip_hello_1": {
+  "who": "bip",
+  "text": "Quase! São dois pedacinhos: rre e lôu. Escute:"
+ },
+ "W_nova_friend": {
+  "who": "nova",
+  "text": "Friend."
+ },
+ "S_nova_friend": {
+  "who": "nova",
+  "text": "Friend... Friend."
+ },
+ "T_bip_friend_0": {
+  "who": "bip",
+  "text": "Friend começa com f e o R enroladinho, juntinhos: fr. Escute:"
+ },
+ "T_bip_friend_1": {
+  "who": "bip",
+  "text": "Quase! No final tem n e d: frénd. Escute:"
  },
  "W_coach_yes": {
   "who": "coach",
@@ -2767,6 +3031,179 @@ const VOCAB = {
   "tips": [
    "Thank you começa com a pontinha da língua entre os dentes, soprando um ventinho: th. Escute:",
    "Quase! Fala as duas partes: thank... you. Escute:"
+  ]
+ },
+ "cold": {
+  "pt": "frio",
+  "say": "kôuld",
+  "icon": "🥶",
+  "ok": [
+   "cold",
+   "colds",
+   "colder",
+   "called",
+   "cold cold"
+  ],
+  "almost": [
+   1
+  ],
+  "near": [
+   [
+    "gold",
+    "goal",
+    "go",
+    "code",
+    "coat",
+    "could",
+    "call",
+    "cool",
+    "cola",
+    "told",
+    "hold",
+    "sold"
+   ],
+   [
+    "old",
+    "cole",
+    "coal",
+    "col",
+    "co",
+    "colt",
+    "coke"
+   ]
+  ],
+  "tips": [
+   "Cold começa com k, e o ô termina num biquinho: kôu. Escute:",
+   "Quase! No final tem um L e um d curtinho: kôuld. Escute:"
+  ]
+ },
+ "fire": {
+  "pt": "fogo",
+  "say": "fáier",
+  "icon": "🔥",
+  "ok": [
+   "fire",
+   "fires",
+   "fired",
+   "fyre",
+   "fiery",
+   "fireball",
+   "fire fire"
+  ],
+  "near": [
+   [
+    "tire",
+    "hire",
+    "wire",
+    "liar",
+    "tyre",
+    "pie",
+    "buyer",
+    "higher",
+    "dryer"
+   ],
+   [
+    "fine",
+    "five",
+    "fi",
+    "fai",
+    "far",
+    "fair",
+    "fear",
+    "for",
+    "fight",
+    "file",
+    "find"
+   ]
+  ],
+  "tips": [
+   "Fire começa com f: os dentes de cima encostam no lábio de baixo e sai um ventinho. Escute:",
+   "Quase! No final tem um R enroladinho: fáier. Escute:"
+  ]
+ },
+ "hello": {
+  "pt": "oi, olá",
+  "say": "rrelôu",
+  "icon": "👋",
+  "ok": [
+   "hello",
+   "hallo",
+   "hullo",
+   "helo",
+   "hello hello",
+   "hi hello"
+  ],
+  "almost": [
+   1
+  ],
+  "near": [
+   [
+    "yellow",
+    "fellow",
+    "jello",
+    "mellow",
+    "yello",
+    "ello",
+    "allo",
+    "below"
+   ],
+   [
+    "hell",
+    "halo",
+    "hollow",
+    "hello w",
+    "helen",
+    "hey low",
+    "hey"
+   ]
+  ],
+  "tips": [
+   "Hello começa com um sopro, como uma risadinha: rrr. Não é iê, é rre. Escute:",
+   "Quase! São dois pedacinhos: rre e lôu. Escute:"
+  ]
+ },
+ "friend": {
+  "pt": "amigo",
+  "say": "frénd",
+  "icon": "🤝",
+  "ok": [
+   "friend",
+   "friends",
+   "friendly",
+   "frend",
+   "frien",
+   "my friend"
+  ],
+  "near": [
+   [
+    "brand",
+    "bread",
+    "fred",
+    "french",
+    "fried",
+    "frame",
+    "free",
+    "fresh",
+    "freon",
+    "print",
+    "prince"
+   ],
+   [
+    "fan",
+    "fun",
+    "find",
+    "fin",
+    "fen",
+    "fend",
+    "fiend",
+    "end",
+    "fence",
+    "and"
+   ]
+  ],
+  "tips": [
+   "Friend começa com f e o R enroladinho, juntinhos: fr. Escute:",
+   "Quase! No final tem n e d: frénd. Escute:"
   ]
  },
  "up": {
